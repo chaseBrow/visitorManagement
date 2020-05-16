@@ -37,8 +37,9 @@
                 drawer: false,
                 links: [
                     { icon: 'mdi-view-dashboard', text: 'Dashboard', route: '/' },
-                    { icon: 'mdi-folder', text: 'My Projects', route: '/projects' },
-                    { icon: 'mdi-account', text: 'Team', route: '/team' },
+                    { icon: 'mdi-calendar-check', text: 'Calendar', route: '/Calendar' },
+                    { icon: 'mdi-clipboard-text', text: 'Engagements', route: '/Engagements' },
+                    { icon: 'mdi-cog', text: 'Settings', route: '/Settings' },
                 ]
             }
         }

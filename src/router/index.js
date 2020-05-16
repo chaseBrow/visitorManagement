@@ -1,8 +1,10 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Dashboard from "../views/Dashboard.vue";
-import Projects from "../views/Projects.vue";
-import Team from "../views/Team";
+import Calendar from "../views/Calendar.vue";
+import Engagements from "../views/Engagements";
+import Settings from "../views/Settings";
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -12,14 +14,19 @@ const routes = [
     component: Dashboard
   },
   {
-    path: "/projects",
-    name: "projects",
-    component: Projects
+    path: "/Calendar",
+    name: "calendar",
+    component: Calendar
   },
   {
-    path: "/Team",
-    name: "team",
-    component: Team
+    path: "/Settings",
+    name: "settings",
+    component: Settings
+  },
+  {
+    path: "/Engagements",
+    name: "engagements",
+    component: Engagements
   }
 ];
 
