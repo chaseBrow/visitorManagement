@@ -3,8 +3,8 @@
         <v-toolbar flat app class="primary">
             <v-app-bar-nav-icon  @click="drawer = !drawer"></v-app-bar-nav-icon>
             <v-toolbar-title class="text-uppercase">
-                <span class="font-weight-light"> ToDo</span>
-                <span class="font-weight-bold">Calendar</span>
+                <span class="font-weight-light" style="font-size: x-large"> ToDo</span>
+                <span class="font-weight-bold" style="font-size: x-large">Calendar</span>
             </v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn text >

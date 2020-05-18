@@ -1,13 +1,38 @@
 <template>
-  <v-container style="height: 100%">
+  <v-container fill-height>
     <v-row style="height: 100%">
-      <v-col cols="12" md="4" lg="4" xl="4">
-        <v-sheet style="height: auto; font-size: larger;" class="primary ma-1 pa-2 font-weight-bold ">
-          Today
-          <v-btn fab x-small rounded><v-icon x-large>mdi-arrow-down-drop-circle</v-icon></v-btn>
-        </v-sheet>
+
+      <!--  This is the Daily summary list    -->
+      <v-col cols="12" md="4" style="border-radius: 10px" class="blue">
+        <v-toolbar flat dark>
+          <v-toolbar-title>Today's Summary</v-toolbar-title>
+        </v-toolbar>
+        <v-list subheader two-line shaped elevation="24" style="max-height: 750px" class="overflow-y-auto">
+          <v-subheader>Upcoming</v-subheader>
+          <v-list-item class="listItem" v-for="engagement in engagements" :key="engagement.engagement" @click="test = !test">
+            <v-list-item-content>
+              <v-list-item-title class="font-weight-bold title">You have a {{engagement.engagement}} with {{engagement.who}}</v-list-item-title>
+              <v-list-item-subtitle class="font-weight-bold">@{{engagement.when}}</v-list-item-subtitle>
+            </v-list-item-content>
+            <v-list-item-action>
+              <v-icon>mdi-arrow-right</v-icon>
+            </v-list-item-action>
+          </v-list-item>
+          <v-subheader>Past</v-subheader>
+          <v-list-item class="listItem" v-for="engagement in engagements" :key="engagement.engagement" @click="test = !test">
+            <v-list-item-content>
+              <v-list-item-title class="font-weight-bold title">You have a {{engagement.engagement}} with {{engagement.who}}</v-list-item-title>
+              <v-list-item-subtitle class="font-weight-bold">@{{engagement.when}}</v-list-item-subtitle>
+            </v-list-item-content>
+            <v-list-item-action>
+              <v-icon>mdi-arrow-right</v-icon>
+            </v-list-item-action>
+          </v-list-item>
+        </v-list>
       </v-col>
-      <v-col cols="12" md="8" lg="8" xl="8" class="red">
+
+      <!--This is the Approve Engagement list      -->
+      <v-col cols="12" md="8" class="red">
         <span> test 2 </span>
       </v-col>
     </v-row>
@@ -16,9 +41,74 @@
 
 <script>
 export default {
-
+  data: () => ({
+    test: false,
+    engagements: [
+      {
+        engagement: 'Lunch meeting',
+        who: 'Jonny Rose',
+        when: '11:30am',
+        where: 'Groton Town House',
+        completed: false
+      },
+      {
+        engagement: 'Dinner meeting',
+        who: 'Alexis Rose',
+        when: '4:00pm',
+        where: 'Bdubs',
+        completed: false
+      },
+      {
+        engagement: 'Rose drugs',
+        who: 'David Rose',
+        when: '1:00pm',
+        where: 'Groton Town House',
+        completed: false
+      },
+      {
+        engagement: 'Concer',
+        who: 'Moria Rose',
+        when: '9:00pm',
+        where: 'Syndey Opera House',
+        completed: false
+      },
+      {
+        engagement: 'Lunch meeting',
+        who: 'Jonny Rose',
+        when: '11:30am',
+        where: 'Groton Town House',
+        completed: false
+      },
+      {
+        engagement: 'Dinner meeting',
+        who: 'Alexis Rose',
+        when: '4:00pm',
+        where: 'Bdubs',
+        completed: false
+      },
+      {
+        engagement: 'Rose drugs',
+        who: 'David Rose',
+        when: '1:00pm',
+        where: 'Groton Town House',
+        completed: false
+      },
+      {
+        engagement: 'Concer',
+        who: 'Moria Rose',
+        when: '9:00pm',
+        where: 'Syndey Opera House',
+        completed: false
+      },
+    ]
+  }),
 }
+
 </script>
+
 <style scoped>
 
+.listItem:hover {
+  background:lightgray;
+}
 </style>
