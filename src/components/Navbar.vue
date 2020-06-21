@@ -1,19 +1,19 @@
 <template>
 	<nav>
-		<v-toolbar flat app class="primary">
+		<v-toolbar app class="secondary">
 			<v-app-bar-nav-icon  @click="drawer = !drawer"></v-app-bar-nav-icon>
 			<v-toolbar-title class="text-uppercase">
 				<span class="font-weight-light" style="font-size: x-large"> Visitor</span>
 				<span class="font-weight-bold" style="font-size: x-large">Management</span>
 			</v-toolbar-title>
 			<v-spacer></v-spacer>
-			<v-btn text>
-				<span>New Vistor</span>
-				<v-icon>mdi-account-plus</v-icon>
+			<v-btn class="mr-2 primary">
+				<span class="mr-1 black--text">New Vistor</span>
+				<v-icon color="black">mdi-account-plus</v-icon>
 			</v-btn>
-			<v-btn text >
-				<span>Sign Out</span>
-				<v-icon>mdi-exit-to-app</v-icon>
+			<v-btn class="primary">
+				<span class="mr-1 black--text">Sign Out</span>
+				<v-icon color="black">mdi-exit-to-app</v-icon>
 			</v-btn>
 		</v-toolbar>
 
