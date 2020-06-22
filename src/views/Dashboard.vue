@@ -1,8 +1,12 @@
 <template>
-	<v-container fill-height primary>
-		<v-row style="height: 35%">
-			<v-col cols="12" class="blue"></v-col>	
-			<v-col cols="12" class="green"></v-col>
+	<v-container fluid fill-height background>
+		<v-row class="mx-4" style="height: 100%">
+			<v-col cols="12" class="primary" style="border-radius: 10px 10px 0px 0px; height: auto">
+				<v-text-field></v-text-field>
+			</v-col>
+			<v-col cols="12" class="secondary" style="border-radius: 0px 0px 10px 10px; height: auto">
+
+			</v-col>	
 		</v-row>
 	</v-container>
 </template>
