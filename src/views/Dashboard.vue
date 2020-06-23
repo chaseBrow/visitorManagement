@@ -16,6 +16,19 @@
 						<v-col cols="3">
 							<v-text-field label="Email" outlined color="black"></v-text-field>
 						</v-col>
+						<v-col cols="2">
+							<v-select label="Access" outlined color="black" :items="options"></v-select>
+						</v-col>
+						<v-col cols="1" class="">
+							<v-btn x-large width="100%">
+								<!-- <v-col cols="12">Today's</v-col>
+								<v-col cols="12">Visitors</v-col> -->
+								<span>Today's Visitor</span>
+								<v-icon>mdi-magnify</v-icon>
+							</v-btn>
+						</v-col>
+							
+
 					</v-row>
 				</v-container>
 			</v-form>
@@ -28,24 +41,19 @@
 
 <script>
 export default {
-data: () => ({
-test: false,
-engagements: [
-	{
-engagement: 'Lunch meeting',
-who: 'Jonny Rose',
-when: '11:30am',
-where: 'Groton Town House',
-completed: false
-	},
-]
-}),
+	data: () => ({
+		test: false,
+		options: [
+			'Data Suite 1',
+			'Escort Required',
+			'Contractor',
+		],
+	}),
 }
 
 </script>
 
 <style scoped>
-
 .listItem:hover {
 background:lightgray;
 }
