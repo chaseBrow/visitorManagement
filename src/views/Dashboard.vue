@@ -31,12 +31,45 @@
 
 
 			<v-col cols="12" class="secondary" style="border-radius: 0px 0px 10px 10px; height: auto">
+				<v-toolbar class="primary">
+						<v-col cols="2">
+							First Name
+			            </v-col>
+						<v-col cols="2">
+							Last Name
+			            </v-col>
+						<v-col cols="2">
+                            Company
+			            </v-col>
+						<v-col cols="3">
+                            Email
+			            </v-col>
+						<v-col cols="2">
+                            Access
+			            </v-col>
+					</v-toolbar>
 				<v-list>
 					<v-list-item v-for="person in people" :key="person.email">
-						{{ person.firstName }}
+						<v-col cols="2">
+							{{ person.firstName }}
+			            </v-col>
+						<v-col cols="2">
+							{{ person.lastName }}
+			            </v-col>
+						<v-col cols="2">
+                            {{ person.company }}
+			            </v-col>
+						<v-col cols="3">
+                            {{ person.email }}
+			            </v-col>
+						<v-col cols="2">
+                            {{ person.access }}
+			            </v-col>
 					</v-list-item>
 				</v-list>
 			</v-col>
+
+
 
 
 		</v-row>
@@ -89,6 +122,118 @@ export default {
 					email: "joe.smith@aunalytics.company",
 					access: "Data Suite 1"
 				},
+				{
+					firstName: 'Chase',
+					lastName: "Brown",
+					company: "Aunalytics",
+					email: "CT-Chase.brown@aunalytics.company",
+					access: "Data Suite 1"
+				},
+				{
+					firstName: 'Brandon',
+					lastName: "Harrington",
+					company: "Apple",
+					email: "brandon.harrington@betheluniversity.edu",
+					access: "Contractor"
+				},
+				{
+					firstName: 'Ava',
+					lastName: "Brown",
+					company: "Chickfila",
+					email: "lemayava@outlook.com",
+					access: "Escort Required"
+				},
+				{
+					firstName: 'Joe',
+					lastName: "Smith",
+					company: "Aunalytics",
+					email: "joe.smith@aunalytics.company",
+					access: "Data Suite 1"
+				},
+				{
+					firstName: 'Chase',
+					lastName: "Brown",
+					company: "Aunalytics",
+					email: "CT-Chase.brown@aunalytics.company",
+					access: "Data Suite 1"
+				},
+				{
+					firstName: 'Brandon',
+					lastName: "Harrington",
+					company: "Apple",
+					email: "brandon.harrington@betheluniversity.edu",
+					access: "Contractor"
+				},
+				{
+					firstName: 'Ava',
+					lastName: "Brown",
+					company: "Chickfila",
+					email: "lemayava@outlook.com",
+					access: "Escort Required"
+				},
+				{
+					firstName: 'Joe',
+					lastName: "Smith",
+					company: "Aunalytics",
+					email: "joe.smith@aunalytics.company",
+					access: "Data Suite 1"
+				},
+				{
+					firstName: 'Chase',
+					lastName: "Brown",
+					company: "Aunalytics",
+					email: "CT-Chase.brown@aunalytics.company",
+					access: "Data Suite 1"
+				},
+				{
+					firstName: 'Brandon',
+					lastName: "Harrington",
+					company: "Apple",
+					email: "brandon.harrington@betheluniversity.edu",
+					access: "Contractor"
+				},
+				{
+					firstName: 'Ava',
+					lastName: "Brown",
+					company: "Chickfila",
+					email: "lemayava@outlook.com",
+					access: "Escort Required"
+				},
+				{
+					firstName: 'Joe',
+					lastName: "Smith",
+					company: "Aunalytics",
+					email: "joe.smith@aunalytics.company",
+					access: "Data Suite 1"
+				},
+				{
+					firstName: 'Chase',
+					lastName: "Brown",
+					company: "Aunalytics",
+					email: "CT-Chase.brown@aunalytics.company",
+					access: "Data Suite 1"
+				},
+				{
+					firstName: 'Brandon',
+					lastName: "Harrington",
+					company: "Apple",
+					email: "brandon.harrington@betheluniversity.edu",
+					access: "Contractor"
+				},
+				{
+					firstName: 'Ava',
+					lastName: "Brown",
+					company: "Chickfila",
+					email: "lemayava@outlook.com",
+					access: "Escort Required"
+				},
+				{
+					firstName: 'Joe',
+					lastName: "Smith",
+					company: "Aunalytics",
+					email: "joe.smith@aunalytics.company",
+					access: "Data Suite 1"
+				},
 			]
 		}
 	}
@@ -97,7 +242,14 @@ export default {
 </script>
 
 <style scoped>
-.listItem:hover {
-background:lightgray;
+.v-list-item:hover {
+	background:lightgray;
 }
+
+.v-list {
+  border-radius: 0px;
+  overflow-y: auto;
+  height: 450px;
+}
+
 </style>
