@@ -25,28 +25,73 @@
 								<v-icon class="pl-2">mdi-magnify</v-icon>
 							</v-btn>
 						</v-col>
-							
-
 					</v-row>
 				</v-container>
 			</v-form>
+
+
 			<v-col cols="12" class="secondary" style="border-radius: 0px 0px 10px 10px; height: auto">
-				
-			</v-col>	
+				<v-list>
+					<v-list-item v-for="person in people" :key="person.email">
+						{{ person.firstName }}
+					</v-list-item>
+				</v-list>
+			</v-col>
+
+
 		</v-row>
 	</v-container>
 </template>
 
 <script>
 export default {
-	data: () => ({
-		test: false,
-		options: [
-			'Data Suite 1',
-			'Escort Required',
-			'Contractor',
-		],
-	}),
+	data() {
+		return {
+			test: false,
+			options: [
+				'Data Suite 1',
+				'Escort Required',
+				'Contractor',
+			],
+			person: {
+				firstName: 'Chase',
+				lastName: "Brown",
+				company: "Aunalytics",
+				email: "CT-Chase.brown@aunalytics.company",
+				access: "Data Suite 1"
+			},
+			people: [
+				{
+					firstName: 'Chase',
+					lastName: "Brown",
+					company: "Aunalytics",
+					email: "CT-Chase.brown@aunalytics.company",
+					access: "Data Suite 1"
+				},
+				{
+					firstName: 'Brandon',
+					lastName: "Harrington",
+					company: "Apple",
+					email: "brandon.harrington@betheluniversity.edu",
+					access: "Contractor"
+				},
+				{
+					firstName: 'Ava',
+					lastName: "Brown",
+					company: "Chickfila",
+					email: "lemayava@outlook.com",
+					access: "Escort Required"
+				},
+				{
+					firstName: 'Joe',
+					lastName: "Smith",
+					company: "Aunalytics",
+					email: "joe.smith@aunalytics.company",
+					access: "Data Suite 1"
+				},
+			]
+		}
+	}
 }
 
 </script>
