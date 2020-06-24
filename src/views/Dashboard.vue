@@ -5,10 +5,19 @@
 				<v-container class="align-start">	
 					<v-row class="align-start">
 						<v-col cols="2">
-							<v-text-field  label="First Name" outlined color="black"></v-text-field>
+							<v-text-field  label="First Name" outlined color="black"
+								v-on:input="filter"
+						
+							
+							>
+							</v-text-field>
 						</v-col>
 						<v-col cols="2">
-							<v-text-field  label="Last Name" outlined color="black"></v-text-field>
+							<v-text-field  label="Last Name" outlined color="black"
+							v-on:input="search2"
+
+							>
+							</v-text-field>
 						</v-col>
 						<v-col cols="3">
 							<v-text-field  label="Company" outlined color="black"></v-text-field>
@@ -80,19 +89,18 @@
 export default {
 	data() {
 		return {
-			test: false,
+			search: {
+				firstName: '',
+				lastName: '',
+				company: '',
+				email: '',
+				access: '',
+			},
 			options: [
 				'Data Suite 1',
 				'Escort Required',
 				'Contractor',
 			],
-			person: {
-				firstName: 'Chase',
-				lastName: "Brown",
-				company: "Aunalytics",
-				email: "CT-Chase.brown@aunalytics.company",
-				access: "Data Suite 1"
-			},
 			people: [
 				{
 					firstName: 'Chase',
@@ -236,7 +244,24 @@ export default {
 				},
 			]
 		}
+	},
+	methods: {
+		filter() {
+			console.log("filterFirstName");
+		},
+		search2: function () {
+			console.log("this is a different test");
+		}
 	}
+	// computed: {
+	// 	filterVisitors: function() {
+	// 		return this.people.filter((person) => {
+
+
+	// 			return person.firstName.match(this.search);
+	// 		});
+	// 	}
+	// }
 }
 
 </script>
@@ -244,6 +269,10 @@ export default {
 <style scoped>
 .v-list-item:hover {
 	background:lightgray;
+}
+
+.v-list-item {
+	overflow-wrap: break-word;
 }
 
 .v-list {
