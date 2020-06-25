@@ -5,28 +5,39 @@
 				<v-container class="align-start">	
 					<v-row class="align-start">
 						<v-col cols="2">
-							<v-text-field  label="First Name" outlined color="black"
+							<v-text-field  label="First Name" outlined color="black" 
+								v-model="filterTerms.firstName"
 								v-on:input="filter"
-						
-							
 							>
 							</v-text-field>
 						</v-col>
 						<v-col cols="2">
-							<v-text-field  label="Last Name" outlined color="black"
-							v-on:input="search2"
-
+							<v-text-field  label="Last Name" outlined color="black" 
+								v-model="filterTerms.lastName"
+								v-on:input="filter"
 							>
 							</v-text-field>
 						</v-col>
 						<v-col cols="3">
-							<v-text-field  label="Company" outlined color="black"></v-text-field>
+							<v-text-field  label="Company" outlined color="black"
+								v-model="filterTerms.company"
+								v-on:input="filter"
+							>
+							</v-text-field>
 						</v-col>
 						<v-col cols="3">
-							<v-text-field label="Email" outlined color="black"></v-text-field>
+							<v-text-field label="Email" outlined color="black"
+								v-model="filterTerms.email"
+								v-on:input="filter"
+							>
+							</v-text-field>
 						</v-col>
 						<v-col cols="2">
-							<v-select label="Access" outlined color="black" :items="options"></v-select>
+							<v-select label="Access" outlined color="black" :items="options"
+								v-model="filterTerms.access"
+								v-on:change="filter"
+							>
+							</v-select>
 						</v-col>
 						<v-col cols="2">
 							<v-btn x-large>
@@ -89,7 +100,8 @@
 export default {
 	data() {
 		return {
-			search: {
+			test: "hello",
+			filterTerms: {
 				firstName: '',
 				lastName: '',
 				company: '',
@@ -130,138 +142,17 @@ export default {
 					email: "joe.smith@aunalytics.company",
 					access: "Data Suite 1"
 				},
-				{
-					firstName: 'Chase',
-					lastName: "Brown",
-					company: "Aunalytics",
-					email: "CT-Chase.brown@aunalytics.company",
-					access: "Data Suite 1"
-				},
-				{
-					firstName: 'Brandon',
-					lastName: "Harrington",
-					company: "Apple",
-					email: "brandon.harrington@betheluniversity.edu",
-					access: "Contractor"
-				},
-				{
-					firstName: 'Ava',
-					lastName: "Brown",
-					company: "Chickfila",
-					email: "lemayava@outlook.com",
-					access: "Escort Required"
-				},
-				{
-					firstName: 'Joe',
-					lastName: "Smith",
-					company: "Aunalytics",
-					email: "joe.smith@aunalytics.company",
-					access: "Data Suite 1"
-				},
-				{
-					firstName: 'Chase',
-					lastName: "Brown",
-					company: "Aunalytics",
-					email: "CT-Chase.brown@aunalytics.company",
-					access: "Data Suite 1"
-				},
-				{
-					firstName: 'Brandon',
-					lastName: "Harrington",
-					company: "Apple",
-					email: "brandon.harrington@betheluniversity.edu",
-					access: "Contractor"
-				},
-				{
-					firstName: 'Ava',
-					lastName: "Brown",
-					company: "Chickfila",
-					email: "lemayava@outlook.com",
-					access: "Escort Required"
-				},
-				{
-					firstName: 'Joe',
-					lastName: "Smith",
-					company: "Aunalytics",
-					email: "joe.smith@aunalytics.company",
-					access: "Data Suite 1"
-				},
-				{
-					firstName: 'Chase',
-					lastName: "Brown",
-					company: "Aunalytics",
-					email: "CT-Chase.brown@aunalytics.company",
-					access: "Data Suite 1"
-				},
-				{
-					firstName: 'Brandon',
-					lastName: "Harrington",
-					company: "Apple",
-					email: "brandon.harrington@betheluniversity.edu",
-					access: "Contractor"
-				},
-				{
-					firstName: 'Ava',
-					lastName: "Brown",
-					company: "Chickfila",
-					email: "lemayava@outlook.com",
-					access: "Escort Required"
-				},
-				{
-					firstName: 'Joe',
-					lastName: "Smith",
-					company: "Aunalytics",
-					email: "joe.smith@aunalytics.company",
-					access: "Data Suite 1"
-				},
-				{
-					firstName: 'Chase',
-					lastName: "Brown",
-					company: "Aunalytics",
-					email: "CT-Chase.brown@aunalytics.company",
-					access: "Data Suite 1"
-				},
-				{
-					firstName: 'Brandon',
-					lastName: "Harrington",
-					company: "Apple",
-					email: "brandon.harrington@betheluniversity.edu",
-					access: "Contractor"
-				},
-				{
-					firstName: 'Ava',
-					lastName: "Brown",
-					company: "Chickfila",
-					email: "lemayava@outlook.com",
-					access: "Escort Required"
-				},
-				{
-					firstName: 'Joe',
-					lastName: "Smith",
-					company: "Aunalytics",
-					email: "joe.smith@aunalytics.company",
-					access: "Data Suite 1"
-				},
 			]
 		}
 	},
 	methods: {
-		filter() {
-			console.log("filterFirstName");
+		filter: function () {
+			console.log(this.filterTerms);
 		},
 		search2: function () {
 			console.log("this is a different test");
 		}
 	}
-	// computed: {
-	// 	filterVisitors: function() {
-	// 		return this.people.filter((person) => {
-
-
-	// 			return person.firstName.match(this.search);
-	// 		});
-	// 	}
-	// }
 }
 
 </script>
