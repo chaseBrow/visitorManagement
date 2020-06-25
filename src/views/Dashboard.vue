@@ -113,6 +113,9 @@ export default {
 				'Escort Required',
 				'Contractor',
 			],
+			filteredPeople: [
+				
+			],
 			people: [
 				{
 					firstName: 'Chase',
@@ -147,10 +150,11 @@ export default {
 	},
 	methods: {
 		filter: function () {
-			console.log(this.filterTerms);
+			console.log(this.people.filter(this.filterPeople));
 		},
-		search2: function () {
-			console.log("this is a different test");
+
+		filterPeople: function (person) {
+			return person.firstName.includes(this.filterTerms.firstName);
 		}
 	}
 }
