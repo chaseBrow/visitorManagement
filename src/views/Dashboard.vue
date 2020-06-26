@@ -154,11 +154,11 @@ export default {
 		},
 
 		filterPeople: function (person) {
-			var first = person.firstName.includes(this.filterTerms.firstName);
-			var last = person.lastName.includes(this.filterTerms.lastName);
-			var company = person.company.includes(this.filterTerms.company)
-			var email = person.email.includes(this.filterTerms.email)
-			var access = person.access.includes(this.filterTerms.access)
+			var first = person.firstName.toLowerCase().includes(this.filterTerms.firstName.toLowerCase());
+			var last = person.lastName.toLowerCase().includes(this.filterTerms.lastName.toLowerCase());
+			var company = person.company.toLowerCase().includes(this.filterTerms.company.toLowerCase());
+			var email = person.email.toLowerCase().includes(this.filterTerms.email.toLowerCase());
+			var access = person.access.toLowerCase().includes(this.filterTerms.access.toLowerCase());
 			if (first == true && last == true && company == true && email == true && access == true) {
 				return true;
 			}
