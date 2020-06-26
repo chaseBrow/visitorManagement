@@ -69,7 +69,7 @@
 			            </v-col>
 					</v-toolbar>
 				<v-list>
-					<v-list-item v-for="person in people" :key="person.email">
+					<v-list-item v-for="person in filteredPeople" :key="person.email">
 						<v-col cols="2">
 							{{ person.firstName }}
 			            </v-col>
@@ -150,11 +150,21 @@ export default {
 	},
 	methods: {
 		filter: function () {
-			console.log(this.people.filter(this.filterPeople));
+			this.filteredPeople = this.people.filter(this.filterPeople);
 		},
 
 		filterPeople: function (person) {
-			return person.firstName.includes(this.filterTerms.firstName);
+			var first = person.firstName.includes(this.filterTerms.firstName);
+			var last = person.lastName.includes(this.filterTerms.lastName);
+			var company = person.company.includes(this.filterTerms.company)
+			var email = person.email.includes(this.filterTerms.email)
+			var access = person.access.includes(this.filterTerms.access)
+			if (first == true && last == true && company == true && email == true && access == true) {
+				return true;
+			}
+			else {
+				return false;
+			}
 		}
 	}
 }
