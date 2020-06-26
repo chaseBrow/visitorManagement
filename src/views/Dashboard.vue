@@ -179,7 +179,6 @@ export default {
 .v-list-item {
 	overflow-wrap: break-word;
 }
-
 .v-list {
   border-radius: 0px;
   overflow-y: auto;
