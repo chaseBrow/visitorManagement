@@ -5,19 +5,39 @@
 				<v-container class="align-start">	
 					<v-row class="align-start">
 						<v-col cols="2">
-							<v-text-field  label="First Name" outlined color="black"></v-text-field>
+							<v-text-field  label="First Name" outlined color="black" 
+								v-model="filterTerms.firstName"
+								v-on:input="filter"
+							>
+							</v-text-field>
 						</v-col>
 						<v-col cols="2">
-							<v-text-field  label="Last Name" outlined color="black"></v-text-field>
+							<v-text-field  label="Last Name" outlined color="black" 
+								v-model="filterTerms.lastName"
+								v-on:input="filter"
+							>
+							</v-text-field>
 						</v-col>
 						<v-col cols="3">
-							<v-text-field  label="Company" outlined color="black"></v-text-field>
+							<v-text-field  label="Company" outlined color="black"
+								v-model="filterTerms.company"
+								v-on:input="filter"
+							>
+							</v-text-field>
 						</v-col>
 						<v-col cols="3">
-							<v-text-field label="Email" outlined color="black"></v-text-field>
+							<v-text-field label="Email" outlined color="black"
+								v-model="filterTerms.email"
+								v-on:input="filter"
+							>
+							</v-text-field>
 						</v-col>
 						<v-col cols="2">
-							<v-select label="Access" outlined color="black" :items="options"></v-select>
+							<v-select label="Access" outlined color="black" :items="options"
+								v-model="filterTerms.access"
+								v-on:change="filter"
+							>
+							</v-select>
 						</v-col>
 						<v-col cols="2">
 							<v-btn x-large>
@@ -49,7 +69,7 @@
 			            </v-col>
 					</v-toolbar>
 				<v-list>
-					<v-list-item v-for="person in people" :key="person.email">
+					<v-list-item v-for="person in filteredPeople" :key="person.email">
 						<v-col cols="2">
 							{{ person.firstName }}
 			            </v-col>
@@ -80,132 +100,23 @@
 export default {
 	data() {
 		return {
-			test: false,
+			test: "hello",
+			filterTerms: {
+				firstName: '',
+				lastName: '',
+				company: '',
+				email: '',
+				access: '',
+			},
 			options: [
 				'Data Suite 1',
 				'Escort Required',
 				'Contractor',
 			],
-			person: {
-				firstName: 'Chase',
-				lastName: "Brown",
-				company: "Aunalytics",
-				email: "CT-Chase.brown@aunalytics.company",
-				access: "Data Suite 1"
-			},
+			filteredPeople: [
+				
+			],
 			people: [
-				{
-					firstName: 'Chase',
-					lastName: "Brown",
-					company: "Aunalytics",
-					email: "CT-Chase.brown@aunalytics.company",
-					access: "Data Suite 1"
-				},
-				{
-					firstName: 'Brandon',
-					lastName: "Harrington",
-					company: "Apple",
-					email: "brandon.harrington@betheluniversity.edu",
-					access: "Contractor"
-				},
-				{
-					firstName: 'Ava',
-					lastName: "Brown",
-					company: "Chickfila",
-					email: "lemayava@outlook.com",
-					access: "Escort Required"
-				},
-				{
-					firstName: 'Joe',
-					lastName: "Smith",
-					company: "Aunalytics",
-					email: "joe.smith@aunalytics.company",
-					access: "Data Suite 1"
-				},
-				{
-					firstName: 'Chase',
-					lastName: "Brown",
-					company: "Aunalytics",
-					email: "CT-Chase.brown@aunalytics.company",
-					access: "Data Suite 1"
-				},
-				{
-					firstName: 'Brandon',
-					lastName: "Harrington",
-					company: "Apple",
-					email: "brandon.harrington@betheluniversity.edu",
-					access: "Contractor"
-				},
-				{
-					firstName: 'Ava',
-					lastName: "Brown",
-					company: "Chickfila",
-					email: "lemayava@outlook.com",
-					access: "Escort Required"
-				},
-				{
-					firstName: 'Joe',
-					lastName: "Smith",
-					company: "Aunalytics",
-					email: "joe.smith@aunalytics.company",
-					access: "Data Suite 1"
-				},
-				{
-					firstName: 'Chase',
-					lastName: "Brown",
-					company: "Aunalytics",
-					email: "CT-Chase.brown@aunalytics.company",
-					access: "Data Suite 1"
-				},
-				{
-					firstName: 'Brandon',
-					lastName: "Harrington",
-					company: "Apple",
-					email: "brandon.harrington@betheluniversity.edu",
-					access: "Contractor"
-				},
-				{
-					firstName: 'Ava',
-					lastName: "Brown",
-					company: "Chickfila",
-					email: "lemayava@outlook.com",
-					access: "Escort Required"
-				},
-				{
-					firstName: 'Joe',
-					lastName: "Smith",
-					company: "Aunalytics",
-					email: "joe.smith@aunalytics.company",
-					access: "Data Suite 1"
-				},
-				{
-					firstName: 'Chase',
-					lastName: "Brown",
-					company: "Aunalytics",
-					email: "CT-Chase.brown@aunalytics.company",
-					access: "Data Suite 1"
-				},
-				{
-					firstName: 'Brandon',
-					lastName: "Harrington",
-					company: "Apple",
-					email: "brandon.harrington@betheluniversity.edu",
-					access: "Contractor"
-				},
-				{
-					firstName: 'Ava',
-					lastName: "Brown",
-					company: "Chickfila",
-					email: "lemayava@outlook.com",
-					access: "Escort Required"
-				},
-				{
-					firstName: 'Joe',
-					lastName: "Smith",
-					company: "Aunalytics",
-					email: "joe.smith@aunalytics.company",
-					access: "Data Suite 1"
-				},
 				{
 					firstName: 'Chase',
 					lastName: "Brown",
@@ -236,6 +147,25 @@ export default {
 				},
 			]
 		}
+	},
+	methods: {
+		filter: function () {
+			this.filteredPeople = this.people.filter(this.filterPeople);
+		},
+
+		filterPeople: function (person) {
+			var first = person.firstName.toLowerCase().includes(this.filterTerms.firstName.toLowerCase());
+			var last = person.lastName.toLowerCase().includes(this.filterTerms.lastName.toLowerCase());
+			var company = person.company.toLowerCase().includes(this.filterTerms.company.toLowerCase());
+			var email = person.email.toLowerCase().includes(this.filterTerms.email.toLowerCase());
+			var access = person.access.toLowerCase().includes(this.filterTerms.access.toLowerCase());
+			if (first == true && last == true && company == true && email == true && access == true) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
 	}
 }
 
@@ -244,6 +174,10 @@ export default {
 <style scoped>
 .v-list-item:hover {
 	background:lightgray;
+}
+
+.v-list-item {
+	overflow-wrap: break-word;
 }
 
 .v-list {

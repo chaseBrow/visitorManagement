@@ -35,20 +35,19 @@
 </template>
 
 <script>
-	export default {
-		data() {
-			return {
-				drawer: false,
-				links: [
-					{ icon: 'mdi-view-dashboard', text: 'Dashboard', route: '/' },
-					{ icon: 'mdi-calendar-check', text: 'Calendar', route: '/Calendar' },
-					{ icon: 'mdi-clipboard-text', text: 'Engagements', route: '/Engagements' },
-					{ icon: 'mdi-cog', text: 'Settings', route: '/Settings' },
-				]
-			}
+export default {
+	data() {
+		return {
+			drawer: false,
+			links: [
+				{ icon: 'mdi-view-dashboard', text: 'Dashboard', route: '/' },
+				{ icon: 'mdi-calendar-check', text: 'Calendar', route: '/Calendar' },
+				{ icon: 'mdi-clipboard-text', text: 'Engagements', route: '/Engagements' },
+				{ icon: 'mdi-cog', text: 'Settings', route: '/Settings' },
+			]
 		}
-
 	}
+}
 </script>
 <style scoped>
 
