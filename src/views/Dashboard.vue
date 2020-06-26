@@ -52,39 +52,51 @@
 
 			<v-col cols="12" class="secondary" style="border-radius: 0px 0px 10px 10px; height: auto">
 				<v-toolbar class="primary">
-						<v-col cols="2">
+						<v-col class="listItem" cols="1">
 							First Name
 			            </v-col>
-						<v-col cols="2">
+						<v-col class="listItem" cols="2">
 							Last Name
 			            </v-col>
-						<v-col cols="2">
+						<v-col class="listItem" cols="2">
                             Company
 			            </v-col>
-						<v-col cols="3">
+						<v-col class="listItem" cols="3">
                             Email
 			            </v-col>
-						<v-col cols="2">
+						<v-col class="listItem" cols="2">
                             Access
 			            </v-col>
 					</v-toolbar>
-				<v-list>
+				<v-list dense>
 					<v-list-item v-for="person in filteredPeople" :key="person.email">
-						<v-col cols="2">
+						<v-col class="listItem" cols="1" >
 							{{ person.firstName }}
 			            </v-col>
-						<v-col cols="2">
+						<v-col class="listItem" cols="2">
 							{{ person.lastName }}
 			            </v-col>
-						<v-col cols="2">
+						<v-col class="listItem" cols="2">
                             {{ person.company }}
 			            </v-col>
-						<v-col cols="3">
+						<v-col class="listItem" cols="3">
                             {{ person.email }}
 			            </v-col>
-						<v-col cols="2">
+						<v-col class="listItem" cols="2">
                             {{ person.access }}
 			            </v-col>
+						<v-btn class="mr-6 primary" style="padding: 0 16px 0 6px">
+							<v-icon dense class="pr-1">mdi-plus</v-icon>
+							<span>Visit</span>
+						</v-btn>
+						<v-btn class="primary" >
+							<span>Edit</span>
+							<v-icon dense class="pl-1">mdi-pencil</v-icon>
+						</v-btn>
+
+
+
+						
 					</v-list-item>
 				</v-list>
 			</v-col>
@@ -136,7 +148,7 @@ export default {
 					lastName: "Brown",
 					company: "Chickfila",
 					email: "lemayava@outlook.com",
-					access: "Escort Required"
+					access: "Data Suite 1"
 				},
 				{
 					firstName: 'Joe',
@@ -183,6 +195,9 @@ export default {
   border-radius: 0px;
   overflow-y: auto;
   height: 450px;
+}
+.col.listItem {
+	padding: 0px;
 }
 
 </style>
