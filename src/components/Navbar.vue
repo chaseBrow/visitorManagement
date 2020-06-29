@@ -1,21 +1,22 @@
 <template>
 	<nav>
 		<v-toolbar app class="secondary">
-			<v-app-bar-nav-icon  @click="drawer = !drawer"></v-app-bar-nav-icon>
+			<v-app-bar-nav-icon  v-on:click="drawer = !drawer"></v-app-bar-nav-icon>
 			<v-toolbar-title class="text-uppercase">
 				<span class="font-weight-light" style="font-size: x-large"> Visitor</span>
 				<span class="font-weight-bold" style="font-size: x-large">Management</span>
 			</v-toolbar-title>
 			<v-spacer></v-spacer>
-			<v-btn class="mr-2 primary">
-				<span class="mr-1 black--text">New Vistor</span>
-				<v-icon color="black">mdi-account-plus</v-icon>
-			</v-btn>
+
+			<VisitorInfo>
+			</VisitorInfo>
 			<v-btn class="primary">
 				<span class="mr-1 black--text">Sign Out</span>
 				<v-icon color="black">mdi-exit-to-app</v-icon>
 			</v-btn>
 		</v-toolbar>
+
+
 
 		<v-navigation-drawer  v-model="drawer" class="secondary" temporary app>
 			<v-list>
@@ -35,7 +36,12 @@
 </template>
 
 <script>
+import VisitorInfo from "./VisitorInfo"
+
 export default {
+	components: {
+		VisitorInfo
+	},
 	data() {
 		return {
 			drawer: false,

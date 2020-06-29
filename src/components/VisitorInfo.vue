@@ -1,44 +1,30 @@
 <template>
-    <v-footer
-            color="primary lighten-1"
-            padless
-    >
-        <v-row
-                justify="center"
-                no-gutters
-        >
-            <v-btn
-                    v-for="link in links"
-                    :key="link"
-                    color="white"
-                    text
-                    rounded
-                    class="my-2"
-            >
-                {{ link }}
+    <v-menu>
+        <template v-slot:activator="{ on, attrs }">
+            <v-btn class="mr-2 primary" v-bind="attrs" v-on="on">
+                <span class="mr-1 black--text">New Vistor</span>
+                <v-icon color="black">mdi-account-plus</v-icon>
             </v-btn>
-            <v-col
-                    class="primary lighten-2 py-4 text-center white--text"
-                    cols="12"
-            >
-                {{ new Date().getFullYear() }} — <strong>Chase Brown</strong>
+        </template>
+        <v-row>
+            <v-col cols="12" class="primary">
             </v-col>
         </v-row>
-    </v-footer>
-</template>
 
+
+
+
+
+    </v-menu>
+
+</template>
 <script>
     export default {
-        data: () => ({
-            links: [
-                'Home',
-                'About Us',
-                'Team',
-                'Services',
-                'Blog',
-                'Contact Us',
-            ],
-        }),
+        data() {
+            return {
+
+            }
+        }
     }
 </script>
 
