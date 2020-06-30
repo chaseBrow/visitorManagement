@@ -3,6 +3,10 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import vuetify from './plugins/vuetify';
+import Parse from 'parse';
+
+Parse.initialize("visitorManagement");
+Parse.serverURL = "https://visitor-management-parse.herokuapp.com/parse";
 
 Vue.config.productionTip = false;
 

@@ -33,7 +33,7 @@
 							</v-text-field>
 						</v-col>
 						<v-col cols="2">
-							<v-select label="Access" outlined color="black" :items="options"
+							 <v-select label="Access" outlined color="black" :items="options"
 								v-model="filterTerms.access"
 								v-on:change="filter"
 							>
@@ -177,7 +177,7 @@ export default {
 			else {
 				return false;
 			}
-		}
+		},
 	}
 }
 
