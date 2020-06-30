@@ -20,8 +20,8 @@
 
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn v-on:click="cancel" text>Clear</v-btn>
-                <v-btn v-on:click="save" color="primary">Save</v-btn>
+                <v-btn v-on:click="clear" text>Clear</v-btn>
+                <v-btn v-on:click="saveParse" color="primary">Save</v-btn>
             </v-card-actions>
 
         </v-card>
@@ -35,43 +35,50 @@
 
 </template>
 <script>
-    export default {
-        data() {
-            return {
-                options: [
-				    'Data Suite 1',
-				    'Escort Required',
-				    'Contractor',
-                ],
-                firstName: "",
-                lastName: "",
-                company: "",
-                email: "",
-                access: "",
-                menu: false,
+import Parse from 'parse'
+export default {
+    data() {
+        return {
+            options: [
+                'Data Suite 1',
+                'Escort Required',
+                'Contractor',
+            ],
+            firstName: "",
+            lastName: "",
+            company: "",
+            email: "",
+            access: "",
+            menu: false,
 
-            }
+        }
+    },
+    methods: {
+        clear: function () {
+            this.firstName = "";
+            this.lastName = "";
+            this.company = "";
+            this.email = "";
+            this.access = "";
         },
-        methods: {
-            cancel: function () {
-                this.firstName = "";
-                this.lastName = "";
-                this.company = "";
-                this.email = "";
-                this.access = "";
-            },
-            save: function () {
-                var person = {
-                    first: this.firstName,
-                    last: this.lastName,
-                    company: this.company,
-                    email: this.email,
-                    access: this. access
-                }
-                this.people.push(person)
-            }
+        saveParse: function () {
+            let People = Parse.Object.extend("Visitor");
+            let person = new People();
+            person.set("firstName", this.firstName);
+            person.set("lastName", this.lastName);
+            person.set("company", this.company);
+            person.set("email", this.email);
+            person.set("access", this.access);
+            person.save().then((person) => {
+                console.log('New object created with objectId: ' + person.id);
+            }, (error) => {
+                console.log('Failed to create new object, with error code: ' + error.message);
+            });
+            this.clear();
+            this.menu = !this.menu;
         }
     }
+}
 </script>
 
 <style scoped>
