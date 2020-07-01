@@ -62,13 +62,17 @@ export default {
             this.access = "";
         },
         saveParse: function () {
-            let People = Parse.Object.extend("Visitor");
-            let person = new People();
+            let Visitor = Parse.Object.extend("Visitor");
+
+            let person = new Visitor();
+
             person.set("firstName", this.firstName);
             person.set("lastName", this.lastName);
             person.set("company", this.company);
             person.set("email", this.email);
             person.set("access", this.access);
+
+            
             person.save().then((person) => {
                 console.log('New object created with objectId: ' + person.id);
             }, (error) => {

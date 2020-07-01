@@ -109,10 +109,10 @@
 </template>
 
 <script>
+import Parse from "parse"
 export default {
 	data() {
 		return {
-			test: "hello",
 			filterTerms: {
 				firstName: '',
 				lastName: '',
@@ -162,22 +162,34 @@ export default {
 	},
 	methods: {
 		filter: function () {
-			this.filteredPeople = this.people.filter(this.filterPeople);
+			let Visitors = Parse.Object.extend("Visitor");
+			let queryVisitor = new Parse.Query(Visitors);
+			queryVisitor.get().then((person) => {
+				console.log(person);
+				
+			},
+			(error) => {
+				console.log("No person was retrieved" + error);
+			});
+			
+			// this.filteredPeople = visitors.filter(this.filterPeople);
 		},
 
-		filterPeople: function (person) {
-			var first = person.firstName.toLowerCase().includes(this.filterTerms.firstName.toLowerCase());
-			var last = person.lastName.toLowerCase().includes(this.filterTerms.lastName.toLowerCase());
-			var company = person.company.toLowerCase().includes(this.filterTerms.company.toLowerCase());
-			var email = person.email.toLowerCase().includes(this.filterTerms.email.toLowerCase());
-			var access = person.access.toLowerCase().includes(this.filterTerms.access.toLowerCase());
-			if (first == true && last == true && company == true && email == true && access == true) {
-				return true;
-			}
-			else {
-				return false;
-			}
-		},
+		// filterPeople: function (visitor) {
+		// 	// let vistor = Parse.Object.extend("Vistor");
+
+		// 	let first = visitor.firstName.toLowerCase().includes(this.filterTerms.firstName.toLowerCase());
+		// 	let last = visitor.lastName.toLowerCase().includes(this.filterTerms.lastName.toLowerCase());
+		// 	let company = visitor.company.toLowerCase().includes(this.filterTerms.company.toLowerCase());
+		// 	let email = vistior.email.toLowerCase().includes(this.filterTerms.email.toLowerCase());
+		// 	let access = vistior.access.toLowerCase().includes(this.filterTerms.access.toLowerCase());
+		// 	if (first == true && last == true && company == true && email == true && access == true) {
+		// 		return true;
+		// 	}
+		// 	else {
+		// 		return false;
+		// 	}
+		// },
 	}
 }
 
