@@ -122,9 +122,7 @@ export default {
 				email: '',
 				access: '',
 			},
-			options: [
-				
-			],
+			options: [],
 			filteredPeople: [
 				
 			],
@@ -135,12 +133,9 @@ export default {
 			const Options = Parse.Object.extend("Client");
 			const queryOptions = new Parse.Query(Options);
 
-
-			
 			queryOptions.equalTo("objectId", this.clientID);
-			let client = await queryOptions.first();
+			const client = await queryOptions.first();
 			this.options = client.get("options");
-
 		},
 
 		filter: function () {
@@ -156,9 +151,6 @@ export default {
 			(error) =>	{ 
 				console.log("there was an error:" + error.message)
 			});
-
-			
-			
 		},
 
 		filterPeople: function (visitor) {
