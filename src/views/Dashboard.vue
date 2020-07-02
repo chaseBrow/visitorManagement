@@ -35,6 +35,7 @@
 						<v-col cols="2">
 							 <v-select label="Access" outlined color="black" :items="options"
 								v-model="filterTerms.access"
+								v-on:focus="getOptions"
 								v-on:change="filter"
 							>
 							</v-select>
@@ -71,19 +72,19 @@
 				<v-list dense>
 					<v-list-item v-for="person in filteredPeople" :key="person.email">
 						<v-col class="listItem" cols="1" >
-							{{ person.firstName }}
+							{{ person.get("firstName") }}
 			            </v-col>
 						<v-col class="listItem" cols="2">
-							{{ person.lastName }}
+							{{ person.get("lastName") }}
 			            </v-col>
 						<v-col class="listItem" cols="2">
-                            {{ person.company }}
+                            {{ person.get("company") }}
 			            </v-col>
 						<v-col class="listItem" cols="3">
-                            {{ person.email }}
+                            {{ person.get("email") }}
 			            </v-col>
 						<v-col class="listItem" cols="2">
-                            {{ person.access }}
+                            {{ person.get("access") }}
 			            </v-col>
 						<v-btn class="mr-6 primary" style="padding: 0 16px 0 6px">
 							<v-icon dense class="pr-1">mdi-plus</v-icon>
@@ -109,10 +110,11 @@
 </template>
 
 <script>
+import Parse from "parse"
 export default {
 	data() {
 		return {
-			test: "hello",
+			clientID: "upZS6tm7Pw",
 			filterTerms: {
 				firstName: '',
 				lastName: '',
@@ -120,57 +122,44 @@ export default {
 				email: '',
 				access: '',
 			},
-			options: [
-				'Data Suite 1',
-				'Escort Required',
-				'Contractor',
-			],
+			options: [],
 			filteredPeople: [
 				
 			],
-			people: [
-				{
-					firstName: 'Chase',
-					lastName: "Brown",
-					company: "Aunalytics",
-					email: "CT-Chase.brown@aunalytics.company",
-					access: "Data Suite 1"
-				},
-				{
-					firstName: 'Brandon',
-					lastName: "Harrington",
-					company: "Apple",
-					email: "brandon.harrington@betheluniversity.edu",
-					access: "Contractor"
-				},
-				{
-					firstName: 'Ava',
-					lastName: "Brown",
-					company: "Chickfila",
-					email: "lemayava@outlook.com",
-					access: "Data Suite 1"
-				},
-				{
-					firstName: 'Joe',
-					lastName: "Smith",
-					company: "Aunalytics",
-					email: "joe.smith@aunalytics.company",
-					access: "Data Suite 1"
-				},
-			]
 		}
 	},
 	methods: {
-		filter: function () {
-			this.filteredPeople = this.people.filter(this.filterPeople);
+		getOptions: async function () {
+			const Options = Parse.Object.extend("Client");
+			const queryOptions = new Parse.Query(Options);
+
+			queryOptions.equalTo("objectId", this.clientID);
+			const client = await queryOptions.first();
+			this.options = client.get("options");
 		},
 
-		filterPeople: function (person) {
-			var first = person.firstName.toLowerCase().includes(this.filterTerms.firstName.toLowerCase());
-			var last = person.lastName.toLowerCase().includes(this.filterTerms.lastName.toLowerCase());
-			var company = person.company.toLowerCase().includes(this.filterTerms.company.toLowerCase());
-			var email = person.email.toLowerCase().includes(this.filterTerms.email.toLowerCase());
-			var access = person.access.toLowerCase().includes(this.filterTerms.access.toLowerCase());
+		filter: function () {
+			const Visitors = Parse.Object.extend("Visitor");
+			const queryVisitor = new Parse.Query(Visitors);
+
+			// console.log(this.clientID);
+			// queryVisitor.equalTo("client", this.clientID);
+			queryVisitor.find().then((visitors) => {
+				console.log(visitors);
+				this.filteredPeople = visitors.filter(this.filterPeople);
+			},
+			(error) =>	{ 
+				console.log("there was an error:" + error.message)
+			});
+		},
+
+		filterPeople: function (visitor) {
+			console.log(visitor);
+			let first = visitor.get("firstName").toLowerCase().includes(this.filterTerms.firstName.toLowerCase());
+			let last = visitor.get("lastName").toLowerCase().includes(this.filterTerms.lastName.toLowerCase());
+			let company = visitor.get("company").toLowerCase().includes(this.filterTerms.company.toLowerCase());
+			let email = visitor.get("email").toLowerCase().includes(this.filterTerms.email.toLowerCase());
+			let access = visitor.get("access").toLowerCase().includes(this.filterTerms.access.toLowerCase());
 			if (first == true && last == true && company == true && email == true && access == true) {
 				return true;
 			}
