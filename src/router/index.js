@@ -14,19 +14,14 @@ const routes = [
     component: Dashboard
   },
   {
-    path: "/Calendar",
-    name: "calendar",
-    component: Calendar
+    path: "/Account",
+    name: "account",
+    component: Account
   },
   {
-    path: "/Settings",
-    name: "settings",
-    component: Settings
-  },
-  {
-    path: "/Engagements",
-    name: "engagements",
-    component: Engagements
+    path: "/VisitHistory",
+    name: "visitHistory",
+    component: VisitHistory
   }
 ];
 

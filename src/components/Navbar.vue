@@ -52,8 +52,8 @@ export default {
 			drawer: false,
 			links: [
 				{ icon: 'mdi-view-dashboard', text: 'Dashboard', route: '/' },
-				{ icon: 'mdi-calendar-check', text: 'Calendar', route: '/Calendar' },
-				{ icon: 'mdi-clipboard-text', text: 'Engagements', route: '/Engagements' },
+				{ icon: 'mdi-calendar-check', text: 'Visit History', route: '/RecordHistory' },
+				{ icon: 'mdi-clipboard-text', text: 'Account Settings', route: '/Account' },
 				{ icon: 'mdi-cog', text: 'Settings', route: '/Settings' },
 			]
 		}
