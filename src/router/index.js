@@ -1,9 +1,8 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Dashboard from "../views/Dashboard.vue";
-import Calendar from "../views/Calendar.vue";
-import Engagements from "../views/Engagements";
-import Settings from "../views/Settings";
+import Account from "../views/Account.vue";
+import VisitHistory from "../views/VisitHistory.vue";
 
 Vue.use(VueRouter);
 
