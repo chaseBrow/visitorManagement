@@ -145,7 +145,6 @@ export default {
 			// console.log(this.clientID);
 			// queryVisitor.equalTo("client", this.clientID);
 			queryVisitor.find().then((visitors) => {
-				console.log(visitors);
 				this.filteredPeople = visitors.filter(this.filterPeople);
 			},
 			(error) =>	{ 
@@ -154,7 +153,6 @@ export default {
 		},
 
 		filterPeople: function (visitor) {
-			console.log(visitor);
 			let first = visitor.get("firstName").toLowerCase().includes(this.filterTerms.firstName.toLowerCase());
 			let last = visitor.get("lastName").toLowerCase().includes(this.filterTerms.lastName.toLowerCase());
 			let company = visitor.get("company").toLowerCase().includes(this.filterTerms.company.toLowerCase());
