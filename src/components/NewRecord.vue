@@ -7,36 +7,38 @@
             </v-btn>
         </template>
         <v-form>
-            <v-card>
+            <v-card class="pa-4">
                 <v-card-title>
                     Visit Log
                 </v-card-title>
-                    <v-text-field
-                     label="Visit"
-                     value="12:30:00"
-                     type="time"
-                     suffix="EST"
-                    ></v-text-field>
-                    
-                    <v-text-field
-                    label="Visit"
+                <v-text-field
+                    :disabled="arrive"
+                    label="Arrival"
                     value="12:30:00"
                     type="time"
-                    suffix="EST"
-                    ></v-text-field>
+                ></v-text-field>
+                
+                <v-text-field
+                    :disabled="depart"
+                    label="Departure"
+                    value="12:30:00"
+                    type="time"
+                ></v-text-field>
 
-                    <v-select
+                <v-select
+                    v-model="select"
+                    placeholder="Absent"
                     label="Status"
                     :items="options"
-
-                    ></v-select>
+                    v-on:change="visitStatus"
+                ></v-select>
 
 
 
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn v-on:click="clear" text>Clear</v-btn>
-                    <v-btn v-on:click="saveParse" color="primary">Save</v-btn>
+                    <v-btn v-on:click="cancel" text>Cancel</v-btn>
+                    <v-btn v-on:click="saveRecord" color="primary">Save</v-btn>
                 </v-card-actions>
 
             </v-card>
@@ -51,11 +53,31 @@ export default {
                 "Arrived",
                 "Departed",
                 "Expected",
-            ]
+            ],
+            arrive: true,
+            depart: true,
+            select: "",
+            dialog: false
         }
     },
     methods: {
-
+        visitStatus: function() {
+            console.log(this.select);
+            if (this.select == "Arrived" || this.select == "Expected") {
+                this.arrive = false;
+            }
+            if (this.select == "Departed") {
+                this.depart = false;
+            }
+        },
+        cancel: function() {
+            this.dialog = false;
+            console.log("clear");
+        },
+        saveRecord: function() {
+            console.log("save");
+        }
+        
     }
 }
 </script>

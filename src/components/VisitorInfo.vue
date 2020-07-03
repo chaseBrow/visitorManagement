@@ -24,7 +24,7 @@
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn v-on:click="clear" text>Clear</v-btn>
-                    <v-btn v-on:click="saveParse" color="primary">Save</v-btn>
+                    <v-btn v-on:click="saveVisitor" color="primary">Save</v-btn>
                 </v-card-actions>
             </v-card>
         </v-form>
@@ -63,7 +63,7 @@ export default {
             this.email = "";
             this.access = "";
         },
-        saveParse: function () {
+        saveVisitor: function () {
             const Visitor = Parse.Object.extend("Visitor");
 
             let person = new Visitor();
