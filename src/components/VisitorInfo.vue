@@ -6,35 +6,29 @@
                 <v-icon color="black">mdi-account-plus</v-icon>
             </v-btn>
         </template>
-        <v-card class="secondary pa-4"> 
-            <v-text-field  label="First Name" outlined color="black" v-model="firstName">
-            </v-text-field>
-            <v-text-field  label="Last Name" outlined color="black" v-model="lastName">
-            </v-text-field>    
-            <v-text-field  label="Company" outlined color="black" v-model="company"> 
-            </v-text-field> 
-            <v-text-field  label="Email" outlined color="black" v-model="email">  
-            </v-text-field>
-            <v-select label="Access" outlined color="black" :items="options" v-model="access" 
-                v-on:focus="getOptions"
-            >
-            </v-select>
+        <v-form>
+            <v-card class="secondary pa-4"> 
+                <v-text-field  label="First Name" outlined color="black" v-model="firstName">
+                </v-text-field>
+                <v-text-field  label="Last Name" outlined color="black" v-model="lastName">
+                </v-text-field>    
+                <v-text-field  label="Company" outlined color="black" v-model="company"> 
+                </v-text-field> 
+                <v-text-field  label="Email" outlined color="black" v-model="email">  
+                </v-text-field>
+                <v-select label="Access" outlined color="black" :items="options" v-model="access" 
+                    v-on:focus="getOptions"
+                >
+                </v-select>
 
-            <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn v-on:click="clear" text>Clear</v-btn>
-                <v-btn v-on:click="saveParse" color="primary">Save</v-btn>
-            </v-card-actions>
-
-        </v-card>
-
-
-
-
-
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn v-on:click="clear" text>Clear</v-btn>
+                    <v-btn v-on:click="saveParse" color="primary">Save</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-form>
     </v-menu>
-    
-
 </template>
 <script>
 import Parse from 'parse'
