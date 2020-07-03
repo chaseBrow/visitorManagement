@@ -8,8 +8,13 @@
 			</v-toolbar-title>
 			<v-spacer></v-spacer>
 
+
+
 			<VisitorInfo>
 			</VisitorInfo>
+
+
+
 			<v-btn class="primary">
 				<span class="mr-1 black--text">Sign Out</span>
 				<v-icon color="black">mdi-exit-to-app</v-icon>

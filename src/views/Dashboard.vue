@@ -86,34 +86,28 @@
 						<v-col class="listItem" cols="2">
                             {{ person.get("access") }}
 			            </v-col>
-						<v-btn class="mr-6 primary" style="padding: 0 16px 0 6px">
-							<v-icon dense class="pr-1">mdi-plus</v-icon>
-							<span>Visit</span>
-						</v-btn>
+
+						<NewRecord>
+						</NewRecord>
 						<v-btn class="primary" >
 							<span>Edit</span>
 							<v-icon dense class="pl-1">mdi-pencil</v-icon>
 						</v-btn>
-
-
-
-						
 					</v-list-item>
 				</v-list>
 			</v-col>
-
-
-
-
 		</v-row>
+
 	</v-container>
 </template>
 
 <script>
 import Parse from "parse"
+import NewRecord from "../components/NewRecord"
 export default {
 	data() {
 		return {
+			dialog: false,
 			clientID: "upZS6tm7Pw",
 			filterTerms: {
 				firstName: '',
@@ -165,6 +159,9 @@ export default {
 				return false;
 			}
 		},
+	},
+	components: {
+		NewRecord
 	}
 }
 
