@@ -72,19 +72,29 @@
 				<v-list dense>
 					<v-list-item v-for="person in filteredPeople" :key="person.email">
 						<v-col class="listItem" cols="1" >
-							{{ person.get("firstName") }}
+							<v-text-field rounded class="test" :value="person.get('firstName')" :disabled="edit">
+								
+							</v-text-field>
 			            </v-col>
 						<v-col class="listItem" cols="2">
-							{{ person.get("lastName") }}
+							<v-text-field rounded class="test" :value="person.get('lastName')" :disabled="edit">
+								
+							</v-text-field>
 			            </v-col>
 						<v-col class="listItem" cols="2">
-                            {{ person.get("company") }}
+                            <v-text-field rounded class="test" :value="person.get('company')" :disabled="edit">
+								
+							</v-text-field>
 			            </v-col>
 						<v-col class="listItem" cols="3">
-                            {{ person.get("email") }}
+                            <v-text-field rounded class="test" :value="person.get('email')" :disabled="edit">
+								
+							</v-text-field>
 			            </v-col>
 						<v-col class="listItem" cols="2">
-                            {{ person.get("access") }}
+                            <v-text-field rounded class="test" :value="person.get('access')" :disabled="edit">
+								
+							</v-text-field>
 			            </v-col>
 
 						<NewRecord>
@@ -107,6 +117,7 @@ import NewRecord from "../components/NewRecord"
 export default {
 	data() {
 		return {
+			edit: true,
 			dialog: false,
 			clientID: "upZS6tm7Pw",
 			filterTerms: {
@@ -183,5 +194,6 @@ export default {
 .col.listItem {
 	padding: 0px;
 }
+
 
 </style>
