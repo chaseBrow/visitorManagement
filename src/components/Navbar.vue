@@ -15,7 +15,7 @@
 
 
 
-			<v-btn class="primary">
+			<v-btn class="primary" v-on:click="router">
 				<span class="mr-1 black--text">Sign Out</span>
 				<v-icon color="black">mdi-exit-to-app</v-icon>
 			</v-btn>
@@ -56,6 +56,11 @@ export default {
 				{ icon: 'mdi-cog', text: 'Account Settings', route: '/Account' },
 			]
 		}
+	},
+	methods: {
+		router: function () {
+			console.log(this.$route);
+		},
 	}
 }
 </script>
