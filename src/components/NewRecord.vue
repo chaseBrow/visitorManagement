@@ -77,7 +77,6 @@ export default {
         saveRecord: function() {
             console.log("save");
         }
-        
     }
 }
 </script>
