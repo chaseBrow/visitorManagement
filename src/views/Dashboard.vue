@@ -72,34 +72,34 @@
 				<v-list dense>
 					<v-list-item v-for="person in filteredPeople" :key="person.email">
 						<v-col class="listItem" cols="1" >
-							<v-text-field rounded class="test" :value="person.get('firstName')" :disabled="edit">
+							<v-text-field rounded :value="person.get('firstName')" :disabled="true" :id="person.get('email')">
 								
 							</v-text-field>
 			            </v-col>
 						<v-col class="listItem" cols="2">
-							<v-text-field rounded class="test" :value="person.get('lastName')" :disabled="edit">
+							<v-text-field rounded :value="person.get('lastName')" :disabled="true" :id="person.get('email')">
 								
 							</v-text-field>
 			            </v-col>
 						<v-col class="listItem" cols="2">
-                            <v-text-field rounded class="test" :value="person.get('company')" :disabled="edit">
+                            <v-text-field rounded :value="person.get('company')" :disabled="true" :id="person.get('email')">
 								
 							</v-text-field>
 			            </v-col>
 						<v-col class="listItem" cols="3">
-                            <v-text-field rounded class="test" :value="person.get('email')" :disabled="edit">
+                            <v-text-field rounded :value="person.get('email')" :disabled="true" :id="person.get('email')">
 								
 							</v-text-field>
 			            </v-col>
 						<v-col class="listItem" cols="2">
-                            <v-text-field rounded class="test" :value="person.get('access')" :disabled="edit">
+                            <v-text-field rounded :value="person.get('access')" :disabled="true" :id="person.get('email')">
 								
 							</v-text-field>
 			            </v-col>
 
 						<NewRecord>
 						</NewRecord>
-						<v-btn class="primary" >
+						<v-btn class="primary" v-on:click="editVisitor(person)">
 							<span>Edit</span>
 							<v-icon dense class="pl-1">mdi-pencil</v-icon>
 						</v-btn>
@@ -117,7 +117,6 @@ import NewRecord from "../components/NewRecord"
 export default {
 	data() {
 		return {
-			edit: true,
 			dialog: false,
 			clientID: "upZS6tm7Pw",
 			filterTerms: {
@@ -134,6 +133,10 @@ export default {
 		}
 	},
 	methods: {
+		editVisitor: function (person) {
+			console.log(person);
+			document.getElementById(person.get("email")).removeAttribute("disabled");
+		},
 		getOptions: async function () {
 			const Options = Parse.Object.extend("Client");
 			const queryOptions = new Parse.Query(Options);
