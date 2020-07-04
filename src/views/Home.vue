@@ -1,13 +1,13 @@
 <template>
-    <v-dialog v-model="dialog" width="300px" class="primary">
-        
-    </v-dialog>
+    <v-card>
+        Hello Home Page
+    </v-card>
 </template>
 <script>
 export default {
     data() {
         return {
-            dialog: true
+           
         }
     },
     methods: {

@@ -51,7 +51,7 @@ export default {
 		return {
 			drawer: false,
 			links: [
-				{ icon: 'mdi-view-dashboard', text: 'Dashboard', route: '/' },
+				{ icon: 'mdi-view-dashboard', text: 'Dashboard', route: '/Dashboard' },
 				{ icon: 'mdi-folder-clock-outline', text: 'Visit History', route: '/RecordHistory' },
 				{ icon: 'mdi-cog', text: 'Account Settings', route: '/Account' },
 			]
