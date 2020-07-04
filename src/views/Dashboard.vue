@@ -72,27 +72,27 @@
 				<v-list dense>
 					<v-list-item v-for="person in filteredPeople" :key="person.email">
 						<v-col class="listItem" cols="1" >
-							<v-text-field rounded :value="person.get('firstName')" :disabled="true" :id="person.get('email')">
+							<v-text-field rounded :value="person.get('firstName')" readonly :id="person.get('email') + person.get('firstName')">
 								
 							</v-text-field>
 			            </v-col>
 						<v-col class="listItem" cols="2">
-							<v-text-field rounded :value="person.get('lastName')" :disabled="true" :id="person.get('email')">
+							<v-text-field rounded :value="person.get('lastName')" readonly :id="person.get('email') + person.get('lastName')">
 								
 							</v-text-field>
 			            </v-col>
 						<v-col class="listItem" cols="2">
-                            <v-text-field rounded :value="person.get('company')" :disabled="true" :id="person.get('email')">
+                            <v-text-field rounded :value="person.get('company')" readonly :id="person.get('email') + person.get('company')">
 								
 							</v-text-field>
 			            </v-col>
 						<v-col class="listItem" cols="3">
-                            <v-text-field rounded :value="person.get('email')" :disabled="true" :id="person.get('email')">
+                            <v-text-field rounded :value="person.get('email')" readonly :id="person.get('email')">
 								
 							</v-text-field>
 			            </v-col>
 						<v-col class="listItem" cols="2">
-                            <v-text-field rounded :value="person.get('access')" :disabled="true" :id="person.get('email')">
+                            <v-text-field rounded :value="person.get('access')" readonly :id="person.get('email') + person.get('access')">
 								
 							</v-text-field>
 			            </v-col>
@@ -134,8 +134,14 @@ export default {
 	},
 	methods: {
 		editVisitor: function (person) {
-			console.log(person);
-			document.getElementById(person.get("email")).removeAttribute("disabled");
+			let firstName = document.getElementById(person.get("email") + person.get("firstName"));
+			firstName.removeAttribute("readonly");
+			firstName.style.outline = "thin solid black";
+			
+			document.getElementById(person.get("email") + person.get("lastName")).removeAttribute("readonly");
+			document.getElementById(person.get("email") + person.get("company")).removeAttribute("readonly");
+			document.getElementById(person.get("email")).removeAttribute("readonly");
+			document.getElementById(person.get("email") + person.get('access')).removeAttribute("readonly");
 		},
 		getOptions: async function () {
 			const Options = Parse.Object.extend("Client");
