@@ -75,12 +75,12 @@
 							<v-text-field class="listItem" rounded :value="person.get('firstName')" readonly :id="person.get('email') + person.get('firstName')">
 								
 							</v-text-field>
-			            </v-col>
+						</v-col>
 						<v-col class="listItem" cols="2">
 							<v-text-field class="listItem" rounded :value="person.get('lastName')" readonly :id="person.get('email') + person.get('lastName')">
 								
 							</v-text-field>
-			            </v-col>
+						</v-col>
 						<v-col class="listItem" cols="2">
                             <v-text-field class="listItem" rounded :value="person.get('company')" readonly :id="person.get('email') + person.get('company')">
 								
@@ -134,14 +134,30 @@ export default {
 	},
 	methods: {
 		editVisitor: function (person) {
-			// let firstName = document.getElementById(person.get("email") + person.get("firstName"));
-			// firstName.removeAttribute("readonly");
-			// firstName.style.outline = "thin solid black";
-			console.log(person)
-			// document.getElementById(person.get("email") + person.get("lastName")).removeAttribute("readonly");
-			// document.getElementById(person.get("email") + person.get("company")).removeAttribute("readonly");
-			// document.getElementById(person.get("email")).removeAttribute("readonly");
-			// document.getElementById(person.get("email") + person.get('access')).removeAttribute("readonly");
+			let firstName = document.getElementById(person.get("email") + person.get("firstName"));
+			firstName.removeAttribute("readonly");
+			firstName.style.outline = "thin solid black";
+			firstName.style.paddingLeft = "2px";
+
+			let lastName = document.getElementById(person.get("email") + person.get("lastName"));
+			lastName.removeAttribute("readonly");
+			lastName.style.outline = "thin solid black";
+			lastName.style.paddingLeft = "2px";
+
+			let company = document.getElementById(person.get("email") + person.get("company"));
+			company.removeAttribute("readonly");
+			company.style.outline = "thin solid black";
+			company.style.paddingLeft = "2px";
+
+			let email = document.getElementById(person.get("email"));
+			email.removeAttribute("readonly");
+			email.style.outline = "thin solid black";
+			email.style.paddingLeft = "2px";
+
+			let access = document.getElementById(person.get("email") + person.get("access"));
+			access.removeAttribute("readonly");
+			access.style.outline = "thin solid black";
+			access.style.paddingLeft = "2px";
 		},
 		getOptions: async function () {
 			const Options = Parse.Object.extend("Client");
@@ -201,13 +217,12 @@ export default {
   overflow-y: auto;
   height: 450px;
 }
-.col.listItem {
-	padding: 0px;
-	margin: 0;
-}
+
 .v-text-field.listItem {
-	padding: 0px;
+	padding: 0;
 	margin: 0;
+	position: relative;
+	top: 12px;
 }
 
 </style>
