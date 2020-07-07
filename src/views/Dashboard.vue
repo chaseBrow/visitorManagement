@@ -53,7 +53,7 @@
 
 			<v-col cols="12" class="secondary" style="border-radius: 0px 0px 10px 10px; height: auto">
 				<v-toolbar class="primary">
-						<v-col class="listItem" cols="1">
+						<v-col class="listItem" cols="2">
 							First Name
 			            </v-col>
 						<v-col class="listItem" cols="2">
@@ -71,28 +71,28 @@
 					</v-toolbar>
 				<v-list dense>
 					<v-list-item v-for="person in filteredPeople" :key="person.email">
-						<v-col class="listItem" cols="1" >
-							<v-text-field rounded :value="person.get('firstName')" readonly :id="person.get('email') + person.get('firstName')">
+						<v-col class="listItem" cols="2">
+							<v-text-field class="listItem" rounded :value="person.get('firstName')" readonly :id="person.get('email') + person.get('firstName')">
 								
 							</v-text-field>
 			            </v-col>
 						<v-col class="listItem" cols="2">
-							<v-text-field rounded :value="person.get('lastName')" readonly :id="person.get('email') + person.get('lastName')">
+							<v-text-field class="listItem" rounded :value="person.get('lastName')" readonly :id="person.get('email') + person.get('lastName')">
 								
 							</v-text-field>
 			            </v-col>
 						<v-col class="listItem" cols="2">
-                            <v-text-field rounded :value="person.get('company')" readonly :id="person.get('email') + person.get('company')">
+                            <v-text-field class="listItem" rounded :value="person.get('company')" readonly :id="person.get('email') + person.get('company')">
 								
 							</v-text-field>
 			            </v-col>
 						<v-col class="listItem" cols="3">
-                            <v-text-field rounded :value="person.get('email')" readonly :id="person.get('email')">
+                            <v-text-field class="listItem" rounded :value="person.get('email')" readonly :id="person.get('email')">
 								
 							</v-text-field>
 			            </v-col>
 						<v-col class="listItem" cols="2">
-                            <v-text-field rounded :value="person.get('access')" readonly :id="person.get('email') + person.get('access')">
+                            <v-text-field class="listItem" rounded :value="person.get('access')" readonly :id="person.get('email') + person.get('access')">
 								
 							</v-text-field>
 			            </v-col>
@@ -134,14 +134,14 @@ export default {
 	},
 	methods: {
 		editVisitor: function (person) {
-			let firstName = document.getElementById(person.get("email") + person.get("firstName"));
-			firstName.removeAttribute("readonly");
-			firstName.style.outline = "thin solid black";
-			
-			document.getElementById(person.get("email") + person.get("lastName")).removeAttribute("readonly");
-			document.getElementById(person.get("email") + person.get("company")).removeAttribute("readonly");
-			document.getElementById(person.get("email")).removeAttribute("readonly");
-			document.getElementById(person.get("email") + person.get('access')).removeAttribute("readonly");
+			// let firstName = document.getElementById(person.get("email") + person.get("firstName"));
+			// firstName.removeAttribute("readonly");
+			// firstName.style.outline = "thin solid black";
+			console.log(person)
+			// document.getElementById(person.get("email") + person.get("lastName")).removeAttribute("readonly");
+			// document.getElementById(person.get("email") + person.get("company")).removeAttribute("readonly");
+			// document.getElementById(person.get("email")).removeAttribute("readonly");
+			// document.getElementById(person.get("email") + person.get('access')).removeAttribute("readonly");
 		},
 		getOptions: async function () {
 			const Options = Parse.Object.extend("Client");
@@ -202,7 +202,14 @@ export default {
 }
 .col.listItem {
 	padding: 0px;
+	margin: 0;
 }
-
+.v-text-field.listItem {
+	padding: 0px;
+	margin: 0;
+}
+.v-text-field--rounded.v-input__control.v-input__slot {
+    padding: 0;
+}
 
 </style>
