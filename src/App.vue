@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <Navbar>
+    <Navbar fixed>
 
     </Navbar>
     <v-content>
@@ -32,3 +32,6 @@ export default {
   }),
 };
 </script>
+<style scoped> 
+
+</style>

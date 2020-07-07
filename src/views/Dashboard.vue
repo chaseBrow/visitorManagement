@@ -1,7 +1,7 @@
 <template>
 	<v-container fluid fill-height background>
 		<v-row class="mx-4" style="height: 100%">
-			<v-form style="border-radius: 10px 10px 0px 0px; height: auto; width: 100%" class="primary">
+			<v-form style="border-radius: 10px 10px 0px 0px; height: 1000px; width: 100%" class="primary">
 				<v-container class="align-start">	
 					<v-row class="align-start">
 						<v-col cols="2">
@@ -207,9 +207,6 @@ export default {
 .v-text-field.listItem {
 	padding: 0px;
 	margin: 0;
-}
-.v-text-field--rounded.v-input__control.v-input__slot {
-    padding: 0;
 }
 
 </style>

@@ -1,6 +1,6 @@
 <template>
-	<nav>
-		<v-toolbar app class="secondary">
+	<v-app-bar app dense class="secondary">
+		<!-- <v-toolbar class="secondary"> -->
 			<v-app-bar-nav-icon  v-on:click="drawer = !drawer"></v-app-bar-nav-icon>
 			<v-toolbar-title class="text-uppercase">
 				<span class="font-weight-light" style="font-size: x-large"> Visitor</span>
@@ -19,7 +19,7 @@
 				<span class="mr-1 black--text">Sign Out</span>
 				<v-icon color="black">mdi-exit-to-app</v-icon>
 			</v-btn>
-		</v-toolbar>
+		<!-- </v-toolbar> -->
 
 
 
@@ -37,7 +37,7 @@
 				</v-list-item>
 			</v-list>
 		</v-navigation-drawer>
-	</nav>
+	</v-app-bar>
 </template>
 
 <script>
