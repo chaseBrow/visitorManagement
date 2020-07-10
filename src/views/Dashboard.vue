@@ -53,28 +53,11 @@
 
 			<v-col cols="12" class="secondary" style="border-radius: 0px 0px 10px 10px; height: auto">
 				<v-toolbar class="primary">
-						<!-- <v-col class="listItem" cols="2">
-							First Name
-			            </v-col>
-						<v-col class="listItem" cols="2">
-							Last Name
-			            </v-col>
-						<v-col class="listItem" cols="2">
-                            Company
-			            </v-col>
-						<v-col class="listItem" cols="3">
-                            Email
-			            </v-col>
-						<v-col class="listItem" cols="2">
-                            Access
-			            </v-col> -->
-
-							<v-text-field class="listItem" rounded value="First Name" readonly></v-text-field>
-							<v-text-field class="listItem" rounded value="Last Name" readonly></v-text-field>
-                            <v-text-field class="listItem" rounded value="Company" readonly></v-text-field>
-                            <v-text-field class="listItem" rounded value="Email" readonly></v-text-field>
-                            <v-text-field class="listItem" rounded value="Access" readonly></v-text-field>
-							<span style="min-width: 179px"> </span>
+						<span style="width: 10%">First Name</span>
+						<span style="width: 10%">Last Name</span>
+						<span style="width: 10%">Company</span>
+						<span style="width: 25%">Email</span>
+						<span style="width: 10%">Access</span>
 					</v-toolbar>
 				<v-list dense>
 					<v-list-item v-for="person in filteredPeople" :key="person.email">
@@ -90,6 +73,14 @@
 						<v-btn class="primary" v-on:click="editVisitor(person)">
 							<span>Edit</span>
 							<v-icon dense class="pl-1">mdi-pencil</v-icon>
+						</v-btn>
+						<v-btn class="green" v-on:click="save(this)">
+							<span>Cancel</span>
+							<v-icon dense class="pl-1">mdi-content-save</v-icon>
+						</v-btn>
+						<v-btn class="red" v-on:click="cancel(this)">
+							<span>Cancel</span>
+							<v-icon dense class="pl-1">mdi-cancel</v-icon>
 						</v-btn>
 					</v-list-item>
 				</v-list>
@@ -121,7 +112,16 @@ export default {
 		}
 	},
 	methods: {
+		save: function () {
+
+		},
+		cancel: function () {
+
+		},
 		editVisitor: function (person) {
+			
+			person.id.setAttribute("hidden", true);
+	
 			let firstName = document.getElementById(person.get("email") + person.get("firstName"));
 			firstName.removeAttribute("readonly");
 			firstName.style.outline = "thin solid black";
@@ -151,6 +151,8 @@ export default {
 			access.style.outline = "thin solid black";
 			access.style.paddingLeft = "2px";
 			access.style.marginRight = "8px";
+
+
 		},
 		getOptions: async function () {
 			const Options = Parse.Object.extend("Client");
