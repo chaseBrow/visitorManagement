@@ -53,7 +53,7 @@
 
 			<v-col cols="12" class="secondary" style="border-radius: 0px 0px 10px 10px; height: auto">
 				<v-toolbar class="primary">
-						<v-col class="listItem" cols="2">
+						<!-- <v-col class="listItem" cols="2">
 							First Name
 			            </v-col>
 						<v-col class="listItem" cols="2">
@@ -67,36 +67,24 @@
 			            </v-col>
 						<v-col class="listItem" cols="2">
                             Access
-			            </v-col>
+			            </v-col> -->
+
+							<v-text-field class="listItem" rounded value="First Name" readonly></v-text-field>
+							<v-text-field class="listItem" rounded value="Last Name" readonly></v-text-field>
+                            <v-text-field class="listItem" rounded value="Company" readonly></v-text-field>
+                            <v-text-field class="listItem" rounded value="Email" readonly></v-text-field>
+                            <v-text-field class="listItem" rounded value="Access" readonly></v-text-field>
+							<span style="min-width: 179px"> </span>
 					</v-toolbar>
 				<v-list dense>
 					<v-list-item v-for="person in filteredPeople" :key="person.email">
-						<v-col class="listItem" cols="2">
-							<v-text-field class="listItem" rounded :value="person.get('firstName')" readonly :id="person.get('email') + person.get('firstName')">
-								
-							</v-text-field>
-						</v-col>
-						<v-col class="listItem" cols="2">
-							<v-text-field class="listItem" rounded :value="person.get('lastName')" readonly :id="person.get('email') + person.get('lastName')">
-								
-							</v-text-field>
-						</v-col>
-						<v-col class="listItem" cols="2">
-                            <v-text-field class="listItem" rounded :value="person.get('company')" readonly :id="person.get('email') + person.get('company')">
-								
-							</v-text-field>
-			            </v-col>
-						<v-col class="listItem" cols="3">
-                            <v-text-field class="listItem" rounded :value="person.get('email')" readonly :id="person.get('email')">
-								
-							</v-text-field>
-			            </v-col>
-						<v-col class="listItem" cols="2">
-                            <v-text-field class="listItem" rounded :value="person.get('access')" readonly :id="person.get('email') + person.get('access')">
-								
-							</v-text-field>
-			            </v-col>
 
+						<input type="text" style="width: 10%" readonly :value="person.get('firstName')" :id="person.get('email') + person.get('firstName')">
+						<input type="text" style="width: 10%" readonly :value="person.get('lastName')" :id="person.get('email') + person.get('lastName')">
+						<input type="text" style="width: 10%" readonly :value="person.get('company')" :id="person.get('email') + person.get('company')">
+						<input type="text" style="width: 25%" readonly :value="person.get('email')" :id="person.get('email')">
+						<input type="text" style="width: 10%" readonly :value="person.get('access')" :id="person.get('email') + person.get('access')">
+						<v-spacer></v-spacer>
 						<NewRecord>
 						</NewRecord>
 						<v-btn class="primary" v-on:click="editVisitor(person)">
@@ -138,26 +126,31 @@ export default {
 			firstName.removeAttribute("readonly");
 			firstName.style.outline = "thin solid black";
 			firstName.style.paddingLeft = "2px";
+			firstName.style.marginRight = "8px";
 
 			let lastName = document.getElementById(person.get("email") + person.get("lastName"));
 			lastName.removeAttribute("readonly");
 			lastName.style.outline = "thin solid black";
 			lastName.style.paddingLeft = "2px";
+			lastName.style.marginRight = "8px";
 
 			let company = document.getElementById(person.get("email") + person.get("company"));
 			company.removeAttribute("readonly");
 			company.style.outline = "thin solid black";
 			company.style.paddingLeft = "2px";
+			company.style.marginRight = "8px";
 
 			let email = document.getElementById(person.get("email"));
 			email.removeAttribute("readonly");
 			email.style.outline = "thin solid black";
 			email.style.paddingLeft = "2px";
+			email.style.marginRight = "8px";
 
 			let access = document.getElementById(person.get("email") + person.get("access"));
 			access.removeAttribute("readonly");
 			access.style.outline = "thin solid black";
 			access.style.paddingLeft = "2px";
+			access.style.marginRight = "8px";
 		},
 		getOptions: async function () {
 			const Options = Parse.Object.extend("Client");
@@ -209,20 +202,13 @@ export default {
 	background:lightgray;
 }
 
-.v-list-item {
-	overflow-wrap: break-word;
-}
 .v-list {
   border-radius: 0px;
   overflow-y: auto;
   height: 450px;
 }
 
-.v-text-field.listItem {
-	padding: 0;
-	margin: 0;
-	position: relative;
-	top: 12px;
+textarea:focus, input:focus{
+    outline: none;
 }
-
 </style>
