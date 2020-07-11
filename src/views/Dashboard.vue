@@ -69,7 +69,7 @@
 						<input type="text" style="width: 10%" readonly :value="person.get('access')" :id="person.get('email') + person.get('access')">
 						<v-spacer></v-spacer>
 
-						<NewRecord v-bind:person="person" :hidden="true">
+						<NewRecord v-bind:person="person">
 						</NewRecord> 
 						<v-btn class="primary" :id="person.get('email') + 'edit'" v-on:click="editVisitor(person)">
 							<span>Edit</span>
@@ -99,8 +99,6 @@ import NewRecord from "../components/NewRecord"
 export default {
 	data() {
 		return {
-			dialog: false,
-			editButton: true,
 			clientID: "upZS6tm7Pw",
 			filterTerms: {
 				firstName: '',
@@ -126,11 +124,6 @@ export default {
 			
 			let edit = document.getElementById(person.get("email") + "edit");
 			edit.setAttribute("hidden", true);
-
-			// let visit = document.getElementById(person.get("email") + "visit");
-			// visit.setAttribute("hidden", true);
-
-			this.editButton = true;
 
 			let del = document.getElementById(person.get("email") + "delete");
 			del.removeAttribute("hidden");
