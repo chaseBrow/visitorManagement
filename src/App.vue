@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <Navbar fixed>
+    <Navbar>
 
     </Navbar>
     <v-content>

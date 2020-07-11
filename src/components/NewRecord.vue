@@ -1,7 +1,7 @@
 <template>
-    <v-dialog v-model="dialog" width="300px" class="primary">
+    <v-dialog v-model="dialog" width="300px" class="primary" v-if="hidden">
         <template v-slot:activator="{ on, attrs }">
-            <v-btn v-bind="attrs" v-on="on" class="mr-6 primary" style="padding: 0 16px 0 6px">
+            <v-btn v-bind="attrs" v-on="on" class="mr-6 primary" v-if="hidden" style="padding: 0 16px 0 6px">
                 <v-icon dense class="pr-1">mdi-plus</v-icon>
                 <span>Visit</span>
             </v-btn>
@@ -47,6 +47,7 @@
 </template>
 <script>
 export default {
+    props: ['person'],
     data() {
         return {
             options: [
@@ -76,6 +77,7 @@ export default {
         },
         saveRecord: function() {
             console.log("save");
+            console.log(this.person)
         }
     }
 }

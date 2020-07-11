@@ -1,27 +1,17 @@
 <template>
 	<v-app-bar app dense class="secondary">
-		<!-- <v-toolbar class="secondary"> -->
-			<v-app-bar-nav-icon  v-on:click="drawer = !drawer"></v-app-bar-nav-icon>
-			<v-toolbar-title class="text-uppercase">
-				<span class="font-weight-light" style="font-size: x-large"> Visitor</span>
-				<span class="font-weight-bold" style="font-size: x-large">Management</span>
-			</v-toolbar-title>
-			<v-spacer></v-spacer>
-
-
-
-			<VisitorInfo>
-			</VisitorInfo>
-
-
-
-			<v-btn class="primary" v-on:click="router">
-				<span class="mr-1 black--text">Sign Out</span>
-				<v-icon color="black">mdi-exit-to-app</v-icon>
-			</v-btn>
-		<!-- </v-toolbar> -->
-
-
+		<v-app-bar-nav-icon  v-on:click="drawer = !drawer"></v-app-bar-nav-icon>
+		<v-toolbar-title class="text-uppercase">
+			<span class="font-weight-light" style="font-size: x-large"> Visitor</span>
+			<span class="font-weight-bold" style="font-size: x-large">Management</span>
+		</v-toolbar-title>
+		<v-spacer></v-spacer>
+		<VisitorInfo>
+		</VisitorInfo>
+		<v-btn class="primary" v-on:click="router">
+			<span class="mr-1 black--text">Sign Out</span>
+			<v-icon color="black">mdi-exit-to-app</v-icon>
+		</v-btn>
 
 		<v-navigation-drawer  v-model="drawer" class="secondary" temporary app>
 			<v-list>
