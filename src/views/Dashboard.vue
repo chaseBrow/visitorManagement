@@ -68,9 +68,10 @@
 						<input type="text" style="width: 25%" readonly :value="person.get('email')" :id="person.get('email')">
 						<input type="text" style="width: 10%" readonly :value="person.get('access')" :id="person.get('email') + person.get('access')">
 						<v-spacer></v-spacer>
-
-						<NewRecord v-bind:person="person" :v-if="hideVisit(person)">
-						</NewRecord> 
+						<div :id="person.get('email') + 'visit'">
+							<NewRecord v-bind:person="person">
+							</NewRecord> 
+						</div>
 						<v-btn class="primary" :id="person.get('email') + 'edit'" v-on:click="editVisitor(person)">
 							<span>Edit</span>
 							<v-icon dense class="pl-1">mdi-pencil</v-icon>
@@ -113,16 +114,6 @@ export default {
 			],
 		}
 	},
-	computed: {
-		hideVisit: function (person) {
-			let id = document.getElementById(person.get("email") + "edit");
-			// if ( === "none") {
-			// 	return false
-			// }
-			console.log(id.hasAttribute("hidden"));
-			return true;
-		},
-	},
 	methods: {
 		
 		save: function () {
@@ -135,6 +126,9 @@ export default {
 			
 			let edit = document.getElementById(person.get("email") + "edit");
 			edit.setAttribute("hidden", true);
+
+			let visit = document.getElementById(person.get("email") + "visit");
+			visit.setAttribute("hidden", true);
 
 			let del = document.getElementById(person.get("email") + "delete");
 			del.removeAttribute("hidden");
