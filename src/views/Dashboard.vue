@@ -68,19 +68,21 @@
 						<input type="text" style="width: 25%" readonly :value="person.get('email')" :id="person.get('email')">
 						<input type="text" style="width: 10%" readonly :value="person.get('access')" :id="person.get('email') + person.get('access')">
 						<v-spacer></v-spacer>
-						<NewRecord>
+						<NewRecord hidden>
 						</NewRecord>
-						<v-btn class="primary" v-on:click="editVisitor(person)">
+						<v-btn class="primary" :id="person.get('email') + 'edit'" v-on:click="editVisitor(person)">
 							<span>Edit</span>
 							<v-icon dense class="pl-1">mdi-pencil</v-icon>
 						</v-btn>
-						<v-btn class="green" v-on:click="save(this)">
-							<span>Cancel</span>
-							<v-icon dense class="pl-1">mdi-content-save</v-icon>
+						<v-btn class="green" fab small :id="person.get('email') + 'save'" v-on:click="save(this)" hidden>
+							<v-icon dense>mdi-content-save</v-icon>
 						</v-btn>
-						<v-btn class="red" v-on:click="cancel(this)">
-							<span>Cancel</span>
-							<v-icon dense class="pl-1">mdi-cancel</v-icon>
+						<v-btn class="grey mx-1" fab small :id="person.get('email') + 'cancel'" v-on:click="cancel(this)" hidden>
+							<v-icon dense>mdi-cancel</v-icon>
+						</v-btn>
+						<v-btn class="red" :id="person.get('email') + 'delete'" v-on:click="cancel(this)" hidden>
+							<span>Delete</span>
+							<v-icon dense class="pl-1">mdi-delete-forever</v-icon>
 						</v-btn>
 					</v-list-item>
 				</v-list>
@@ -120,8 +122,24 @@ export default {
 		},
 		editVisitor: function (person) {
 			
-			person.id.setAttribute("hidden", true);
-	
+			let edit = document.getElementById(person.get("email") + "edit");
+			edit.setAttribute("hidden", true);
+
+			let visit = document.getElementById(person.get("email") + "visit");
+			visit.setAttribute("hidden", true);
+
+			let del = document.getElementById(person.get("email") + "delete");
+			del.removeAttribute("hidden");
+
+			let can = document.getElementById(person.get("email") + "cancel");
+			can.removeAttribute("hidden");
+
+			let save = document.getElementById(person.get("email") + "save");
+			save.removeAttribute("hidden");
+
+
+
+			
 			let firstName = document.getElementById(person.get("email") + person.get("firstName"));
 			firstName.removeAttribute("readonly");
 			firstName.style.outline = "thin solid black";
