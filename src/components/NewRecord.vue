@@ -47,6 +47,7 @@
 </template>
 <script>
 export default {
+    props: ['person'],
     data() {
         return {
             options: [
@@ -76,12 +77,11 @@ export default {
         },
         saveRecord: function() {
             console.log("save");
+            console.log(this.person)
         }
-        
     }
 }
 </script>
 
 <style scoped>
-
 </style>

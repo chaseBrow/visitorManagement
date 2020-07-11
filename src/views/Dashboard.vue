@@ -53,45 +53,38 @@
 
 			<v-col cols="12" class="secondary" style="border-radius: 0px 0px 10px 10px; height: auto">
 				<v-toolbar class="primary">
-						<v-col class="listItem" cols="1">
-							First Name
-			            </v-col>
-						<v-col class="listItem" cols="2">
-							Last Name
-			            </v-col>
-						<v-col class="listItem" cols="2">
-                            Company
-			            </v-col>
-						<v-col class="listItem" cols="3">
-                            Email
-			            </v-col>
-						<v-col class="listItem" cols="2">
-                            Access
-			            </v-col>
+						<span style="width: 10%">First Name</span>
+						<span style="width: 10%">Last Name</span>
+						<span style="width: 10%">Company</span>
+						<span style="width: 25%">Email</span>
+						<span style="width: 10%">Access</span>
 					</v-toolbar>
 				<v-list dense>
 					<v-list-item v-for="person in filteredPeople" :key="person.email">
-						<v-col class="listItem" cols="1" >
-							{{ person.get("firstName") }}
-			            </v-col>
-						<v-col class="listItem" cols="2">
-							{{ person.get("lastName") }}
-			            </v-col>
-						<v-col class="listItem" cols="2">
-                            {{ person.get("company") }}
-			            </v-col>
-						<v-col class="listItem" cols="3">
-                            {{ person.get("email") }}
-			            </v-col>
-						<v-col class="listItem" cols="2">
-                            {{ person.get("access") }}
-			            </v-col>
 
-						<NewRecord>
-						</NewRecord>
-						<v-btn class="primary" >
+						<input type="text" style="width: 10%" readonly :value="person.get('firstName')" :id="person.get('email') + person.get('firstName')">
+						<input type="text" style="width: 10%" readonly :value="person.get('lastName')" :id="person.get('email') + person.get('lastName')">
+						<input type="text" style="width: 10%" readonly :value="person.get('company')" :id="person.get('email') + person.get('company')">
+						<input type="text" style="width: 25%" readonly :value="person.get('email')" :id="person.get('email')">
+						<input type="text" style="width: 10%" readonly :value="person.get('access')" :id="person.get('email') + person.get('access')">
+						<v-spacer></v-spacer>
+						<div :id="person.get('email') + 'visit'">
+							<NewRecord v-bind:person="person">
+							</NewRecord> 
+						</div>
+						<v-btn class="primary" :id="person.get('email') + 'edit'" v-on:click="editVisitor(person)">
 							<span>Edit</span>
 							<v-icon dense class="pl-1">mdi-pencil</v-icon>
+						</v-btn>
+						<v-btn class="green" fab small :id="person.get('email') + 'save'" v-on:click="save(this)" hidden>
+							<v-icon dense>mdi-content-save</v-icon>
+						</v-btn>
+						<v-btn class="grey mx-1" fab small :id="person.get('email') + 'cancel'" v-on:click="cancel(this)" hidden>
+							<v-icon dense>mdi-cancel</v-icon>
+						</v-btn>
+						<v-btn class="red" :id="person.get('email') + 'delete'" v-on:click="cancel(this)" hidden>
+							<span>Delete</span>
+							<v-icon dense class="pl-1">mdi-delete-forever</v-icon>
 						</v-btn>
 					</v-list-item>
 				</v-list>
@@ -107,7 +100,6 @@ import NewRecord from "../components/NewRecord"
 export default {
 	data() {
 		return {
-			dialog: false,
 			clientID: "upZS6tm7Pw",
 			filterTerms: {
 				firstName: '',
@@ -123,6 +115,65 @@ export default {
 		}
 	},
 	methods: {
+		
+		save: function () {
+
+		},
+		cancel: function () {
+
+		},
+		editVisitor: function (person) {
+			
+			let edit = document.getElementById(person.get("email") + "edit");
+			edit.setAttribute("hidden", true);
+
+			let visit = document.getElementById(person.get("email") + "visit");
+			visit.setAttribute("hidden", true);
+
+			let del = document.getElementById(person.get("email") + "delete");
+			del.removeAttribute("hidden");
+
+			let can = document.getElementById(person.get("email") + "cancel");
+			can.removeAttribute("hidden");
+
+			let save = document.getElementById(person.get("email") + "save");
+			save.removeAttribute("hidden");
+
+
+
+			
+			let firstName = document.getElementById(person.get("email") + person.get("firstName"));
+			firstName.removeAttribute("readonly");
+			firstName.style.outline = "thin solid black";
+			firstName.style.paddingLeft = "2px";
+			firstName.style.marginRight = "8px";
+
+			let lastName = document.getElementById(person.get("email") + person.get("lastName"));
+			lastName.removeAttribute("readonly");
+			lastName.style.outline = "thin solid black";
+			lastName.style.paddingLeft = "2px";
+			lastName.style.marginRight = "8px";
+
+			let company = document.getElementById(person.get("email") + person.get("company"));
+			company.removeAttribute("readonly");
+			company.style.outline = "thin solid black";
+			company.style.paddingLeft = "2px";
+			company.style.marginRight = "8px";
+
+			let email = document.getElementById(person.get("email"));
+			email.removeAttribute("readonly");
+			email.style.outline = "thin solid black";
+			email.style.paddingLeft = "2px";
+			email.style.marginRight = "8px";
+
+			let access = document.getElementById(person.get("email") + person.get("access"));
+			access.removeAttribute("readonly");
+			access.style.outline = "thin solid black";
+			access.style.paddingLeft = "2px";
+			access.style.marginRight = "8px";
+
+
+		},
 		getOptions: async function () {
 			const Options = Parse.Object.extend("Client");
 			const queryOptions = new Parse.Query(Options);
@@ -138,6 +189,7 @@ export default {
 
 			// console.log(this.clientID);
 			// queryVisitor.equalTo("client", this.clientID);
+			queryVisitor.limit(20);
 			queryVisitor.find().then((visitors) => {
 				this.filteredPeople = visitors.filter(this.filterPeople);
 			},
@@ -172,16 +224,13 @@ export default {
 	background:lightgray;
 }
 
-.v-list-item {
-	overflow-wrap: break-word;
-}
 .v-list {
   border-radius: 0px;
   overflow-y: auto;
   height: 450px;
 }
-.col.listItem {
-	padding: 0px;
-}
 
+textarea:focus, input:focus{
+    outline: none;
+}
 </style>

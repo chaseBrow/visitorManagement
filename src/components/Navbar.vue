@@ -1,27 +1,17 @@
 <template>
-	<nav>
-		<v-toolbar app class="secondary">
-			<v-app-bar-nav-icon  v-on:click="drawer = !drawer"></v-app-bar-nav-icon>
-			<v-toolbar-title class="text-uppercase">
-				<span class="font-weight-light" style="font-size: x-large"> Visitor</span>
-				<span class="font-weight-bold" style="font-size: x-large">Management</span>
-			</v-toolbar-title>
-			<v-spacer></v-spacer>
-
-
-
-			<VisitorInfo>
-			</VisitorInfo>
-
-
-
-			<v-btn class="primary">
-				<span class="mr-1 black--text">Sign Out</span>
-				<v-icon color="black">mdi-exit-to-app</v-icon>
-			</v-btn>
-		</v-toolbar>
-
-
+	<v-app-bar app dense class="secondary">
+		<v-app-bar-nav-icon  v-on:click="drawer = !drawer"></v-app-bar-nav-icon>
+		<v-toolbar-title class="text-uppercase">
+			<span class="font-weight-light" style="font-size: x-large"> Visitor</span>
+			<span class="font-weight-bold" style="font-size: x-large">Management</span>
+		</v-toolbar-title>
+		<v-spacer></v-spacer>
+		<VisitorInfo>
+		</VisitorInfo>
+		<v-btn class="primary" v-on:click="router">
+			<span class="mr-1 black--text">Sign Out</span>
+			<v-icon color="black">mdi-exit-to-app</v-icon>
+		</v-btn>
 
 		<v-navigation-drawer  v-model="drawer" class="secondary" temporary app>
 			<v-list>
@@ -37,7 +27,7 @@
 				</v-list-item>
 			</v-list>
 		</v-navigation-drawer>
-	</nav>
+	</v-app-bar>
 </template>
 
 <script>
@@ -51,12 +41,16 @@ export default {
 		return {
 			drawer: false,
 			links: [
-				{ icon: 'mdi-view-dashboard', text: 'Dashboard', route: '/' },
-				{ icon: 'mdi-calendar-check', text: 'Visit History', route: '/RecordHistory' },
-				{ icon: 'mdi-clipboard-text', text: 'Account Settings', route: '/Account' },
-				{ icon: 'mdi-cog', text: 'Settings', route: '/Settings' },
+				{ icon: 'mdi-view-dashboard', text: 'Dashboard', route: '/Dashboard' },
+				{ icon: 'mdi-folder-clock-outline', text: 'Visit History', route: '/RecordHistory' },
+				{ icon: 'mdi-cog', text: 'Account Settings', route: '/Account' },
 			]
 		}
+	},
+	methods: {
+		router: function () {
+			console.log(this.$route);
+		},
 	}
 }
 </script>
