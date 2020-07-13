@@ -8,7 +8,7 @@
 		<v-spacer></v-spacer>
 		<VisitorInfo>
 		</VisitorInfo>
-		<v-btn class="primary">
+		<v-btn class="primary" v-on:click="logOut()">
 			<span class="mr-1 black--text">Sign Out</span>
 			<v-icon color="black">mdi-exit-to-app</v-icon>
 		</v-btn>
@@ -21,7 +21,7 @@
 						<v-icon class="white--text">{{ link.icon }}</v-icon>
 					</v-list-item-action>
 					<v-list-item-content>
-						<v-list-item-title class="white--text" v-on:click="console.log('test')">
+						<v-list-item-title class="white--text">
 							{{ link.text }}
 						</v-list-item-title>
 					</v-list-item-content>
@@ -33,6 +33,7 @@
 
 <script>
 import VisitorInfo from "./VisitorInfo"
+import Parse from "parse"
 
 export default {
 	components: {
@@ -48,7 +49,27 @@ export default {
 			]
 		}
 	},
+	asyncComputed: {
+		
+	},
 	methods: {
+		loggedIn: async function () {
+			const user = await Parse.User.currentAsync()
+			console.log(user);
+			if (user !== null) {
+				console.log("true");
+				return true;
+			}
+			else {
+				console.log("false");
+				return false;
+			}
+		},
+		logOut: async function () {
+			await Parse.User.logOut();
+			this.$router.push('/');
+			this.loggedIn();
+		}
 	}
 }
 </script>

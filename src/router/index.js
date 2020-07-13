@@ -48,7 +48,7 @@ const router = new VueRouter({
 });
 
 async function testLogin() {
-  await Parse.User.logIn("testUser", "password");
+  //await Parse.User.logIn("testUser", "password");
   // Parse.User.logOut();
 }
   

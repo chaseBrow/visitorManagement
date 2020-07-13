@@ -9,16 +9,15 @@
               <v-card-text>
                 <v-form>
                   <v-text-field
-                    label="Login"
-                    name="login"
+                    v-model="username"
+                    label="Username"
                     prepend-icon="mdi-account"
                     type="text"
                   ></v-text-field>
 
                   <v-text-field
-                    id="password"
+                    v-model="password"
                     label="Password"
-                    name="password"
                     prepend-icon="mdi-lock"
                     type="password"
                   ></v-text-field>
@@ -26,20 +25,27 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="primary">Login</v-btn>
+                <v-btn color="primary" v-on:click="login()">Login</v-btn>
               </v-card-actions>
             </v-card>
     </v-container>
 </template>
 <script>
+import Parse from "parse"
 export default {
     data() {
         return {
-           
+		   password: "",
+		   username: "",
         }
     },
     methods: {
-        
+        login: async function () {
+			let user = await Parse.User.logIn(this.username, this.password);
+			this.$router.push("dashboard");
+			console.log(user);
+
+        }
     }
 }
 </script>
