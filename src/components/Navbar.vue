@@ -8,14 +8,15 @@
 		<v-spacer></v-spacer>
 		<VisitorInfo>
 		</VisitorInfo>
-		<v-btn class="primary" v-on:click="router">
+		<v-btn class="primary" v-if="['home'].indexOf($route.name) <= -1" v-on:click="logOut()">
 			<span class="mr-1 black--text">Sign Out</span>
 			<v-icon color="black">mdi-exit-to-app</v-icon>
 		</v-btn>
 
-		<v-navigation-drawer  v-model="drawer" class="secondary" temporary app>
+		<v-navigation-drawer  v-model="drawer" class="secondary" app>
+			
 			<v-list>
-				<v-list-item v-for="link in links" :key="link.text" router :to="link.route">
+				<v-list-item v-for="link in links" :key="link.text" :to="link.route" >
 					<v-list-item-action>
 						<v-icon class="white--text">{{ link.icon }}</v-icon>
 					</v-list-item-action>
@@ -32,6 +33,7 @@
 
 <script>
 import VisitorInfo from "./VisitorInfo"
+import Parse from "parse"
 
 export default {
 	components: {
@@ -40,6 +42,8 @@ export default {
 	data() {
 		return {
 			drawer: false,
+			loggedIn: false,
+			user: null,
 			links: [
 				{ icon: 'mdi-view-dashboard', text: 'Dashboard', route: '/Dashboard' },
 				{ icon: 'mdi-folder-clock-outline', text: 'Visit History', route: '/RecordHistory' },
@@ -48,9 +52,10 @@ export default {
 		}
 	},
 	methods: {
-		router: function () {
-			console.log(this.$route);
-		},
+		logOut: async function () {
+			await Parse.User.logOut();
+			this.$router.push('/');
+		}
 	}
 }
 </script>
