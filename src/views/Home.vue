@@ -41,10 +41,8 @@ export default {
     },
     methods: {
         login: async function () {
-			let user = await Parse.User.logIn(this.username, this.password);
+			await Parse.User.logIn(this.username, this.password);
 			this.$router.push("dashboard");
-			console.log(user);
-
         }
     }
 }

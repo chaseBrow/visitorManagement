@@ -8,7 +8,7 @@
 		<v-spacer></v-spacer>
 		<VisitorInfo>
 		</VisitorInfo>
-		<v-btn class="primary" v-if="loggedIn" v-on:click="logOut()">
+		<v-btn class="primary" v-if="['home'].indexOf($route.name) <= -1" v-on:click="logOut()">
 			<span class="mr-1 black--text">Sign Out</span>
 			<v-icon color="black">mdi-exit-to-app</v-icon>
 		</v-btn>
@@ -51,22 +51,7 @@ export default {
 			]
 		}
 	},
-	asyncComputed: {
-		userLog: async function () {
-			this.user = await Parse.User.currentAsync()
-			console.log(this.user);
-			if (this.user !== null) {
-				console.log("true");
-				this.loggedIn = true;
-			}
-			else {
-				console.log("false");
-				this.loggedIn = false;
-			}
-		},
-	},
 	methods: {
-		
 		logOut: async function () {
 			await Parse.User.logOut();
 			this.$router.push('/');
