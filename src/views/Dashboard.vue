@@ -122,6 +122,9 @@ export default {
 		cancel: function () {
 
 		},
+		delete: function () {
+
+		},
 		editVisitor: function (person) {
 			
 			let edit = document.getElementById(person.get("email") + "edit");
@@ -138,9 +141,6 @@ export default {
 
 			let save = document.getElementById(person.get("email") + "save");
 			save.removeAttribute("hidden");
-
-
-
 			
 			let firstName = document.getElementById(person.get("email") + person.get("firstName"));
 			firstName.removeAttribute("readonly");
@@ -171,8 +171,6 @@ export default {
 			access.style.outline = "thin solid black";
 			access.style.paddingLeft = "2px";
 			access.style.marginRight = "8px";
-
-
 		},
 		getOptions: async function () {
 			const Options = Parse.Object.extend("Client");
@@ -182,13 +180,10 @@ export default {
 			const client = await queryOptions.first();
 			this.options = client.get("options");
 		},
-
 		filter: function () {
 			const Visitors = Parse.Object.extend("Visitor");
 			const queryVisitor = new Parse.Query(Visitors);
 
-			// console.log(this.clientID);
-			// queryVisitor.equalTo("client", this.clientID);
 			queryVisitor.limit(20);
 			queryVisitor.find().then((visitors) => {
 				this.filteredPeople = visitors.filter(this.filterPeople);
@@ -216,7 +211,6 @@ export default {
 		NewRecord
 	}
 }
-
 </script>
 
 <style scoped>
