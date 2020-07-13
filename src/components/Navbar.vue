@@ -8,7 +8,7 @@
 		<v-spacer></v-spacer>
 		<VisitorInfo>
 		</VisitorInfo>
-		<v-btn class="primary" v-on:click="logOut()">
+		<v-btn class="primary" v-if="loggedIn" v-on:click="logOut()">
 			<span class="mr-1 black--text">Sign Out</span>
 			<v-icon color="black">mdi-exit-to-app</v-icon>
 		</v-btn>
@@ -42,6 +42,8 @@ export default {
 	data() {
 		return {
 			drawer: false,
+			loggedIn: false,
+			user: null,
 			links: [
 				{ icon: 'mdi-view-dashboard', text: 'Dashboard', route: '/Dashboard' },
 				{ icon: 'mdi-folder-clock-outline', text: 'Visit History', route: '/RecordHistory' },
@@ -50,25 +52,24 @@ export default {
 		}
 	},
 	asyncComputed: {
-		
-	},
-	methods: {
-		loggedIn: async function () {
-			const user = await Parse.User.currentAsync()
-			console.log(user);
-			if (user !== null) {
+		userLog: async function () {
+			this.user = await Parse.User.currentAsync()
+			console.log(this.user);
+			if (this.user !== null) {
 				console.log("true");
-				return true;
+				this.loggedIn = true;
 			}
 			else {
 				console.log("false");
-				return false;
+				this.loggedIn = false;
 			}
 		},
+	},
+	methods: {
+		
 		logOut: async function () {
 			await Parse.User.logOut();
 			this.$router.push('/');
-			this.loggedIn();
 		}
 	}
 }
