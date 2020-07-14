@@ -76,13 +76,13 @@
 							<span>Edit</span>
 							<v-icon dense class="pl-1">mdi-pencil</v-icon>
 						</v-btn>
-						<v-btn class="green" fab small :id="person.get('email') + 'save'" v-on:click="save(this)" hidden>
+						<v-btn class="green" fab small :id="person.get('email') + 'save'" v-on:click="save(person)" hidden>
 							<v-icon dense>mdi-content-save</v-icon>
 						</v-btn>
-						<v-btn class="grey mx-1" fab small :id="person.get('email') + 'cancel'" v-on:click="cancel(this)" hidden>
+						<v-btn class="grey mx-1" fab small :id="person.get('email') + 'cancel'" v-on:click="cancel(person)" hidden>
 							<v-icon dense>mdi-cancel</v-icon>
 						</v-btn>
-						<v-btn class="red" :id="person.get('email') + 'delete'" v-on:click="cancel(this)" hidden>
+						<v-btn class="red" :id="person.get('email') + 'delete'" v-on:click="del(person)" hidden>
 							<span>Delete</span>
 							<v-icon dense class="pl-1">mdi-delete-forever</v-icon>
 						</v-btn>
@@ -116,13 +116,67 @@ export default {
 	},
 	methods: {
 		
-		save: function () {
+		save: async function (person) {
+			this.cancel(person);
 
-		},
-		cancel: function () {
+			person.set("firstName", document.getElementById(person.get('email') + person.get('firstName')).value);
+			person.set("lastName", document.getElementById(person.get('email') + person.get('lastName')).value);
+			person.set("company", document.getElementById(person.get('email') + person.get('company')).value);
+			person.set("email", document.getElementById(person.get('email')).value);
+			person.set("access", document.getElementById(person.get('email') + person.get('access')).value);
+			
+			await person.save();
 
+			this.filter();
+			
 		},
-		delete: function () {
+		cancel: function (person) {
+			let edit = document.getElementById(person.get("email") + "edit");
+			edit.removeAttribute("hidden");
+
+			let visit = document.getElementById(person.get("email") + "visit");
+			visit.removeAttribute("hidden");
+
+			let del = document.getElementById(person.get("email") + "delete");
+			del.setAttribute("hidden", true);
+
+			let can = document.getElementById(person.get("email") + "cancel");
+			can.setAttribute("hidden", true);
+
+			let save = document.getElementById(person.get("email") + "save");
+			save.setAttribute("hidden", true);
+			
+			let firstName = document.getElementById(person.get("email") + person.get("firstName"));
+			firstName.setAttribute("readonly", true);
+			firstName.style.outline = null;
+			firstName.style.paddingLeft = null;
+			firstName.style.marginRight = null;
+
+			let lastName = document.getElementById(person.get("email") + person.get("lastName"));
+			lastName.setAttribute("readonly", true);
+			lastName.style.outline = null;
+			lastName.style.paddingLeft = null;
+			lastName.style.marginRight = null;
+
+			let company = document.getElementById(person.get("email") + person.get("company"));
+			company.setAttribute("readonly", true);
+			company.style.outline = null;
+			company.style.paddingLeft = null;
+			company.style.marginRight = null;
+
+			let email = document.getElementById(person.get("email"));
+			email.setAttribute("readonly", true);
+			email.style.outline = null;
+			email.style.paddingLeft = null;
+			email.style.marginRight = null;
+
+			let access = document.getElementById(person.get("email") + person.get("access"));
+			access.setAttribute("readonly", true);
+			access.style.outline = null;
+			access.style.paddingLeft = null;
+			access.style.marginRight = null;
+		},
+		del: function () {
 
 		},
 		editVisitor: function (person) {
