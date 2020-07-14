@@ -90,6 +90,9 @@
 				</v-list>
 			</v-col>
 		</v-row>
+		<!-- <v-dialog v-model="confirmDelete">
+			This is a test
+		</v-dialog> -->
 
 	</v-container>
 </template>
@@ -177,7 +180,7 @@ export default {
 			access.style.marginRight = null;
 		},
 		del: function () {
-
+			console.log(process.env.VUE_APP_NOT_SECRET_CODE);
 		},
 		editVisitor: function (person) {
 			
@@ -227,12 +230,8 @@ export default {
 			access.style.marginRight = "8px";
 		},
 		getOptions: async function () {
-			const Options = Parse.Object.extend("Client");
-			const queryOptions = new Parse.Query(Options);
-
-			queryOptions.equalTo("objectId", this.clientID);
-			const client = await queryOptions.first();
-			this.options = client.get("options");
+			let opt = await process.env.OPTIONS;
+			this.options = opt.split(',');
 		},
 		filter: function () {
 			const Visitors = Parse.Object.extend("Visitor");
