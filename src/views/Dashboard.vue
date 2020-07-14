@@ -82,7 +82,7 @@
 						<v-btn class="grey mx-1" fab small :id="person.get('email') + 'cancel'" v-on:click="cancel(person)" hidden>
 							<v-icon dense>mdi-cancel</v-icon>
 						</v-btn>
-						<v-btn class="red" :id="person.get('email') + 'delete'" v-on:click="confirmDelete = !confirmDelete" hidden>
+						<v-btn class="red" :id="person.get('email') + 'delete'" v-on:click="delStart(person)" hidden>
 							<span>Delete</span>
 							<v-icon dense class="pl-1">mdi-delete-forever</v-icon>
 						</v-btn>
@@ -91,8 +91,19 @@
 			</v-col>
 		</v-row>
 		<v-dialog v-model="confirmDelete">
-			<div> This is a test
-			</div>
+			<v-card>
+				<v-card-title>Confirm Delete</v-card-title>
+				<v-card-text>The visitor and their records will remain on the database, but no longer will appear in visitor searches </v-card-text>
+				<v-card-actions>
+					<v-spacer></v-spacer>
+					<v-btn color="grey" v-on:click="confirmDelete = !confirmDelete">
+						Cancel
+					</v-btn>
+					<v-btn color="red" v-on:click="del()">
+						Delete
+					</v-btn>
+				</v-card-actions>
+			</v-card>
 		</v-dialog>
 
 	</v-container>
@@ -104,6 +115,7 @@ import NewRecord from "../components/NewRecord"
 export default {
 	data() {
 		return {
+			person: null,
 			confirmDelete: false,
 			filterTerms: {
 				firstName: '',
@@ -181,7 +193,13 @@ export default {
 			access.style.marginRight = null;
 		},
 		del: function () {
-			console.log(process.env.VUE_APP_ACCESS_OPTIONS);
+			this.person.set("deleted", true);
+			this.person.save();
+			this.confirmDelete = !this.confirmDelete;
+		},
+		delStart: function (person) {
+			this.person = person;
+			this.confirmDelete = !this.confirmDelete;
 		},
 		editVisitor: function (person) {
 			
@@ -239,6 +257,7 @@ export default {
 			const queryVisitor = new Parse.Query(Visitors);
 
 			queryVisitor.limit(20);
+			queryVisitor.notEqualTo("deleted", true);
 			queryVisitor.find().then((visitors) => {
 				this.filteredPeople = visitors.filter(this.filterPeople);
 			},
