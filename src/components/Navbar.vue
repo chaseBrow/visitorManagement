@@ -13,7 +13,7 @@
 			<v-icon color="black">mdi-exit-to-app</v-icon>
 		</v-btn>
 
-		<v-navigation-drawer  v-model="drawer" class="secondary" app>
+		<v-navigation-drawer  v-model="drawer" class="secondary" app temporary>
 			
 			<v-list>
 				<v-list-item v-for="link in links" :key="link.text" :to="link.route" >
