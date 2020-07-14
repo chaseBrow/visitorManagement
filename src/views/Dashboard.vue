@@ -82,7 +82,7 @@
 						<v-btn class="grey mx-1" fab small :id="person.get('email') + 'cancel'" v-on:click="cancel(person)" hidden>
 							<v-icon dense>mdi-cancel</v-icon>
 						</v-btn>
-						<v-btn class="red" :id="person.get('email') + 'delete'" v-on:click="del(person)" hidden>
+						<v-btn class="red" :id="person.get('email') + 'delete'" v-on:click="confirmDelete = !confirmDelete" hidden>
 							<span>Delete</span>
 							<v-icon dense class="pl-1">mdi-delete-forever</v-icon>
 						</v-btn>
@@ -90,9 +90,10 @@
 				</v-list>
 			</v-col>
 		</v-row>
-		<!-- <v-dialog v-model="confirmDelete">
-			This is a test
-		</v-dialog> -->
+		<v-dialog v-model="confirmDelete">
+			<div> This is a test
+			</div>
+		</v-dialog>
 
 	</v-container>
 </template>
@@ -103,7 +104,7 @@ import NewRecord from "../components/NewRecord"
 export default {
 	data() {
 		return {
-			clientID: "upZS6tm7Pw",
+			confirmDelete: false,
 			filterTerms: {
 				firstName: '',
 				lastName: '',
@@ -180,7 +181,7 @@ export default {
 			access.style.marginRight = null;
 		},
 		del: function () {
-			console.log(process.env.VUE_APP_NOT_SECRET_CODE);
+			console.log(process.env.VUE_APP_ACCESS_OPTIONS);
 		},
 		editVisitor: function (person) {
 			
@@ -230,7 +231,7 @@ export default {
 			access.style.marginRight = "8px";
 		},
 		getOptions: async function () {
-			let opt = await process.env.OPTIONS;
+			let opt = await process.env.VUE_APP_ACCESS_OPTIONS;
 			this.options = opt.split(',');
 		},
 		filter: function () {
@@ -267,6 +268,7 @@ export default {
 </script>
 
 <style scoped>
+
 .v-list-item:hover {
 	background:lightgray;
 }
