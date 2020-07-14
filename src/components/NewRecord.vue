@@ -14,7 +14,7 @@
                 <v-text-field
                     :disabled="status !== 'Arrived'"
                     label="Arrival"
-                    :value="getDate()"
+                    :value="arrivalTime"
                     type="time"
                     v-model="arrivalTime"
                 ></v-text-field>
@@ -22,7 +22,7 @@
                 <v-text-field
                     :disabled="status !== 'Departed'"
                     label="Departure"
-                    :value="getDate()"
+                    :value="departureTime"
                     type="time"
                     v-model="departureTime"
                 ></v-text-field>
@@ -67,21 +67,31 @@ export default {
     methods: {
         visitStatus: function () {
             this.status = this.select;
+            if (this.status == 'Arrived') {
+                this.arrivalTime = this.getDate();
+            }
+            else if (this.status == 'Departed') {
+                this.departureTime = this.getDate();
+            }
+            // else if (this.status == 'Expected') {
+
+            // }
+            // else if (this.status == 'Delete') {
+
+            // }
         },
         cancel: function () {
             this.dialog = false;
         },
         newRecord: function () {
             if (this.record == null) {
-                const Record = new Parse.Object.extend('record');
+                const Record = new Parse.Object.extend('Record');
                 this.record = new Record();
             }
             
-            console.log(this.record);
         },
         saveRecord: async function () {
             if (this.status == 'Arrived') {
-                console.log("arrived");
 
                 this.options.splice(0,2);
                 this.options.push("Delete");
@@ -89,7 +99,6 @@ export default {
                 this.record.set("arrive", this.arrivalTime);
             }
             else if (this.status == 'Departed') {
-                console.log("departed");
 
                 this.options.splice(2,1);
                 this.options.push("Delete");
@@ -99,7 +108,6 @@ export default {
                 await this.record.save();
             }
             else if (this.status == 'Expected') {
-                console.log("expected");
 
                 this.options.splice(1,1);
                 this.options.push("Delete");
@@ -113,8 +121,7 @@ export default {
                 this.arrivalTime = null;
                 this.record = null;
             }
-            else this.cancel();
-            console.log(this.person)
+            this.cancel();
         },
         getDate: function () {
             let today = new Date();
