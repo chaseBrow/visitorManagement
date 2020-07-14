@@ -27,7 +27,7 @@
 
                 <v-select
                     v-model="select"
-                    placeholder="Absent"
+                    :placeholder="status"
                     label="Status"
                     :items="options"
                     v-on:change="visitStatus()"
@@ -51,10 +51,10 @@ export default {
         return {
             options: [
                 "Arrived",
-                "Departed",
                 "Expected",
+                "Departed"
             ],
-            status: null,
+            status: "Absent",
             select: null,
             dialog: false
         }
@@ -72,13 +72,23 @@ export default {
             console.log(newVisit);
 
             if (this.status == 'Arrived') {
-                console.log("arrived")
+                console.log("arrived");
+
+                this.options.splice(0,2);
+                this.options
+                this.options.push("Delete")
             }
             else if (this.status == 'Departed') {
-                console.log("departed")
+                console.log("departed");
+
+                this.options.splice(2,1);
+                this.options.push("Delete")
             }
             else if (this.status == 'Expected') {
-                console.log("expected")
+                console.log("expected");
+
+                this.options.splice(1,1);
+                this.options.push("Delete")
             }
             else this.cancel();
             console.log(this.person)
