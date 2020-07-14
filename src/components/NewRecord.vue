@@ -12,16 +12,16 @@
                     Visit Log
                 </v-card-title>
                 <v-text-field
-                    :disabled="arrive"
+                    :disabled="status !== 'Arrived'"
                     label="Arrival"
-                    value="12:30:00"
+                    :value="getDate()"
                     type="time"
                 ></v-text-field>
                 
                 <v-text-field
-                    :disabled="depart"
+                    :disabled="status !== 'Departed'"
                     label="Departure"
-                    value="12:30:00"
+                    :value="getDate()"
                     type="time"
                 ></v-text-field>
 
@@ -30,10 +30,8 @@
                     placeholder="Absent"
                     label="Status"
                     :items="options"
-                    v-on:change="visitStatus"
+                    v-on:change="visitStatus()"
                 ></v-select>
-
-
 
                 <v-card-actions>
                     <v-spacer></v-spacer>
@@ -46,6 +44,7 @@
     </v-dialog>
 </template>
 <script>
+import Parse from 'parse'
 export default {
     props: ['person'],
     data() {
@@ -55,29 +54,39 @@ export default {
                 "Departed",
                 "Expected",
             ],
-            arrive: true,
-            depart: true,
-            select: "",
+            status: null,
+            select: null,
             dialog: false
         }
     },
     methods: {
-        visitStatus: function() {
-            console.log(this.select);
-            if (this.select == "Arrived" || this.select == "Expected") {
-                this.arrive = false;
-            }
-            if (this.select == "Departed") {
-                this.depart = false;
-            }
+        visitStatus: function () {
+            this.status = this.select;
         },
-        cancel: function() {
+        cancel: function () {
             this.dialog = false;
-            console.log("clear");
         },
-        saveRecord: function() {
-            console.log("save");
+        saveRecord: function () {
+            const Record = new Parse.Object.extend('record');
+            let newVisit = new Record();
+            console.log(newVisit);
+
+            if (this.status == 'Arrived') {
+                console.log("arrived")
+            }
+            else if (this.status == 'Departed') {
+                console.log("departed")
+            }
+            else if (this.status == 'Expected') {
+                console.log("expected")
+            }
+            else this.cancel();
             console.log(this.person)
+        },
+        getDate: function () {
+            let today = new Date();
+            let time = today.getHours() + ":" + today.getMinutes();
+            return time;
         }
     }
 }
