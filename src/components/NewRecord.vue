@@ -70,21 +70,31 @@ export default {
             this.status = this.select;
             const time = this.getDate();
             if (this.status == 'Arrived') {
-                this.arrivalTime = time[0];
-                this.arrTimeParse = time[1];
+                this.arrivalTime = this.toTime(time);
+                this.arrTimeParse = time;
             }
             else if (this.status == 'Departed') {
-                this.departureTime = time[0];
-                this.depTimeParse = time[1];
+                this.departureTime = this.toTime(time);
+                this.depTimeParse = time;
             }
         },
         cancel: function () {
-            this.status = "Absent";
+            if (this.record.get("status")) {
+                this.status = this.record.get("status");
+            }
+            else this.status = "Absent";
             this.select = null;
             this.dialog = false;
-            this.arrivalTime = null;
+            if (this.record.get("arrive")) {
+                this.arrivalTime = this.toTime(this.record.get("arrive"));
+            }
+            else this.arrivalTime = null;
             this.arrTimeParse = null;
-            this.departureTime = null;
+            if (this.record.get("depart")) {
+                this.departureTime = this.toTime(this.record.get("depart"));
+            }
+
+            else this.departureTime = null;
             this.depTimeParse = null;
         },
         newRecord: async function () {
@@ -99,17 +109,13 @@ export default {
 
             let mainQuery = Parse.Query.or(recQueryArr, recQueryDep);
 
-
             let peep = await mainQuery.first();
-            console.log(peep)
             if (peep)  {
                 this.record = peep;
             }
             else {
                 this.record = new Record();
             }
-            console.log(this.record);
-            console.log(this.person);
         },
         saveRecord: async function () {
             if (this.status == 'Arrived') {
@@ -118,6 +124,7 @@ export default {
                 this.options.push("Departed");
                 this.options.push("Delete");
 
+                this.record.set("status", this.status);
                 this.record.set("arrive", this.arrTimeParse);
                 this.record.set("visitor", this.person);
                 await this.record.save();
@@ -129,33 +136,36 @@ export default {
                 this.options.push("Arrived");
                 this.options.push("Expected");
 
-                
+                this.record.set("status", this.status);
                 this.record.set("depart", this.depTimeParse);
                 await this.record.save();
-                this.cancel();
             }
             else if (this.status == 'Expected') {
 
                 this.options.splice(1,1);
                 this.options.push("Delete");
 
+                this.record.set("status", this.status);
                 this.record.set("visitor", this.person);
                 await this.record.save();
             }
             else if (this.status == 'Delete') {
                 this.options = ["Arrived","Expected"];
                 await this.record.destroy();
-                this.record = null;
                 this.cancel();
+                this.record = null;
             }
             this.dialog = false;
         },
         getDate: function () {
             let today = new Date();
-            let time = today.toTimeString().split(' ')[0];
-            let final = [time.slice(0, -3), today];
-            return final;
+            return today;
         },
+        toTime: function (date) {
+            let time = date.toTimeString().split(' ')[0];
+            time = time.slice(0, -3);
+            return time;
+        }
     }
 }
 </script>
