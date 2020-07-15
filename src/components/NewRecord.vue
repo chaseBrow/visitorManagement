@@ -87,12 +87,19 @@ export default {
             this.departureTime = null;
             this.depTimeParse = null;
         },
-        newRecord: function () {
-            if (this.record == null) {
-                const Record = new Parse.Object.extend('Record');
+        newRecord: async function () {
+            const Record = new Parse.Object.extend('Record');
+            const recQuery = new Parse.Query(Record);
+            recQuery.equalTo("visitor", this.person);
+            let peep = await recQuery.first();
+            if (peep !== null)  {
+                this.record = peep;
+            }
+            else {
                 this.record = new Record();
             }
-            
+            console.log(this.record);
+            console.log(this.person);
         },
         saveRecord: async function () {
             if (this.status == 'Arrived') {
