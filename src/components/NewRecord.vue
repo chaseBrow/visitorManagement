@@ -1,7 +1,7 @@
 <template>
     <v-dialog v-model="dialog" persistent width="300px" class="primary">
         <template v-slot:activator="{ on, attrs }">
-            <v-btn v-bind="attrs" v-on="on" v-on:click="newRecord()" class="mr-6 primary" style="padding: 0 16px 0 6px">
+            <v-btn v-bind="attrs" v-on="on" class="mr-6 primary" style="padding: 0 16px 0 6px">
                 <v-icon dense class="pr-1">mdi-plus</v-icon>
                 <span>Visit</span>
             </v-btn>
@@ -15,8 +15,7 @@
                     :disabled="status !== 'Arrived'"
                     label="Arrival"
                     :value="arrivalTime"
-                    type="time"
-                    v-model="arrivalTime"
+                    type="time"   
                 ></v-text-field>
                 
                 <v-text-field
@@ -24,7 +23,6 @@
                     label="Departure"
                     :value="departureTime"
                     type="time"
-                    v-model="departureTime"
                 ></v-text-field>
 
                 <v-select
@@ -55,47 +53,48 @@ export default {
                 "Arrived",
                 "Expected",
             ],
-            status: "Absent",
             select: null,
             dialog: false,
-            departureTime: null,
-            depTimeParse: null,
-            arrivalTime: null,
-            arrTimeParse: null,
             record: null,
+            status: "Absent",
+            arrivalTime: null,
+            departureTime: null,
+
         }
+    },
+    created: function () {
+        console.log("test");
+        this.newRecord();
     },
     methods: {
         visitStatus: function () {
             this.status = this.select;
-            const time = this.getDate();
             if (this.status == 'Arrived') {
-                this.arrivalTime = this.toTime(time);
-                this.arrTimeParse = time;
+                this.arrivalTime = this.toTime(this.getDate());
             }
             else if (this.status == 'Departed') {
-                this.departureTime = this.toTime(time);
-                this.depTimeParse = time;
+                this.departureTime = this.toTime(this.getDate());
             }
         },
         cancel: function () {
+            this.select = null;
+            this.dialog = false;
+
             if (this.record.get("status")) {
                 this.status = this.record.get("status");
             }
             else this.status = "Absent";
-            this.select = null;
-            this.dialog = false;
+            
+            
             if (this.record.get("arrive")) {
                 this.arrivalTime = this.toTime(this.record.get("arrive"));
             }
             else this.arrivalTime = null;
-            this.arrTimeParse = null;
+
             if (this.record.get("depart")) {
                 this.departureTime = this.toTime(this.record.get("depart"));
             }
-
             else this.departureTime = null;
-            this.depTimeParse = null;
         },
         newRecord: async function () {
             const Record = new Parse.Object.extend('Record');
@@ -112,9 +111,17 @@ export default {
             let peep = await mainQuery.first();
             if (peep)  {
                 this.record = peep;
+                this.status = this.record.get("status");
+                if (this.record.get("arrive")) {
+                    this.arrivalTime = this.record.get("arrive");
+                }
+                if (this.record.get("depart")) {
+                    this.departureTime = this.record.get("depart");
+                }
             }
             else {
                 this.record = new Record();
+                this.record.set("visitor", this.person);
             }
         },
         saveRecord: async function () {
@@ -125,8 +132,7 @@ export default {
                 this.options.push("Delete");
 
                 this.record.set("status", this.status);
-                this.record.set("arrive", this.arrTimeParse);
-                this.record.set("visitor", this.person);
+                this.record.set("arrive", this.getDate());
                 await this.record.save();
 
             }
@@ -137,7 +143,7 @@ export default {
                 this.options.push("Expected");
 
                 this.record.set("status", this.status);
-                this.record.set("depart", this.depTimeParse);
+                this.record.set("depart", this.getDate());
                 await this.record.save();
             }
             else if (this.status == 'Expected') {
@@ -152,8 +158,6 @@ export default {
             else if (this.status == 'Delete') {
                 this.options = ["Arrived","Expected"];
                 await this.record.destroy();
-                this.cancel();
-                this.record = null;
             }
             this.dialog = false;
         },
@@ -162,9 +166,12 @@ export default {
             return today;
         },
         toTime: function (date) {
-            let time = date.toTimeString().split(' ')[0];
-            time = time.slice(0, -3);
-            return time;
+            if (date) {
+                let time = date.toTimeString().split(' ')[0];
+                time = time.slice(0, -3);
+                return time;
+            }
+            else return null;
         }
     }
 }
