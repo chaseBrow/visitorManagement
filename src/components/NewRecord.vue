@@ -1,7 +1,7 @@
 <template>
     <v-dialog v-model="dialog" persistent width="300px" class="primary">
         <template v-slot:activator="{ on, attrs }">
-            <v-btn v-bind="attrs" v-on="on" class="mr-6 primary" style="padding: 0 16px 0 6px">
+            <v-btn v-bind="attrs" v-on="on" class="mr-6 primary" v-on:click="newRecord()" style="padding: 0 16px 0 6px">
                 <v-icon dense class="pr-1">mdi-plus</v-icon>
                 <span>Visit</span>
             </v-btn>
@@ -63,7 +63,6 @@ export default {
         }
     },
     created: function () {
-        console.log("test");
         this.newRecord();
     },
     methods: {
@@ -113,11 +112,14 @@ export default {
                 this.record = peep;
                 this.status = this.record.get("status");
                 if (this.record.get("arrive")) {
-                    this.arrivalTime = this.record.get("arrive");
+                    this.arrivalTime = this.toTime(this.record.get("arrive"));
                 }
                 if (this.record.get("depart")) {
-                    this.departureTime = this.record.get("depart");
+                    this.departureTime = this.toTime(this.record.get("depart"));
                 }
+                if (this.status == "Arrived") this.options = ["Departed", "Delete"];
+                if (this.status == "Departed") this.options = ["Arrived", "Expected"];
+                if (this.status == "Expected") this.options = ["Arrived","Delete"];
             }
             else {
                 this.record = new Record();
@@ -127,9 +129,7 @@ export default {
         saveRecord: async function () {
             if (this.status == 'Arrived') {
 
-                this.options.splice(0,2);
-                this.options.push("Departed");
-                this.options.push("Delete");
+                this.options = ["Departed","Delete"];
 
                 this.record.set("status", this.status);
                 this.record.set("arrive", this.getDate());
@@ -138,18 +138,22 @@ export default {
             }
             else if (this.status == 'Departed') {
 
-                this.options.splice(0,2);
-                this.options.push("Arrived");
-                this.options.push("Expected");
+                this.options = ["Arrived","Expected"];
 
                 this.record.set("status", this.status);
                 this.record.set("depart", this.getDate());
                 await this.record.save();
+
+                this.select = null;
+                this.dialog = false;
+                this.record = null;
+                this.status = "Absent";
+                this.arrivalTime = null;
+                this.departureTime = null;
             }
             else if (this.status == 'Expected') {
 
-                this.options.splice(1,1);
-                this.options.push("Delete");
+                this.options = ["Arrived","Delete"];
 
                 this.record.set("status", this.status);
                 this.record.set("visitor", this.person);
