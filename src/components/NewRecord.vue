@@ -89,10 +89,20 @@ export default {
         },
         newRecord: async function () {
             const Record = new Parse.Object.extend('Record');
-            const recQuery = new Parse.Query(Record);
-            recQuery.equalTo("visitor", this.person);
-            let peep = await recQuery.first();
-            if (peep !== null)  {
+            const recQueryArr = new Parse.Query(Record);
+            recQueryArr.equalTo("visitor", this.person);
+            recQueryArr.doesNotExist("arrive");
+
+            const recQueryDep = new Parse.Query(Record);
+            recQueryDep.equalTo("visitor", this.person);
+            recQueryDep.doesNotExist("depart");
+
+            let mainQuery = Parse.Query.or(recQueryArr, recQueryDep);
+
+
+            let peep = await mainQuery.first();
+            console.log(peep)
+            if (peep)  {
                 this.record = peep;
             }
             else {
