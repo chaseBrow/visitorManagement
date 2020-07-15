@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-model="dialog" width="300px" class="primary">
+    <v-dialog v-model="dialog" persistent width="300px" class="primary">
         <template v-slot:activator="{ on, attrs }">
             <v-btn v-bind="attrs" v-on="on" v-on:click="newRecord()" class="mr-6 primary" style="padding: 0 16px 0 6px">
                 <v-icon dense class="pr-1">mdi-plus</v-icon>
@@ -37,8 +37,8 @@
 
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn v-on:click="cancel" text>Cancel</v-btn>
-                    <v-btn v-on:click="saveRecord" color="primary">Save</v-btn>
+                    <v-btn v-on:click="cancel()" text>Cancel</v-btn>
+                    <v-btn v-on:click="saveRecord()" color="primary">Save</v-btn>
                 </v-card-actions>
 
             </v-card>
@@ -54,34 +54,38 @@ export default {
             options: [
                 "Arrived",
                 "Expected",
-                "Departed"
             ],
             status: "Absent",
             select: null,
             dialog: false,
             departureTime: null,
+            depTimeParse: null,
             arrivalTime: null,
+            arrTimeParse: null,
             record: null,
         }
     },
     methods: {
         visitStatus: function () {
             this.status = this.select;
+            const time = this.getDate();
             if (this.status == 'Arrived') {
-                this.arrivalTime = this.getDate();
+                this.arrivalTime = time[0];
+                this.arrTimeParse = time[1];
             }
             else if (this.status == 'Departed') {
-                this.departureTime = this.getDate();
+                this.departureTime = time[0];
+                this.depTimeParse = time[1];
             }
-            // else if (this.status == 'Expected') {
-
-            // }
-            // else if (this.status == 'Delete') {
-
-            // }
         },
         cancel: function () {
+            this.status = "Absent";
+            this.select = null;
             this.dialog = false;
+            this.arrivalTime = null;
+            this.arrTimeParse = null;
+            this.departureTime = null;
+            this.depTimeParse = null;
         },
         newRecord: function () {
             if (this.record == null) {
@@ -94,40 +98,47 @@ export default {
             if (this.status == 'Arrived') {
 
                 this.options.splice(0,2);
+                this.options.push("Departed");
                 this.options.push("Delete");
 
-                this.record.set("arrive", this.arrivalTime);
+                this.record.set("arrive", this.arrTimeParse);
+                this.record.set("visitor", this.person);
+                await this.record.save();
+
             }
             else if (this.status == 'Departed') {
 
-                this.options.splice(2,1);
-                this.options.push("Delete");
+                this.options.splice(0,2);
+                this.options.push("Arrived");
+                this.options.push("Expected");
 
-                this.record.set("depart", this.departureTime);
-                this.record.set("visitor", this.person);
+                
+                this.record.set("depart", this.depTimeParse);
                 await this.record.save();
+                this.cancel();
             }
             else if (this.status == 'Expected') {
 
                 this.options.splice(1,1);
                 this.options.push("Delete");
+
+                this.record.set("visitor", this.person);
+                await this.record.save();
             }
             else if (this.status == 'Delete') {
-                this.options = ["Arrived","Expected","Departed"];
-                this.status = "Absent";
-                this.select = null;
-                this.dialog = false;
-                this.departureTime = null;
-                this.arrivalTime = null;
+                this.options = ["Arrived","Expected"];
+                await this.record.destroy();
                 this.record = null;
+                this.cancel();
             }
-            this.cancel();
+            this.dialog = false;
         },
         getDate: function () {
             let today = new Date();
-            let time = today.getHours() + ":" + today.getMinutes();
-            return time;
-        }
+            let time = today.toTimeString().split(' ')[0];
+            let final = [time.slice(0, -3), today];
+            return final;
+        },
     }
 }
 </script>

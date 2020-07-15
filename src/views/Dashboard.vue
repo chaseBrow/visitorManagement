@@ -2,7 +2,7 @@
 	<v-container fluid fill-height background>
 		<v-row class="mx-4" style="height: 100%">
 			<v-form style="border-radius: 10px 10px 0px 0px; height: auto; width: 100%" class="primary">
-				<v-container class="align-start">	
+				<v-container>	
 					<v-row class="align-start">
 						<v-col cols="2">
 							<v-text-field  label="First Name" outlined color="black" 
@@ -40,12 +40,6 @@
 							>
 							</v-select>
 						</v-col>
-						<v-col cols="2">
-							<v-btn x-large>
-								<span> Today's Visitor </span>
-								<v-icon class="pl-2">mdi-magnify</v-icon>
-							</v-btn>
-						</v-col>
 					</v-row>
 				</v-container>
 			</v-form>
@@ -58,6 +52,10 @@
 						<span style="width: 10%">Company</span>
 						<span style="width: 25%">Email</span>
 						<span style="width: 10%">Access</span>
+						<v-spacer></v-spacer>
+						<v-btn class="secondary black--text" v-on:click="recentVisitors()"> 
+							Recent Visitors
+						</v-btn>
 					</v-toolbar>
 				<v-list dense>
 					<v-list-item v-for="person in filteredPeople" :key="person.email">
@@ -130,7 +128,23 @@ export default {
 		}
 	},
 	methods: {
-		
+		recentVisitors: async function () {
+			this.filteredPeople = null;
+
+			const Record = Parse.Object.extend("Record");
+			const recQuery = new Parse.Query(Record);
+			recQuery.greaterThan("arrive", this.getDate());
+			recQuery.include(["Visitor.firstName"]);
+			
+			let test = await recQuery.find();
+			console.log(test[0]);
+			
+		},
+		getDate: function () {
+			let date = new Date();
+			let yesterday = date.setTime(date.getTime() - 86400000);
+			return new Date(yesterday);
+		},
 		save: async function (person) {
 			this.cancel(person);
 
@@ -143,7 +157,6 @@ export default {
 			await person.save();
 
 			this.filter();
-			
 		},
 		cancel: function (person) {
 			let edit = document.getElementById(person.get("email") + "edit");
