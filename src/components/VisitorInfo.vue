@@ -33,13 +33,13 @@ import Parse from 'parse'
 export default {
     data() {
         return {
-            clientID: "upZS6tm7Pw",
+            clientID: null,
             options: [],
-            firstName: "",
-            lastName: "",
-            company: "",
-            email: "",
-            access: "",
+            firstName: null,
+            lastName: null,
+            company: null,
+            email: null,
+            access: null,
             menu: false,
 
         }
@@ -50,11 +50,12 @@ export default {
             this.options = user.get("options");
         },
         clear: function () {
-            this.firstName = "";
-            this.lastName = "";
-            this.company = "";
-            this.email = "";
-            this.access = "";
+            this.firstName = null;
+            this.lastName = null;
+            this.company = null;
+            this.email = null;
+            this.access = null;
+            this.clientID = null;
         },
         saveVisitor: function () {
             const Visitor = Parse.Object.extend("Visitor");
