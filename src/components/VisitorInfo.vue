@@ -16,9 +16,7 @@
                 </v-text-field> 
                 <v-text-field  label="Email" outlined color="black" v-model="email">  
                 </v-text-field>
-                <v-select label="Access" outlined color="black" :items="options" v-model="access" 
-                    v-on:focus="getOptions"
-                >
+                <v-select label="Access" outlined color="black" :items="options" v-model="access" v-on:focus="getOptions">
                 </v-select>
 
                 <v-card-actions>
@@ -47,11 +45,9 @@ export default {
         }
     },
     methods: {
-        getOptions: async function () {
+        getOptions: function () {
             const user = Parse.User.current();
             this.options = user.get("options");
-
-            console.log(this.options);
         },
         clear: function () {
             this.firstName = "";

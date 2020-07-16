@@ -33,10 +33,8 @@
 							</v-text-field>
 						</v-col>
 						<v-col cols="2">
-							 <v-select label="Access" outlined color="black" :items="options"
-								v-model="filterTerms.access"
-								v-on:focus="getOptions"
-								v-on:change="filter"
+							 <v-select label="Access" outlined color="black" :items="options" v-model="filterTerms.access" 
+							 v-on:focus="getOptions" v-on:change="filter"
 							>
 							</v-select>
 						</v-col>
@@ -57,7 +55,7 @@
 							Recent Visitors
 						</v-btn>
 					</v-toolbar>
-				<v-list dense>
+				<v-list dense class="data">
 					<v-list-item v-for="person in filteredPeople" :key="person.email">
 
 						<input type="text" style="width: 10%" readonly :value="person.get('firstName')" :id="person.get('email') + person.get('firstName')">
@@ -138,7 +136,6 @@ export default {
 			
 			let test = await recQuery.find();
 			console.log(test[0]);
-			
 		},
 		getDate: function () {
 			let date = new Date();
@@ -260,10 +257,10 @@ export default {
 			access.style.paddingLeft = "2px";
 			access.style.marginRight = "8px";
 		},
-		getOptions: async function () {
-			let opt = await process.env.VUE_APP_ACCESS_OPTIONS;
-			this.options = opt.split(',');
-		},
+		getOptions: function () {
+            const user = Parse.User.current();
+            this.options = user.get("options");
+        },
 		filter: function () {
 			const Visitors = Parse.Object.extend("Visitor");
 			const queryVisitor = new Parse.Query(Visitors);
@@ -302,9 +299,9 @@ export default {
 
 .v-list-item:hover {
 	background:lightgray;
-}
+} 
 
-.v-list {
+ .v-list.data {
   border-radius: 0px;
   overflow-y: auto;
   height: 450px;
