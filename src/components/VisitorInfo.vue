@@ -48,13 +48,10 @@ export default {
     },
     methods: {
         getOptions: async function () {
-            const Options = Parse.Object.extend("Client");
-            const queryOptions = new Parse.Query(Options);
+            const user = Parse.User.current();
+            this.options = user.get("options");
 
-            queryOptions.equalTo("objectId", this.clientID);
-            const client = await queryOptions.first();
-            this.options = client.get("options");
-            
+            console.log(this.options);
         },
         clear: function () {
             this.firstName = "";
