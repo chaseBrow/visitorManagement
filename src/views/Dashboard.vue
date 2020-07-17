@@ -1,11 +1,11 @@
 <template>
 	<v-container fluid fill-height background>
 		<v-row class="mx-4" style="height: 100%">
-			<v-form style="border-radius: 10px 10px 0px 0px; height: auto; width: 100%" class="primary">
+			<v-form class="primary form">
 				<v-container>	
 					<v-row class="align-start">
 						<v-col cols="2">
-							<v-text-field  label="First Name" outlined color="black" 
+							<v-text-field label="First Name" outlined color="black" 
 								v-model="filterTerms.firstName"
 								v-on:input="filter"
 							>
@@ -35,10 +35,8 @@
 							</v-text-field>
 						</v-col>
 						<v-col cols="2">
-							 <v-select label="Access" outlined color="black" :items="options"
-								v-model="filterTerms.access"
-								v-on:focus="getOptions"
-								v-on:change="filter"
+							 <v-select label="Access" outlined color="black" :items="options" v-model="filterTerms.access" 
+							 v-on:focus="getOptions" v-on:change="filter"
 							>
 							</v-select>
 						</v-col>
@@ -59,7 +57,8 @@
 							Recent Visitors
 						</v-btn>
 					</v-toolbar>
-				<v-list dense class="form">
+
+				<v-list dense class="data">
 					<v-list-item v-for="person in filteredPeople" :key="person.email">
 
 						<input type="text" style="width: 10%" readonly :value="person.get('firstName')" :id="person.get('email') + person.get('firstName')">
@@ -161,7 +160,6 @@ export default {
 			
 			let test = await recQuery.find();
 			console.log(test[0]);
-			
 		},
 		getDate: function () {
 			let date = new Date();
@@ -170,7 +168,6 @@ export default {
 		},
 		save: async function (person) {
 			this.cancel(person);
-
 			person.set("firstName", document.getElementById(person.get('email') + person.get('firstName')).value);
 			person.set("lastName", document.getElementById(person.get('email') + person.get('lastName')).value);
 			person.set("company", document.getElementById(person.get('email') + person.get('company')).value);
@@ -283,10 +280,10 @@ export default {
 			access.style.paddingLeft = "2px";
 			access.style.marginRight = "8px";
 		},
-		getOptions: async function () {
-			let opt = await process.env.VUE_APP_ACCESS_OPTIONS;
-			this.options = opt.split(',');
-		},
+		getOptions: function () {
+            const user = Parse.User.current();
+            this.options = user.get("options");
+        },
 		filter: function () {
 			const Visitors = Parse.Object.extend("Visitor");
 			const queryVisitor = new Parse.Query(Visitors);
@@ -337,9 +334,10 @@ export default {
 
 .v-list-item:hover {
 	background:lightgray;
-}
+} 
 
-.v-list.form {
+
+ .v-list.data {
   border-radius: 0px;
   overflow-y: auto;
   height: 450px;
@@ -348,4 +346,10 @@ export default {
 textarea:focus, input:focus{
     outline: none;
 }
+.form {
+	border-radius: 10px 10px 0px 0px; 
+	height: auto; 
+	width: 100%;
+}
+
 </style>

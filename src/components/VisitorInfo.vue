@@ -16,9 +16,7 @@
                 </v-text-field> 
                 <v-text-field  label="Email" outlined color="black" v-model="email">  
                 </v-text-field>
-                <v-select label="Access" outlined color="black" :items="options" v-model="access" 
-                    v-on:focus="getOptions"
-                >
+                <v-select label="Access" outlined color="black" :items="options" v-model="access" v-on:focus="getOptions">
                 </v-select>
 
                 <v-card-actions>
@@ -36,31 +34,27 @@ export default {
     data() {
         return {
             options: [],
-            firstName: "",
-            lastName: "",
-            company: "",
-            email: "",
-            access: "",
+            firstName: null,
+            lastName: null,
+            company: null,
+            email: null,
+            access: null,
             menu: false,
 
         }
     },
     methods: {
-        getOptions: async function () {
-            const Options = Parse.Object.extend("Client");
-            const queryOptions = new Parse.Query(Options);
-
-            queryOptions.equalTo("objectId", this.clientID);
-            const client = await queryOptions.first();
-            this.options = client.get("options");
-            
+        getOptions: function () {
+            const user = Parse.User.current();
+            this.options = user.get("options");
         },
         clear: function () {
-            this.firstName = "";
-            this.lastName = "";
-            this.company = "";
-            this.email = "";
-            this.access = "";
+            this.firstName = null;
+            this.lastName = null;
+            this.company = null;
+            this.email = null;
+            this.access = null;
+            this.clientID = null;
         },
         saveVisitor: function () {
             const Visitor = Parse.Object.extend("Visitor");

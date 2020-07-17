@@ -1,20 +1,10 @@
 <template>
-  <div>
-    <h1 class="accent text-center"> Projects </h1>
-    <v-container>
-
-    </v-container>
-  </div>
-
-
+  <h1> </h1>
 </template>
 
 <script>
-  // @ is an alias to /src
-  // import HelloWorld from "@/components/HelloWorld.vue";
-
   export default {
-
+   
   };
 </script>
 <style scoped>

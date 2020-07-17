@@ -15,7 +15,6 @@
 </template>
 
 <script>
-// import HelloWorld from './components/HelloWorld';
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
