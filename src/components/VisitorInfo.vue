@@ -19,8 +19,6 @@
 								v-on:input="filter"
 				>
 				</v-autocomplete>    
-                <!-- <v-text-field  label="Company" outlined color="black" v-model="company"> 
-                </v-text-field>  -->
                 <v-text-field  label="Email" outlined color="black" v-model="email">  
                 </v-text-field>
                 <v-select label="Access" outlined color="black" :items="options" v-model="access" v-on:focus="getOptions">
@@ -62,7 +60,8 @@ export default {
 			const Users = new Parse.Query(Parse.User);
 			Users.equalTo("parentCompany", user);
 
-			let companyList = await Users.find();
+            let companyList = await Users.find();
+            companyList.push(user);
 			
 			let test = companyList.filter(company => {
 				let name = company.get("name").toLowerCase().includes(val.toLowerCase());
