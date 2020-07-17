@@ -19,19 +19,13 @@
 							</v-text-field>
 						</v-col>
 						<v-col cols="3">
-							<!-- <v-text-field  label="Company" outlined color="black"
-								v-model="filterTerms.company"
+							<v-autocomplete outlined label="Company" color="black" cache-items hide-no-data
+								:items="companyFinal"
+      							:search-input.sync="searchComp"
+								v-model="company"
 								v-on:input="filter"
 							>
-							</v-text-field> -->
-
-							<v-autocomplete outlined label="Company" color="black" cache-items
-								:loading="loading"
-								:items="companyFinal"
-      							:search-input.sync="filterTerms.company"
-							>
 							</v-autocomplete>
-
 						</v-col>
 						<v-col cols="3">
 							<v-text-field label="Email" outlined color="black"
@@ -65,7 +59,7 @@
 							Recent Visitors
 						</v-btn>
 					</v-toolbar>
-				<v-list dense>
+				<v-list dense class="form">
 					<v-list-item v-for="person in filteredPeople" :key="person.email">
 
 						<input type="text" style="width: 10%" readonly :value="person.get('firstName')" :id="person.get('email') + person.get('firstName')">
@@ -120,21 +114,19 @@ import NewRecord from "../components/NewRecord"
 export default {
 	data() {
 		return {
-			loading: false,
 			person: null,
 			confirmDelete: false,
 			filterTerms: {
 				firstName: '',
 				lastName: '',
-				company: '',
 				email: '',
 				access: '',
 			},
 			options: [],
 			filteredPeople: [],
-			companylist: [],
 			companyFinal: [],
 			searchComp: null,
+			company: '',
 		}
 	},
 	watch: {
@@ -144,25 +136,20 @@ export default {
 	},
 	methods: {
 		searchCompanies: async function (val) {
-			this.loading = true;
 			const user = Parse.User.current();
 			const Users = new Parse.Query(Parse.User);
 			Users.equalTo("parentCompany", user);
 
-			Users.find().then((companies) => {
-				this.companylist = companies.filter((company) => {
-					return company.get("name").toLowerCase().includes(val.toLowerCase());
-				});
-			},
-			(error) =>	{ 
-				console.log("there was an error:" + error.message)
-			});
+			let companyList = await Users.find();
 			
-			this.companylist.forEach(company => {
-				this.companyFinal.push(company.get("name"));
+			let test = companyList.filter(company => {
+				let name = company.get("name").toLowerCase().includes(val.toLowerCase());
+				return name;
 			});
-			this.loading = false;
-			console.log(this.companylist);
+			this.companyFinal = [];
+			test.forEach( e =>{
+				this.companyFinal.push(e.get("name"));
+			})
 		},
 		recentVisitors: async function () {
 			this.filteredPeople = null;
@@ -340,7 +327,7 @@ export default {
 	background:lightgray;
 }
 
-.v-list {
+.v-list.form {
   border-radius: 0px;
   overflow-y: auto;
   height: 450px;

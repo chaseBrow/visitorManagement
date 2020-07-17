@@ -35,7 +35,6 @@ import Parse from 'parse'
 export default {
     data() {
         return {
-            clientID: "upZS6tm7Pw",
             options: [],
             firstName: "",
             lastName: "",
