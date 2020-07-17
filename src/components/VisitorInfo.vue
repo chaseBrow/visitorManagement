@@ -42,7 +42,7 @@ export default {
             lastName: null,
             companyFinal: [],
             searchComp: null,
-            company: null,
+            company: '',
             email: null,
             access: null,
             menu: false,
@@ -64,7 +64,11 @@ export default {
             companyList.push(user);
 			
 			let test = companyList.filter(company => {
-				let name = company.get("name").toLowerCase().includes(val.toLowerCase());
+                let name;
+                if (val) {
+                    name = company.get("name").toLowerCase().includes(val.toLowerCase());
+                }
+                else name = company.get("name");
 				return name;
 			});
 			this.companyFinal = [];
@@ -79,28 +83,27 @@ export default {
         clear: function () {
             this.firstName = null;
             this.lastName = null;
-            this.company = null;
+            this.company = '';
             this.email = null;
             this.access = null;
             this.clientID = null;
         },
-        saveVisitor: function () {
+        saveVisitor: async function () {
             const Visitor = Parse.Object.extend("Visitor");
-
             let person = new Visitor();
+
+            const compQuery = new Parse.Query(Parse.User);
+            compQuery.equalTo("name", this.company);
+            let comp = await compQuery.first();
 
             person.set("firstName", this.firstName);
             person.set("lastName", this.lastName);
-            person.set("company", this.company);
+            person.set("company", comp);
             person.set("email", this.email);
             person.set("access", this.access);
 
             
-            person.save().then((person) => {
-                console.log('New object created with objectId: ' + person.id);
-            }, (error) => {
-                console.log('Failed to create new object, with error code: ' + error.message);
-            });
+            await person.save()
             this.clear();
             this.menu = !this.menu;
         }
