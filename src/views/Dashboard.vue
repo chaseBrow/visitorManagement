@@ -19,11 +19,19 @@
 							</v-text-field>
 						</v-col>
 						<v-col cols="3">
-							<v-text-field  label="Company" outlined color="black"
+							<!-- <v-text-field  label="Company" outlined color="black"
 								v-model="filterTerms.company"
 								v-on:input="filter"
 							>
-							</v-text-field>
+							</v-text-field> -->
+
+							<v-autocomplete outlined label="Company" color="black" cache-items
+								:loading="loading"
+								:items="companyFinal"
+      							:search-input.sync="filterTerms.company"
+							>
+							</v-autocomplete>
+
 						</v-col>
 						<v-col cols="3">
 							<v-text-field label="Email" outlined color="black"
@@ -112,6 +120,7 @@ import NewRecord from "../components/NewRecord"
 export default {
 	data() {
 		return {
+			loading: false,
 			person: null,
 			confirmDelete: false,
 			filterTerms: {
@@ -122,12 +131,39 @@ export default {
 				access: '',
 			},
 			options: [],
-			filteredPeople: [
-				
-			],
+			filteredPeople: [],
+			companylist: [],
+			companyFinal: [],
+			searchComp: null,
+		}
+	},
+	watch: {
+		searchComp (val) {
+			this.searchCompanies(val);
 		}
 	},
 	methods: {
+		searchCompanies: async function (val) {
+			this.loading = true;
+			const user = Parse.User.current();
+			const Users = new Parse.Query(Parse.User);
+			Users.equalTo("parentCompany", user);
+
+			Users.find().then((companies) => {
+				this.companylist = companies.filter((company) => {
+					return company.get("name").toLowerCase().includes(val.toLowerCase());
+				});
+			},
+			(error) =>	{ 
+				console.log("there was an error:" + error.message)
+			});
+			
+			this.companylist.forEach(company => {
+				this.companyFinal.push(company.get("name"));
+			});
+			this.loading = false;
+			console.log(this.companylist);
+		},
 		recentVisitors: async function () {
 			this.filteredPeople = null;
 
