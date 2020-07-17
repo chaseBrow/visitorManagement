@@ -19,11 +19,13 @@
 							</v-text-field>
 						</v-col>
 						<v-col cols="3">
-							<v-text-field  label="Company" outlined color="black"
-								v-model="filterTerms.company"
+							<v-autocomplete outlined label="Company" color="black" cache-items hide-no-data
+								:items="companyFinal"
+      							:search-input.sync="searchComp"
+								v-model="company"
 								v-on:input="filter"
 							>
-							</v-text-field>
+							</v-autocomplete>
 						</v-col>
 						<v-col cols="3">
 							<v-text-field label="Email" outlined color="black"
@@ -55,6 +57,7 @@
 							Recent Visitors
 						</v-btn>
 					</v-toolbar>
+
 				<v-list dense class="data">
 					<v-list-item v-for="person in filteredPeople" :key="person.email">
 
@@ -115,17 +118,38 @@ export default {
 			filterTerms: {
 				firstName: '',
 				lastName: '',
-				company: '',
 				email: '',
 				access: '',
 			},
 			options: [],
-			filteredPeople: [
-				
-			],
+			filteredPeople: [],
+			companyFinal: [],
+			searchComp: null,
+			company: '',
+		}
+	},
+	watch: {
+		searchComp (val) {
+			this.searchCompanies(val);
 		}
 	},
 	methods: {
+		searchCompanies: async function (val) {
+			const user = Parse.User.current();
+			const Users = new Parse.Query(Parse.User);
+			Users.equalTo("parentCompany", user);
+
+			let companyList = await Users.find();
+			
+			let test = companyList.filter(company => {
+				let name = company.get("name").toLowerCase().includes(val.toLowerCase());
+				return name;
+			});
+			this.companyFinal = [];
+			test.forEach( e =>{
+				this.companyFinal.push(e.get("name"));
+			})
+		},
 		recentVisitors: async function () {
 			this.filteredPeople = null;
 
@@ -266,6 +290,7 @@ export default {
 
 			queryVisitor.limit(20);
 			queryVisitor.notEqualTo("deleted", true);
+			queryVisitor.include(["company.name"]);
 			queryVisitor.find().then((visitors) => {
 				this.filteredPeople = visitors.filter(this.filterPeople);
 			},
@@ -275,11 +300,22 @@ export default {
 		},
 
 		filterPeople: function (visitor) {
-			let first = visitor.get("firstName").toLowerCase().includes(this.filterTerms.firstName.toLowerCase());
-			let last = visitor.get("lastName").toLowerCase().includes(this.filterTerms.lastName.toLowerCase());
-			let company = visitor.get("company").toLowerCase().includes(this.filterTerms.company.toLowerCase());
-			let email = visitor.get("email").toLowerCase().includes(this.filterTerms.email.toLowerCase());
-			let access = visitor.get("access").toLowerCase().includes(this.filterTerms.access.toLowerCase());
+			let first = true, last = true,company = true, email = true, access = true;
+			if (visitor.get("firstName")) {
+				first = visitor.get("firstName").toLowerCase().includes(this.filterTerms.firstName.toLowerCase());
+			}
+			if (visitor.get("lastName")) {
+				last = visitor.get("lastName").toLowerCase().includes(this.filterTerms.lastName.toLowerCase());
+			}
+			let val = visitor.get("company")
+			company = val.get("name").includes(this.company);
+
+			if (visitor.get("email")) {
+				email = visitor.get("email").toLowerCase().includes(this.filterTerms.email.toLowerCase());
+			}
+			if (visitor.get("access")) {
+				access = visitor.get("access").toLowerCase().includes(this.filterTerms.access.toLowerCase());
+			}
 			if (first == true && last == true && company == true && email == true && access == true) {
 				return true;
 			}
@@ -299,6 +335,7 @@ export default {
 .v-list-item:hover {
 	background:lightgray;
 } 
+
 
  .v-list.data {
   border-radius: 0px;

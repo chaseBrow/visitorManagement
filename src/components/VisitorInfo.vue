@@ -33,7 +33,6 @@ import Parse from 'parse'
 export default {
     data() {
         return {
-            clientID: null,
             options: [],
             firstName: null,
             lastName: null,
