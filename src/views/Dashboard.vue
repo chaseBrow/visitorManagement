@@ -47,16 +47,16 @@
 
 			<v-col cols="12" class="secondary" style="border-radius: 0px 0px 10px 10px; height: auto">
 				<v-toolbar class="primary">
-						<span style="width: 10%">First Name</span>
-						<span style="width: 10%">Last Name</span>
-						<span style="width: 10%">Company</span>
-						<span style="width: 25%">Email</span>
-						<span style="width: 10%">Access</span>
-						<v-spacer></v-spacer>
-						<v-btn class="secondary black--text" v-on:click="recentVisitors()"> 
-							Recent Visitors
-						</v-btn>
-					</v-toolbar>
+					<span style="width: 10%">First Name</span>
+					<span style="width: 10%">Last Name</span>
+					<span style="width: 10%">Company</span>
+					<span style="width: 25%">Email</span>
+					<span style="width: 10%">Access</span>
+					<v-spacer></v-spacer>
+					<v-btn class="secondary black--text" v-on:click="recentVisitors()"> 
+						Recent Visitors
+					</v-btn>
+				</v-toolbar>
 
 				<v-list dense class="data">
 					<v-list-item v-for="person in filteredPeople" :key="person.email">
