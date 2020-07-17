@@ -16,7 +16,6 @@
 								:items="companyFinal"
       							:search-input.sync="searchComp"
 								v-model="company"
-								v-on:input="filter"
 				>
 				</v-autocomplete>    
                 <v-text-field  label="Email" outlined color="black" v-model="email">  
@@ -42,7 +41,8 @@ export default {
             firstName: null,
             lastName: null,
             companyFinal: [],
-			searchComp: null,
+            searchComp: null,
+            company: null,
             email: null,
             access: null,
             menu: false,
