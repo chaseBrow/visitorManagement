@@ -11,9 +11,16 @@
                 <v-text-field  label="First Name" outlined color="black" v-model="firstName">
                 </v-text-field>
                 <v-text-field  label="Last Name" outlined color="black" v-model="lastName">
-                </v-text-field>    
-                <v-text-field  label="Company" outlined color="black" v-model="company"> 
-                </v-text-field> 
+                </v-text-field>
+                <v-autocomplete outlined label="Company" color="black" cache-items hide-no-data
+								:items="companyFinal"
+      							:search-input.sync="searchComp"
+								v-model="company"
+								v-on:input="filter"
+				>
+				</v-autocomplete>    
+                <!-- <v-text-field  label="Company" outlined color="black" v-model="company"> 
+                </v-text-field>  -->
                 <v-text-field  label="Email" outlined color="black" v-model="email">  
                 </v-text-field>
                 <v-select label="Access" outlined color="black" :items="options" v-model="access" v-on:focus="getOptions">
@@ -36,14 +43,36 @@ export default {
             options: [],
             firstName: null,
             lastName: null,
-            company: null,
+            companyFinal: [],
+			searchComp: null,
             email: null,
             access: null,
             menu: false,
 
         }
     },
+    watch: {
+		searchComp (val) {
+			this.searchCompanies(val);
+		}
+	},
     methods: {
+        searchCompanies: async function (val) {
+			const user = Parse.User.current();
+			const Users = new Parse.Query(Parse.User);
+			Users.equalTo("parentCompany", user);
+
+			let companyList = await Users.find();
+			
+			let test = companyList.filter(company => {
+				let name = company.get("name").toLowerCase().includes(val.toLowerCase());
+				return name;
+			});
+			this.companyFinal = [];
+			test.forEach( e =>{
+				this.companyFinal.push(e.get("name"));
+			})
+		},
         getOptions: function () {
             const user = Parse.User.current();
             this.options = user.get("options");
