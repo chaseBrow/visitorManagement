@@ -140,6 +140,7 @@ export default {
 			Users.equalTo("parentCompany", user);
 
 			let companyList = await Users.find();
+			companyList.push(user);
 			
 			let test = companyList.filter(company => {
 				let name = company.get("name").toLowerCase().includes(val.toLowerCase());
