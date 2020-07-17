@@ -293,6 +293,7 @@ export default {
 
 			queryVisitor.limit(20);
 			queryVisitor.notEqualTo("deleted", true);
+			queryVisitor.include(["company.name"]);
 			queryVisitor.find().then((visitors) => {
 				this.filteredPeople = visitors.filter(this.filterPeople);
 			},
@@ -302,11 +303,22 @@ export default {
 		},
 
 		filterPeople: function (visitor) {
-			let first = visitor.get("firstName").toLowerCase().includes(this.filterTerms.firstName.toLowerCase());
-			let last = visitor.get("lastName").toLowerCase().includes(this.filterTerms.lastName.toLowerCase());
-			let company = visitor.get("company").toLowerCase().includes(this.filterTerms.company.toLowerCase());
-			let email = visitor.get("email").toLowerCase().includes(this.filterTerms.email.toLowerCase());
-			let access = visitor.get("access").toLowerCase().includes(this.filterTerms.access.toLowerCase());
+			let first = true, last = true,company = true, email = true, access = true;
+			if (visitor.get("firstName")) {
+				first = visitor.get("firstName").toLowerCase().includes(this.filterTerms.firstName.toLowerCase());
+			}
+			if (visitor.get("lastName")) {
+				last = visitor.get("lastName").toLowerCase().includes(this.filterTerms.lastName.toLowerCase());
+			}
+			let val = visitor.get("company")
+			company = val.get("name").includes(this.company);
+
+			if (visitor.get("email")) {
+				email = visitor.get("email").toLowerCase().includes(this.filterTerms.email.toLowerCase());
+			}
+			if (visitor.get("access")) {
+				access = visitor.get("access").toLowerCase().includes(this.filterTerms.access.toLowerCase());
+			}
 			if (first == true && last == true && company == true && email == true && access == true) {
 				return true;
 			}
