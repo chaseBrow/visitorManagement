@@ -63,7 +63,7 @@
 
 						<input type="text" style="width: 10%" readonly :value="person.get('firstName')" :id="person.get('email') + person.get('firstName')">
 						<input type="text" style="width: 10%" readonly :value="person.get('lastName')" :id="person.get('email') + person.get('lastName')">
-						<input type="text" style="width: 10%" readonly :value="person.get('company')" :id="person.get('email') + person.get('company')">
+						<input type="text" style="width: 10%" readonly :value="getCompanyName(person)" :id="person.get('email') + person.get('company')">
 						<input type="text" style="width: 25%" readonly :value="person.get('email')" :id="person.get('email')">
 						<input type="text" style="width: 10%" readonly :value="person.get('access')" :id="person.get('email') + person.get('access')">
 						<v-spacer></v-spacer>
@@ -126,6 +126,7 @@ export default {
 			companyFinal: [],
 			searchComp: null,
 			company: '',
+			recVisitors: null,
 		}
 	},
 	watch: {
@@ -134,6 +135,11 @@ export default {
 		}
 	},
 	methods: {
+		getCompanyName: function (person) {
+			let comp = person.get("company");
+			let name = comp.get("name");
+			return name;
+		},
 		searchCompanies: async function (val) {
 			const user = Parse.User.current();
 			const Users = new Parse.Query(Parse.User);
@@ -152,15 +158,26 @@ export default {
 			})
 		},
 		recentVisitors: async function () {
-			this.filteredPeople = null;
+			this.filterTerms.firstName = '';
+			this.filterTerms.lastName = '';
+			this.filterTerms.email = '';
+			this.filterTerms.access = '';
+			this.company = '';
+
 
 			const Record = Parse.Object.extend("Record");
 			const recQuery = new Parse.Query(Record);
-			recQuery.greaterThan("arrive", this.getDate());
-			recQuery.include(["Visitor.firstName"]);
+
+
+			recQuery.greaterThan("createdAt", this.getDate());
+			recQuery.include("visitor");
 			
 			let test = await recQuery.find();
-			console.log(test[0]);
+			let vis = [];
+			test.forEach(e => {
+				vis.push(e.get("visitor"));
+			});
+			this.filteredPeople = vis;
 		},
 		getDate: function () {
 			let date = new Date();
