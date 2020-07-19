@@ -13,7 +13,7 @@
 			<v-icon color="black">mdi-exit-to-app</v-icon>
 		</v-btn>
 		<v-btn class="primary" v-if="['home'].indexOf($route.name) == 0">
-			<span class="mr-1 black--text">Sign In</span>
+			<span class="mr-1 black--text">Login</span>
 			<v-icon color="black">mdi-exit-to-app</v-icon>
 		</v-btn>
 
