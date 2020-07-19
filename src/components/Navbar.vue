@@ -12,7 +12,7 @@
 			<span class="mr-1 black--text">Sign Out</span>
 			<v-icon color="black">mdi-exit-to-app</v-icon>
 		</v-btn>
-		<v-btn class="primary" v-if="['home'].indexOf($route.name) == 0">
+		<v-btn class="primary" v-if="['home'].indexOf($route.name) == 0" v-on:click="login()">
 			<span class="mr-1 black--text">Login</span>
 			<v-icon color="black">mdi-exit-to-app</v-icon>
 		</v-btn>
@@ -59,7 +59,11 @@ export default {
 		logOut: async function () {
 			await Parse.User.logOut();
 			this.$router.push('/');
-		}
+		},
+		login: async function () {
+			await Parse.User.logIn(this.username, this.password);
+			this.$router.push("dashboard");
+        }
 	}
 }
 </script>
