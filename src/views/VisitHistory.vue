@@ -7,6 +7,13 @@
                 <v-toolbar class="orange">
                     
                 </v-toolbar>
+                <v-list>
+                    <v-list-item v-for="record in records" :key="record">
+                        <v-list-item-content>
+                            {{ record }}
+                        </v-list-item-content>
+                    </v-list-item>
+                </v-list>
             </v-col>
         </v-row>
 
@@ -15,7 +22,18 @@
 
 <script>
     export default {
+        data () {
+            return {
+                records: [
+                    "test 1",
+                    "test 2",
+                    "test 3"
+                ]
+            }
+        },
+        methods: {
 
+        },
     };
 </script>
 <style scoped>
