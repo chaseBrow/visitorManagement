@@ -12,10 +12,12 @@
 			<span class="mr-1 black--text">Sign Out</span>
 			<v-icon color="black">mdi-exit-to-app</v-icon>
 		</v-btn>
-		<v-btn class="primary" v-if="['home'].indexOf($route.name) == 0" v-on:click="login()">
+		<Login v-if="['home'].indexOf($route.name) == 0">
+		</Login>
+		<!-- <v-btn class="primary" v-if="['home'].indexOf($route.name) == 0" v-on:click="login()">
 			<span class="mr-1 black--text">Login</span>
 			<v-icon color="black">mdi-exit-to-app</v-icon>
-		</v-btn>
+		</v-btn> -->
 
 		<v-navigation-drawer  v-model="drawer" class="secondary" app temporary>
 			
@@ -36,12 +38,14 @@
 </template>
 
 <script>
+import Login from "./Login"
 import VisitorInfo from "./VisitorInfo"
 import Parse from "parse"
 
 export default {
 	components: {
-		VisitorInfo
+		VisitorInfo,
+		Login
 	},
 	data() {
 		return {
@@ -60,10 +64,6 @@ export default {
 			await Parse.User.logOut();
 			this.$router.push('/');
 		},
-		login: async function () {
-			await Parse.User.logIn(this.username, this.password);
-			this.$router.push("dashboard");
-        }
 	}
 }
 </script>
