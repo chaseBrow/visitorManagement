@@ -4,21 +4,21 @@
 			<v-form class="primary form">
 				<v-container>	
 					<v-row class="align-start">
-						<v-col cols="2">
+						<v-col cols="2" class="pb-0">
 							<v-text-field label="First Name" outlined color="black" 
 								v-model="filterTerms.firstName"
 								v-on:input="filter"
 							>
 							</v-text-field>
 						</v-col>
-						<v-col cols="2">
+						<v-col cols="2" class="pb-0">
 							<v-text-field  label="Last Name" outlined color="black" 
 								v-model="filterTerms.lastName"
 								v-on:input="filter"
 							>
 							</v-text-field>
 						</v-col>
-						<v-col cols="3">
+						<v-col cols="3" class="pb-0">
 							<v-autocomplete outlined label="Company" color="black" cache-items hide-no-data
 								:items="companyFinal"
       							:search-input.sync="searchComp"
@@ -27,14 +27,14 @@
 							>
 							</v-autocomplete>
 						</v-col>
-						<v-col cols="3">
+						<v-col cols="3" class="pb-0">
 							<v-text-field label="Email" outlined color="black"
 								v-model="filterTerms.email"
 								v-on:input="filter"
 							>
 							</v-text-field>
 						</v-col>
-						<v-col cols="2">
+						<v-col cols="2" class="pb-0">
 							 <v-select label="Access" outlined color="black" :items="options" v-model="filterTerms.access" 
 							 v-on:focus="getOptions" v-on:change="filter"
 							>
