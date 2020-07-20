@@ -6,6 +6,8 @@
                 <v-icon color="black">mdi-exit-to-app</v-icon>
 		    </v-btn>
         </template>
+        <v-form>
+        </v-form>
     </v-dialog>
 </template>
 <script>
