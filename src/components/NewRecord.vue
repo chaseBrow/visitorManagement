@@ -1,7 +1,7 @@
 <template>
     <v-container class="ma-0 pa-0">
         <v-btn v-if="getStatus() == 'Expected'" fab x-small class="expected">
-            <v-icon v-if="status === 'Expected'">mdi-clock-time-eight-outline</v-icon>
+            <v-icon>mdi-clock-time-eight-outline</v-icon>
         </v-btn>
         <v-btn v-else-if="getStatus() == 'Arrived'" fab x-small class="arrived">
             <v-icon>mdi-login</v-icon>
@@ -61,7 +61,7 @@ export default {
     props: ['person'],
     data() {
         return {
-            btnStat: "",
+            timeDep: null,
             options: [
                 "Arrived",
                 "Expected",
@@ -72,6 +72,7 @@ export default {
             status: "Absent",
             arrivalTime: null,
             departureTime: null,
+
 
         }
     },
@@ -160,6 +161,7 @@ export default {
                 this.select = null;
                 this.dialog = false;
                 this.record = null;
+                this.timeDep = this.getDate();
                 this.status = "Absent";
                 this.arrivalTime = null;
                 this.departureTime = null;
@@ -191,12 +193,13 @@ export default {
             else return null;
         },
         getStatus: function () {
+            console.log(this.timeDep <= this.getYesterday());
             if (this.status !== "Absent") {
-                this.btnStat = this.status;
+                return this.status;
             }
-            else {
-                this.btnStat = this.getDeparted();
-            }
+            else if (this.timeDep <= this.getYesterday()) return "Departed";
+            else return false;
+
         },
         getDeparted: function () {
                 const Record = Parse.Object.extend("Record");
