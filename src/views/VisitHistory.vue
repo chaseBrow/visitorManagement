@@ -44,7 +44,7 @@
                 <v-list>
                     <v-list-item v-for="record in records" :key="record.email">
                         <v-list-item-content>
-                            {{ record.firstName }}
+                            {{ record }}
                         </v-list-item-content>
                     </v-list-item>
                 </v-list>
@@ -67,7 +67,8 @@ export default {
             this.records = []
             const Record = Parse.Object.extend("Record");
             const recordQuery = new Parse.Query(Record);
-            
+            recordQuery.exists("depart");
+            recordQuery.include(['visitor.company']);
             let list = await recordQuery.find();
 
             
@@ -84,12 +85,12 @@ export default {
                 }
 
                 let visitor = item.get("visitor");
-                console.log(visitor)
+                let company = visitor.get('company');
                 
+                record.company = company.get('name');
                 record.arrive = item.get("arrive");
                 record.depart = item.get("depart");
                 record.firstName = visitor.get("firstName");
-                console.log(record.firstName);
                 record.lastName = visitor.get("lastName");
                 record.email = visitor.get("email");
                 record.access= visitor.get("access");
