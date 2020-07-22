@@ -61,6 +61,7 @@ export default {
     props: ['person'],
     data() {
         return {
+            btnStat: "",
             options: [
                 "Arrived",
                 "Expected",
@@ -190,9 +191,32 @@ export default {
             else return null;
         },
         getStatus: function () {
-
-            return this.status;
-        }
+            if (this.status !== "Absent") {
+                this.btnStat = this.status;
+            }
+            else {
+                this.btnStat = this.getDeparted();
+            }
+        },
+        getDeparted: function () {
+                const Record = Parse.Object.extend("Record");
+                const recQuery = new Parse.Query(Record);
+                recQuery.greaterThan("createdAt", this.getYesterday());
+                recQuery.descending("updatedAt");
+                recQuery.equalTo("visitor", this.person);
+                recQuery.first().then(item => {
+                    if (item !== undefined) {
+                        console.log("Departed");
+                        return "Departed";
+                    }
+                    else return "Absent";
+                })
+        },
+        getYesterday: function () {
+			let date = new Date();
+			let yesterday = date.setTime(date.getTime() - 86400000);
+			return new Date(yesterday);
+		},
     }
 }
 </script>
