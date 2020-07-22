@@ -1,7 +1,7 @@
 <template>
     <v-container background fluid fill-height>
         <v-row class="mx-4" style="height: 100%">
-            <v-form class="form" style="height: auto">
+            <v-form class="form primary" style="height: auto">
                 <v-container>
                     <v-row class="align-start">
                         <v-col cols="4" class="py-0">
@@ -37,9 +37,9 @@
                     </v-row>
                 </v-container>
             </v-form>
-            <v-col class="blue" style="border-radius:0px 0px 10px 10px; width: 100%; height: 80%">
-                <v-toolbar class="orange">
-                    
+            <v-col class="secondary" style="border-radius:0px 0px 10px 10px; width: 100%; height: 80%">
+                <v-toolbar class="primary">
+                    <v-btn v-on:click="getRecords()"> Get Records </v-btn>
                 </v-toolbar>
                 <v-list>
                     <v-list-item v-for="record in records" :key="record">
@@ -55,26 +55,34 @@
 </template>
 
 <script>
-    export default {
-        data () {
-            return {
-                records: [
-                    "test 1",
-                    "test 2",
-                    "test 3"
-                ]
-            }
-        },
-        methods: {
+import Parse from 'parse'
+export default {
+    data () {
+        return {
+            records: [
+                "test 1",
+                "test 2",
+                "test 3"
+            ]
+        }
+    },
+    methods: {
+        getRecords: async function () {
+            const Record = Parse.Object.extend("Record");
+            const recordQuery = new Parse.Query(Record);
 
-        },
-    };
+            let list = await recordQuery.find();
+
+
+            console.log(list[0].get('visitor'));
+        }
+    }
+};
 </script>
 <style scoped>
 .v-form.form {
     border-radius: 10px 10px 0px 0px;
     width: 100%;
     height: 20%;
-    background-color: red;
 }
 </style>
