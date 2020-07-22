@@ -42,9 +42,9 @@
                     <v-btn v-on:click="getRecords()"> Get Records </v-btn>
                 </v-toolbar>
                 <v-list>
-                    <v-list-item v-for="record in records" :key="record">
+                    <v-list-item v-for="record in records" :key="record.email">
                         <v-list-item-content>
-                            {{ record }}
+                            {{ record.firstName }}
                         </v-list-item-content>
                     </v-list-item>
                 </v-list>
@@ -59,22 +59,45 @@ import Parse from 'parse'
 export default {
     data () {
         return {
-            records: [
-                "test 1",
-                "test 2",
-                "test 3"
-            ]
+            records: []
         }
     },
     methods: {
         getRecords: async function () {
+            this.records = []
             const Record = Parse.Object.extend("Record");
             const recordQuery = new Parse.Query(Record);
-
+            
             let list = await recordQuery.find();
 
+            
 
-            console.log(list[0].get('visitor'));
+            list.forEach((item) => {
+                let record = {
+                    firstName: null,
+                    lastName: null,
+                    email: null,
+                    company: null,
+                    access: null,
+                    arrive: null,
+                    depart: null,
+                }
+
+                let visitor = item.get("visitor");
+                console.log(visitor)
+                
+                record.arrive = item.get("arrive");
+                record.depart = item.get("depart");
+                record.firstName = visitor.get("firstName");
+                console.log(record.firstName);
+                record.lastName = visitor.get("lastName");
+                record.email = visitor.get("email");
+                record.access= visitor.get("access");
+
+                this.records.push(record);
+            });
+                
+            
         }
     }
 };
