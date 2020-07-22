@@ -67,7 +67,7 @@
 						<input type="text" style="width: 25%" readonly :value="person.get('email')" :id="person.get('email')">
 						<input type="text" style="width: 10%" readonly :value="person.get('access')" :id="person.get('email') + person.get('access')">
 						<v-spacer></v-spacer>
-						<div :id="person.get('email') + 'visit'">
+						<div :id="person.get('email') + 'visit'" :key="person.get('email') + 'key'">
 							<NewRecord v-bind:person="person">
 							</NewRecord> 
 						</div>
@@ -170,14 +170,27 @@ export default {
 
 
 			recQuery.greaterThan("createdAt", this.getDate());
+			recQuery.limit(20);
+			recQuery.descending("createdAt");
 			recQuery.include("visitor");
 			
-			let test = await recQuery.find();
-			let vis = [];
-			test.forEach(e => {
-				vis.push(e.get("visitor"));
+			let vis = await recQuery.find();
+			let test = vis.map(item => {
+				return item.get("visitor");
 			});
-			this.filteredPeople = vis;
+			let ids = test.map(item => {
+				return item.id;
+			});
+			ids = new Set(ids);
+			ids = [...ids];
+			this.filteredPeople = test.filter((item) => {
+				let index = ids.indexOf(item.id);
+				if (index !== -1) {
+					ids.splice(index, 1);
+					return true;
+				}
+				else return false;
+			});
 		},
 		getDate: function () {
 			let date = new Date();
