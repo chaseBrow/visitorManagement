@@ -61,7 +61,6 @@ export default {
     props: ['person'],
     data() {
         return {
-            timeDep: null,
             options: [
                 "Arrived",
                 "Expected",
@@ -161,7 +160,6 @@ export default {
                 this.select = null;
                 this.dialog = false;
                 this.record = null;
-                this.timeDep = this.getDate();
                 this.status = "Absent";
                 this.arrivalTime = null;
                 this.departureTime = null;
@@ -193,27 +191,23 @@ export default {
             else return null;
         },
         getStatus: function () {
-            console.log(this.timeDep <= this.getYesterday());
             if (this.status !== "Absent") {
                 return this.status;
             }
-            else if (this.timeDep <= this.getYesterday()) return "Departed";
+            else if (this.getDeparted(this.person)) return "Departed";
             else return false;
 
         },
-        getDeparted: function () {
-                const Record = Parse.Object.extend("Record");
-                const recQuery = new Parse.Query(Record);
-                recQuery.greaterThan("createdAt", this.getYesterday());
-                recQuery.descending("updatedAt");
-                recQuery.equalTo("visitor", this.person);
-                recQuery.first().then(item => {
-                    if (item !== undefined) {
-                        console.log("Departed");
-                        return "Departed";
-                    }
-                    else return "Absent";
-                })
+        getDeparted: function (person) {
+            const Record = Parse.Object.extend("Record");
+            const recQuery = new Parse.Query(Record);
+            recQuery.greaterThan("createdAt", this.getYesterday());
+            recQuery.descending("updatedAt");
+            recQuery.equalTo("visitor", person);
+            recQuery.first().then(item => {
+                console.log(item);
+            })
+
         },
         getYesterday: function () {
 			let date = new Date();
