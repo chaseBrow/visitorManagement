@@ -1,12 +1,12 @@
 <template>
     <v-container class="ma-0 pa-0">
-        <v-btn v-if="getStatus() == 'Expected'" fab x-small class="expected">
+        <v-btn v-if="statIcon == 'Expected'" fab x-small class="expected">
             <v-icon>mdi-clock-time-eight-outline</v-icon>
         </v-btn>
-        <v-btn v-else-if="getStatus() == 'Arrived'" fab x-small class="arrived">
+        <v-btn v-else-if="statIcon == 'Arrived'" fab x-small class="arrived">
             <v-icon>mdi-login</v-icon>
         </v-btn>
-        <v-btn v-else-if="getStatus() == 'Departed'" fab x-small class="departed">
+        <v-btn v-else-if="statIcon == 'Departed'" fab x-small class="departed">
             <v-icon>mdi-logout</v-icon>
         </v-btn>
         <v-dialog v-model="dialog" persistent width="300px" class="primary">
@@ -69,13 +69,14 @@ export default {
             dialog: false,
             record: null,
             status: "Absent",
+            statIcon: '',
             arrivalTime: null,
             departureTime: null,
 
 
         }
     },
-    created: function () {
+    created() {
         this.newRecord();
     },
     methods: {
@@ -138,6 +139,7 @@ export default {
                 this.record = new Record();
                 this.record.set("visitor", this.person);
             }
+            this.getStatus();
         },
         saveRecord: async function () {
             if (this.status == 'Arrived') {
@@ -190,24 +192,23 @@ export default {
             }
             else return null;
         },
-        getStatus: function () {
+        getStatus: async function () {
             if (this.status !== "Absent") {
-                return this.status;
+                this.statIcon = this.status;
             }
-            else if (this.getDeparted(this.person)) return "Departed";
-            else return false;
-
+            else {
+                this.statIcon = await this.getDeparted(this.person);
+            }
         },
-        getDeparted: function (person) {
+        getDeparted: async function (person) {
             const Record = Parse.Object.extend("Record");
             const recQuery = new Parse.Query(Record);
             recQuery.greaterThan("createdAt", this.getYesterday());
             recQuery.descending("updatedAt");
             recQuery.equalTo("visitor", person);
-            recQuery.first().then(item => {
-                console.log(item);
-            })
-
+            let item = await recQuery.first();
+            if (item) return 'Departed';
+            else return 'Absent';
         },
         getYesterday: function () {
 			let date = new Date();
