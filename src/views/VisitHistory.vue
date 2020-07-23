@@ -42,10 +42,17 @@
                     <v-btn v-on:click="getRecords()"> Get Records </v-btn>
                 </v-toolbar>
                 <v-list>
-                    <v-list-item v-for="record in records" :key="record.email">
-                        <v-list-item-content>
-                            {{ record }}
-                        </v-list-item-content>
+                    <v-list-item v-for="record in records" :key="record.email + record.arrive">
+                        <v-row>
+                            <v-col cols="1">{{ record.firstName }}</v-col>
+                            <v-col cols="1">{{ record.lastName }}</v-col>
+                            <v-col cols="2">{{ record.company }}</v-col>
+                            <v-col cols="2">{{ record.access }}</v-col>
+                            <v-col cols="3">{{ record.email }}</v-col>
+                            <v-col cols="2">{{ record.arrive }}</v-col>
+                            <v-col cols="2">{{ record.depart }}</v-col> 
+                            <!-- mm/dd/yy HH:mm -->
+                        </v-row>
                     </v-list-item>
                 </v-list>
             </v-col>
@@ -88,8 +95,8 @@ export default {
                 let company = visitor.get('company');
                 
                 record.company = company.get('name');
-                record.arrive = item.get("arrive");
-                record.depart = item.get("depart");
+                record.arrive = this.formatDate(item.get("arrive"));
+                record.depart = this.formatDate(item.get("depart"));
                 record.firstName = visitor.get("firstName");
                 record.lastName = visitor.get("lastName");
                 record.email = visitor.get("email");
@@ -97,8 +104,15 @@ export default {
 
                 this.records.push(record);
             });
-                
-            
+               
+        }, //End getRecords
+        formatDate: function(date) {
+            console.log(date)
+            let month = date.getMonth() + 1;
+            let day = date.getDate();
+            let year = date.getYear();
+            console.log(month + "/" + day + "/" + year);
+            return "month";
         }
     }
 };
