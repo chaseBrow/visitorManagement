@@ -47,7 +47,7 @@
                             <v-col cols="1">{{ record.firstName }}</v-col>
                             <v-col cols="1">{{ record.lastName }}</v-col>
                             <v-col cols="2">{{ record.company }}</v-col>
-                            <v-col cols="2">{{ record.access }}</v-col>
+                            <!-- <v-col cols="2">{{ record.access }}</v-col> -->
                             <v-col cols="3">{{ record.email }}</v-col>
                             <v-col cols="2">{{ record.arrive }}</v-col>
                             <v-col cols="2">{{ record.depart }}</v-col> 
@@ -75,6 +75,7 @@ export default {
             const Record = Parse.Object.extend("Record");
             const recordQuery = new Parse.Query(Record);
             recordQuery.exists("depart");
+            recordQuery.descending('depart');
             recordQuery.include(['visitor.company']);
             let list = await recordQuery.find();
 
@@ -105,14 +106,26 @@ export default {
                 this.records.push(record);
             });
                
-        }, //End getRecords
+        },
         formatDate: function(date) {
-            console.log(date)
-            let month = date.getMonth() + 1;
+            let month = '0' + (date.getMonth() + 1);
             let day = date.getDate();
-            let year = date.getYear();
-            console.log(month + "/" + day + "/" + year);
-            return "month";
+            let year = date.getFullYear();
+            let hour = date.getHours();
+            let minute = '0' + date.getMinutes();
+            let dayTime;
+            
+            if (hour <= 12) {
+                dayTime = "am";
+                hour = '0' + hour;
+            }
+            else {
+                dayTime = "pm";
+                hour = '0' + (hour - 12);
+            }
+
+            let formattedDate = month.slice(-2) + "/" + day + "/" + year + " - " + hour.slice(-2) + ":" + minute.slice(-2) + " " + dayTime;
+            return formattedDate;
         }
     }
 };
