@@ -179,6 +179,7 @@ export default {
                 await this.record.destroy();
             }
             this.dialog = false;
+            this.getStatus();
         },
         getDate: function () {
             let today = new Date();
