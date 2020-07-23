@@ -39,6 +39,32 @@
             </v-form>
             <v-col class="secondary" style="border-radius:0px 0px 10px 10px; width: 100%; height: 80%">
                 <v-toolbar class="primary">
+                    <v-col cols="1">
+                        <v-btn class="sort" elevation="0" tile>
+                            <span>First Name</span>
+                            <v-row>
+                                <v-icon class="up">mdi-menu-up</v-icon>
+                            </v-row>
+                            <v-row>
+                                <v-icon class="down">mdi-menu-down</v-icon>
+                            </v-row>
+                        </v-btn>
+                    </v-col>
+                    <v-col cols="1">
+                        <v-btn class="sort">Last Name</v-btn>
+                    </v-col>
+                    <v-col cols="2">
+                        <v-btn class="sort">Company</v-btn>
+                    </v-col>
+                    <v-col cols="3">
+                        <v-btn class="sort">Email</v-btn>
+                    </v-col>
+                    <v-col cols="2">
+                        <v-btn class="sort">Arrive</v-btn>
+                    </v-col>
+                    <v-col cols="2">
+                        <v-btn class="sort">Depart</v-btn>
+                    </v-col>
                     <v-btn v-on:click="getRecords()"> Get Records </v-btn>
                 </v-toolbar>
                 <v-list>
@@ -66,7 +92,8 @@ import Parse from 'parse'
 export default {
     data () {
         return {
-            records: []
+            records: [],
+            sort: "0"
         }
     },
     methods: {
@@ -115,16 +142,24 @@ export default {
             let minute = '0' + date.getMinutes();
             let dayTime;
             
-            if (hour <= 12) {
+            if (hour < 12) {
                 dayTime = "am";
                 hour = '0' + hour;
+            }
+            else if (hour == 12) {
+                dayTime = 'pm';
+                hour = '0' + hour;
+            }
+            else if (hour == 24) {
+                dayTime = "am";
+                hour = '0' + (hour - 12);
             }
             else {
                 dayTime = "pm";
                 hour = '0' + (hour - 12);
             }
 
-            let formattedDate = month.slice(-2) + "/" + day + "/" + year + " - " + hour.slice(-2) + ":" + minute.slice(-2) + " " + dayTime;
+            let formattedDate = month.slice(-2) + "/" + day + "/" + year + " - " + hour.slice(-2) + ":" + minute.slice(-2) + dayTime;
             return formattedDate;
         }
     }
@@ -135,5 +170,19 @@ export default {
     border-radius: 10px 10px 0px 0px;
     width: 100%;
     height: 20%;
+}
+.v-btn.sort {
+    margin: 0px;
+    padding: 10px 20px 10px 5px;
+}
+.v-icon.up {
+    position: relative;
+    top: -5px;
+    left: 10px;
+}
+.v-icon.down {
+    position: relative;
+    top: 5px;
+    left: 10px;
 }
 </style>
