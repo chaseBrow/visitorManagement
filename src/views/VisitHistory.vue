@@ -1,7 +1,7 @@
 <template>
     <v-container background fluid fill-height>
         <v-row class="mx-4" style="height: 100%">
-            <v-form class="form" style="height: auto">
+            <v-form class="form primary" style="height: auto">
                 <v-container>
                     <v-row class="align-start">
                         <v-col cols="4" class="py-0">
@@ -37,12 +37,12 @@
                     </v-row>
                 </v-container>
             </v-form>
-            <v-col class="blue" style="border-radius:0px 0px 10px 10px; width: 100%; height: 80%">
-                <v-toolbar class="orange">
-                    
+            <v-col class="secondary" style="border-radius:0px 0px 10px 10px; width: 100%; height: 80%">
+                <v-toolbar class="primary">
+                    <v-btn v-on:click="getRecords()"> Get Records </v-btn>
                 </v-toolbar>
                 <v-list>
-                    <v-list-item v-for="record in records" :key="record">
+                    <v-list-item v-for="record in records" :key="record.email">
                         <v-list-item-content>
                             {{ record }}
                         </v-list-item-content>
@@ -55,26 +55,58 @@
 </template>
 
 <script>
-    export default {
-        data () {
-            return {
-                records: [
-                    "test 1",
-                    "test 2",
-                    "test 3"
-                ]
-            }
-        },
-        methods: {
+import Parse from 'parse'
+export default {
+    data () {
+        return {
+            records: []
+        }
+    },
+    methods: {
+        getRecords: async function () {
+            this.records = []
+            const Record = Parse.Object.extend("Record");
+            const recordQuery = new Parse.Query(Record);
+            recordQuery.exists("depart");
+            recordQuery.include(['visitor.company']);
+            let list = await recordQuery.find();
 
-        },
-    };
+            
+
+            list.forEach((item) => {
+                let record = {
+                    firstName: null,
+                    lastName: null,
+                    email: null,
+                    company: null,
+                    access: null,
+                    arrive: null,
+                    depart: null,
+                }
+
+                let visitor = item.get("visitor");
+                let company = visitor.get('company');
+                
+                record.company = company.get('name');
+                record.arrive = item.get("arrive");
+                record.depart = item.get("depart");
+                record.firstName = visitor.get("firstName");
+                record.lastName = visitor.get("lastName");
+                record.email = visitor.get("email");
+                record.access= visitor.get("access");
+
+                this.records.push(record);
+            });
+                
+            
+        }
+    }
+};
 </script>
 <style scoped>
 .v-form.form {
     border-radius: 10px 10px 0px 0px;
     width: 100%;
     height: 20%;
-    background-color: red;
 }
 </style>
