@@ -41,7 +41,7 @@
             <v-col class="secondary" style="border-radius:0px 0px 10px 10px; width: 100%; height: 80%">
                 <v-toolbar class="primary">
                     <div style="width: 10%">
-                        <v-btn class="sort" v-on:click="sortBy(0)" elevation="0" tile>
+                        <v-btn class="sort primary" v-on:click="sortBy(0)" elevation="0">
                             <span>First Name</span>
                             <v-row>
                                 <v-icon class="up" id="asc0">mdi-menu-up</v-icon>
@@ -52,7 +52,7 @@
                         </v-btn>
                     </div>
                     <div style="width: 15%">
-                        <v-btn class="sort" v-on:click="sortBy(1)">
+                        <v-btn class="sort primary" v-on:click="sortBy(1)" elevation="0">
                             <span>Last Name</span>
                             <v-row>
                                 <v-icon class="up" id="asc1">mdi-menu-up</v-icon>
@@ -63,7 +63,7 @@
                         </v-btn>
                     </div>
                     <div style="width: 20%">
-                        <v-btn class="sort" v-on:click="sortBy(2)">
+                        <v-btn class="sort primary" v-on:click="sortBy(2)" elevation="0">
                             <span>Company</span>
                             <v-row>
                                 <v-icon class="up" id="asc2">mdi-menu-up</v-icon>
@@ -74,7 +74,7 @@
                         </v-btn>
                     </div>
                     <div style="width: 25%">
-                        <v-btn class="sort" v-on:click="sortBy(3)">
+                        <v-btn class="sort primary" v-on:click="sortBy(3)" elevation="0">
                             <span>Email</span>
                             <v-row>
                                 <v-icon class="up" id="asc3">mdi-menu-up</v-icon>
@@ -85,7 +85,7 @@
                         </v-btn>
                     </div>
                     <div style="width: 15%">
-                        <v-btn class="sort" v-on:click="sortBy(4)">
+                        <v-btn class="sort primary" v-on:click="sortBy(4)" elevation="0">
                             <span>Arrive</span>
                             <v-row>
                                 <v-icon class="up" id="asc4">mdi-menu-up</v-icon>
@@ -96,7 +96,7 @@
                         </v-btn>
                     </div>
                     <div style="width: 15%">
-                        <v-btn class="sort" v-on:click="sortBy(5)">
+                        <v-btn class="sort primary" v-on:click="sortBy(5)" elevation="0">
                             <span>Depart</span>
                             <v-row>
                                 <v-icon class="up" id="asc5">mdi-menu-up</v-icon>
@@ -156,91 +156,145 @@ export default {
                     let des = document.getElementById('des0');
 
                     if ((sort % 3) == 0) {
-                        console.log("no sort");
+                        asc.style.color = "grey";
+                        des.style.color = "grey";
                     }
                     else if ((sort % 3) == 1) {
-                        console.log("sort1")
+                        asc.style.color = "grey";
+                        des.style.color = "black";
+                        this.getRecords("firstName", "des");
                     }
                     else {
-                        console.log("sort2")
+                        asc.style.color = "black";
+                        des.style.color = "grey";
+                        this.getRecords("firstName", "asc");
                     }
                     break;
                 }
                 case 1: {
-                    console.log("btn 1");
+                    let asc = document.getElementById('asc1');
+                    let des = document.getElementById('des1');
+
                     if ((sort % 3) == 0) {
-                        console.log("no sort");
+                        asc.style.color = "white";
+                        des.style.color = "white";
+                        this.getRecords();
                     }
                     else if ((sort % 3) == 1) {
-                        console.log("sort1")
+                        asc.style.color = "white";
+                        des.style.color = "black";
+                        this.getRecords("lastName", "des");
                     }
                     else {
-                        console.log("sort2")
+                        asc.style.color = "black";
+                        des.style.color = "white";
+                        this.getRecords("lastName", "asc");
                     }
                     break;
                 }  
                 case 2:{
-                    console.log("btn 2");
+                    let asc = document.getElementById('asc2');
+                    let des = document.getElementById('des2');
                     if ((sort % 3) == 0) {
-                        console.log("no sort");
+                        asc.style.color = "white";
+                        des.style.color = "white";
+                        this.getRecords();
                     }
                     else if ((sort % 3) == 1) {
-                        console.log("sort1")
+                        asc.style.color = "white";
+                        des.style.color = "black";
+                        this.getRecords("company", "des");
                     }
                     else {
-                        console.log("sort2")
+                        asc.style.color = "black";
+                        des.style.color = "white";
+                        this.getRecords("company", "asc");
                     }
                     break;
                 }
                 case 3: {
-                    console.log("btn 3");
+                    let asc = document.getElementById('asc3');
+                    let des = document.getElementById('des3');
                     if ((sort % 3) == 0) {
-                        console.log("no sort");
+                        asc.style.color = "white";
+                        des.style.color = "white";
+                        this.getRecords();
                     }
                     else if ((sort % 3) == 1) {
-                        console.log("sort1")
+                        asc.style.color = "white";
+                        des.style.color = "black";
+                        this.getRecords("email", "des");
                     }
                     else {
-                        console.log("sort2")
+                        asc.style.color = "black";
+                        des.style.color = "white";
+                        this.getRecords("email", "asc");
                     }
                     break;
                 }
                 case 4: {
-                    console.log("btn 4");
+                    let asc = document.getElementById('asc4');
+                    let des = document.getElementById('des4');
                     if ((sort % 3) == 0) {
-                        console.log("no sort");
+                        asc.style.color = "white";
+                        des.style.color = "white";
+                        this.getRecords("d");
                     }
                     else if ((sort % 3) == 1) {
-                        console.log("sort1")
+                        asc.style.color = "white";
+                        des.style.color = "black";
+                        this.getRecords("arrive", "des");
                     }
                     else {
-                        console.log("sort2")
+                        asc.style.color = "black";
+                        des.style.color = "white";
+                        this.getRecords("arrive", "asc");
                     }
                     break;
                 }
                 case 5: {
-                    console.log("btn 5");
+                    let asc = document.getElementById('asc5');
+                    let des = document.getElementById('des5');
                     if ((sort % 3) == 0) {
-                        console.log("no sort");
+                        asc.style.color = "white";
+                        des.style.color = "white";
+                        this.getRecords();
                     }
                     else if ((sort % 3) == 1) {
-                        console.log("sort1")
+                        asc.style.color = "white";
+                        des.style.color = "black";
+                        this.getRecords('depart', 'des');
                     }
                     else {
-                        console.log("sort2")
+                        asc.style.color = "black";
+                        des.style.color = "white";
+                        this.getRecords('depart', 'asc');
                     }
                     break;
                 }
             }
         },
-        getRecords: async function () {
+        getRecords: async function (sortBy='depart', sortType='des') {
             this.records = []
             const Record = Parse.Object.extend("Record");
             const recordQuery = new Parse.Query(Record);
+            console.log('sorting')
             recordQuery.exists("depart");
-            recordQuery.descending('depart');
+
+            // if (sortType == "des"){
+            //     console.log("sorting des");
+            //     recordQuery.descending(sortBy);
+            // }
+            // else {
+            //     console.log("sorting asc");
+            //     recordQuery.ascending(sortBy);
+            // }
+            console.log(sortType);
+            recordQuery.ascending(sortBy);
+
             recordQuery.include(['visitor.company']);
             let list = await recordQuery.find();
+            console.log(list);
 
             
 
@@ -315,10 +369,12 @@ export default {
     position: relative;
     top: -5px;
     left: 10px;
+    color: grey;
 }
 .v-icon.down {
     position: relative;
     top: 5px;
     left: 10px;
+    color: grey;
 }
 </style>
