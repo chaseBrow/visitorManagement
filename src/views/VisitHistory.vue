@@ -35,17 +35,56 @@
                             </v-text-field>
                         </v-col>
                     </v-row>
+                    <v-btn v-on:click="getRecords()"> Get Records </v-btn>
                 </v-container>
             </v-form>
             <v-col class="secondary" style="border-radius:0px 0px 10px 10px; width: 100%; height: 80%">
                 <v-toolbar class="primary">
-                    <v-btn v-on:click="getRecords()"> Get Records </v-btn>
+                    <div style="width: 10%">
+                        <v-btn class="sort" elevation="0" tile>
+                            <span>First Name</span>
+                            <v-row>
+                                <v-icon class="up" v-if="sort == '01'" >mdi-menu-up</v-icon>
+                            </v-row>
+                            <v-row>
+                                <v-icon class="down" v-if="sort == '02'">mdi-menu-down</v-icon>
+                            </v-row>
+                        </v-btn>
+                    </div>
+                    <div style="width: 15%">
+                        <v-btn class="sort">Last Name</v-btn>
+                    </div>
+                    <div style="width: 20%">
+                        <v-btn class="sort">Company</v-btn>
+                    </div>
+                    <div style="width: 25%">
+                        <v-btn class="sort">Email</v-btn>
+                    </div>
+                    <div style="width: 15%">
+                        <v-btn class="sort">Arrive</v-btn>
+                    </div>
+                    <div style="width: 15%">
+                        <v-btn class="sort">Depart</v-btn>
+                    </div>
                 </v-toolbar>
-                <v-list>
-                    <v-list-item v-for="record in records" :key="record.email">
-                        <v-list-item-content>
-                            {{ record }}
-                        </v-list-item-content>
+                <v-list style="padding: 16px">
+                    <v-list-item v-for="record in records" :key="record.email + record.arrive">
+                        <v-row>
+                            <span style="width: 10%">{{ record.firstName }}</span>
+                            <span style="width: 15%">{{ record.lastName }}</span>
+                            <span style="width: 20%">{{ record.company }}</span>
+                            <!-- <span style="width: 20%">{{ record.access }}</span> -->
+                            <span style="width: 25%">{{ record.email }}</span>
+                            <span style="width: 15%">{{ record.arrive }}</span>
+                            <span style="width: 15%">{{ record.depart }}</span> 
+                            <!-- <v-col cols="1">{{ record.firstName }}</v-col>
+                            <v-col cols="1">{{ record.lastName }}</v-col>
+                            <v-col cols="2">{{ record.company }}</v-col>
+                            <v-col cols="2">{{ record.access }}</v-col>
+                            <v-col cols="3">{{ record.email }}</v-col>
+                            <v-col cols="2">{{ record.arrive }}</v-col>
+                            <v-col cols="2">{{ record.depart }}</v-col>  -->
+                        </v-row>
                     </v-list-item>
                 </v-list>
             </v-col>
@@ -59,7 +98,8 @@ import Parse from 'parse'
 export default {
     data () {
         return {
-            records: []
+            records: [],
+            sort: "01"
         }
     },
     methods: {
@@ -68,6 +108,7 @@ export default {
             const Record = Parse.Object.extend("Record");
             const recordQuery = new Parse.Query(Record);
             recordQuery.exists("depart");
+            recordQuery.descending('depart');
             recordQuery.include(['visitor.company']);
             let list = await recordQuery.find();
 
@@ -88,8 +129,8 @@ export default {
                 let company = visitor.get('company');
                 
                 record.company = company.get('name');
-                record.arrive = item.get("arrive");
-                record.depart = item.get("depart");
+                record.arrive = this.formatDate(item.get("arrive"));
+                record.depart = this.formatDate(item.get("depart"));
                 record.firstName = visitor.get("firstName");
                 record.lastName = visitor.get("lastName");
                 record.email = visitor.get("email");
@@ -97,8 +138,35 @@ export default {
 
                 this.records.push(record);
             });
-                
+               
+        },
+        formatDate: function(date) {
+            let month = '0' + (date.getMonth() + 1);
+            let day = date.getDate();
+            let year = date.getFullYear();
+            let hour = date.getHours();
+            let minute = '0' + date.getMinutes();
+            let dayTime;
             
+            if (hour < 12) {
+                dayTime = "am";
+                hour = '0' + hour;
+            }
+            else if (hour == 12) {
+                dayTime = 'pm';
+                hour = '0' + hour;
+            }
+            else if (hour == 24) {
+                dayTime = "am";
+                hour = '0' + (hour - 12);
+            }
+            else {
+                dayTime = "pm";
+                hour = '0' + (hour - 12);
+            }
+
+            let formattedDate = month.slice(-2) + "/" + day + "/" + year + " - " + hour.slice(-2) + ":" + minute.slice(-2) + dayTime;
+            return formattedDate;
         }
     }
 };
@@ -108,5 +176,19 @@ export default {
     border-radius: 10px 10px 0px 0px;
     width: 100%;
     height: 20%;
+}
+.v-btn.sort {
+    margin: 0px;
+    padding: 10px 20px 10px 5px;
+}
+.v-icon.up {
+    position: relative;
+    top: -5px;
+    left: 10px;
+}
+.v-icon.down {
+    position: relative;
+    top: 5px;
+    left: 10px;
 }
 </style>
