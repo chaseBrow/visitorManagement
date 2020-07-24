@@ -35,11 +35,12 @@
                             </v-text-field>
                         </v-col>
                     </v-row>
+                    <v-btn v-on:click="getRecords()"> Get Records </v-btn>
                 </v-container>
             </v-form>
             <v-col class="secondary" style="border-radius:0px 0px 10px 10px; width: 100%; height: 80%">
                 <v-toolbar class="primary">
-                    <v-col cols="1">
+                    <div style="width: 10%">
                         <v-btn class="sort" elevation="0" tile>
                             <span>First Name</span>
                             <v-row>
@@ -49,35 +50,40 @@
                                 <v-icon class="down">mdi-menu-down</v-icon>
                             </v-row>
                         </v-btn>
-                    </v-col>
-                    <v-col cols="1">
+                    </div>
+                    <div style="width: 15%">
                         <v-btn class="sort">Last Name</v-btn>
-                    </v-col>
-                    <v-col cols="2">
+                    </div>
+                    <div style="width: 20%">
                         <v-btn class="sort">Company</v-btn>
-                    </v-col>
-                    <v-col cols="3">
+                    </div>
+                    <div style="width: 25%">
                         <v-btn class="sort">Email</v-btn>
-                    </v-col>
-                    <v-col cols="2">
+                    </div>
+                    <div style="width: 15%">
                         <v-btn class="sort">Arrive</v-btn>
-                    </v-col>
-                    <v-col cols="2">
+                    </div>
+                    <div style="width: 15%">
                         <v-btn class="sort">Depart</v-btn>
-                    </v-col>
-                    <v-btn v-on:click="getRecords()"> Get Records </v-btn>
+                    </div>
                 </v-toolbar>
-                <v-list>
+                <v-list style="padding: 16px">
                     <v-list-item v-for="record in records" :key="record.email + record.arrive">
                         <v-row>
-                            <v-col cols="1">{{ record.firstName }}</v-col>
+                            <span style="width: 10%">{{ record.firstName }}</span>
+                            <span style="width: 15%">{{ record.lastName }}</span>
+                            <span style="width: 20%">{{ record.company }}</span>
+                            <!-- <span style="width: 20%">{{ record.access }}</span> -->
+                            <span style="width: 25%">{{ record.email }}</span>
+                            <span style="width: 15%">{{ record.arrive }}</span>
+                            <span style="width: 15%">{{ record.depart }}</span> 
+                            <!-- <v-col cols="1">{{ record.firstName }}</v-col>
                             <v-col cols="1">{{ record.lastName }}</v-col>
                             <v-col cols="2">{{ record.company }}</v-col>
-                            <!-- <v-col cols="2">{{ record.access }}</v-col> -->
+                            <v-col cols="2">{{ record.access }}</v-col>
                             <v-col cols="3">{{ record.email }}</v-col>
                             <v-col cols="2">{{ record.arrive }}</v-col>
-                            <v-col cols="2">{{ record.depart }}</v-col> 
-                            <!-- mm/dd/yy HH:mm -->
+                            <v-col cols="2">{{ record.depart }}</v-col>  -->
                         </v-row>
                     </v-list-item>
                 </v-list>
