@@ -44,27 +44,67 @@
                         <v-btn class="sort" elevation="0" tile>
                             <span>First Name</span>
                             <v-row>
-                                <v-icon class="up" v-if="sort == '01'" >mdi-menu-up</v-icon>
+                                <v-icon class="up">mdi-menu-up</v-icon>
                             </v-row>
                             <v-row>
-                                <v-icon class="down" v-if="sort == '02'">mdi-menu-down</v-icon>
+                                <v-icon class="down">mdi-menu-down</v-icon>
                             </v-row>
                         </v-btn>
                     </div>
                     <div style="width: 15%">
-                        <v-btn class="sort">Last Name</v-btn>
+                        <v-btn class="sort">
+                            <span>Last Name</span>
+                            <v-row>
+                                <v-icon class="up">mdi-menu-up</v-icon>
+                            </v-row>
+                            <v-row>
+                                <v-icon class="down">mdi-menu-down</v-icon>
+                            </v-row>
+                        </v-btn>
                     </div>
                     <div style="width: 20%">
-                        <v-btn class="sort">Company</v-btn>
+                        <v-btn class="sort">
+                            <span>Company</span>
+                            <v-row>
+                                <v-icon class="up">mdi-menu-up</v-icon>
+                            </v-row>
+                            <v-row>
+                                <v-icon class="down">mdi-menu-down</v-icon>
+                            </v-row>
+                        </v-btn>
                     </div>
                     <div style="width: 25%">
-                        <v-btn class="sort">Email</v-btn>
+                        <v-btn class="sort">
+                            <span>Email</span>
+                            <v-row>
+                                <v-icon class="up">mdi-menu-up</v-icon>
+                            </v-row>
+                            <v-row>
+                                <v-icon class="down">mdi-menu-down</v-icon>
+                            </v-row>
+                        </v-btn>
                     </div>
                     <div style="width: 15%">
-                        <v-btn class="sort">Arrive</v-btn>
+                        <v-btn class="sort">
+                            <span>Arrive</span>
+                            <v-row>
+                                <v-icon class="up">mdi-menu-up</v-icon>
+                            </v-row>
+                            <v-row>
+                                <v-icon class="down">mdi-menu-down</v-icon>
+                            </v-row>
+                        </v-btn>
                     </div>
                     <div style="width: 15%">
-                        <v-btn class="sort">Depart</v-btn>
+                        <v-btn class="sort">
+                            <span>Depart</span>
+                            <v-row>
+                                <v-icon class="up">mdi-menu-up</v-icon>
+                            </v-row>
+                            <v-row>
+                                <v-icon class="down">mdi-menu-down</v-icon>
+                            </v-row>
+                        </v-btn>
                     </div>
                 </v-toolbar>
                 <v-list style="padding: 16px">
@@ -73,17 +113,9 @@
                             <span style="width: 10%">{{ record.firstName }}</span>
                             <span style="width: 15%">{{ record.lastName }}</span>
                             <span style="width: 20%">{{ record.company }}</span>
-                            <!-- <span style="width: 20%">{{ record.access }}</span> -->
                             <span style="width: 25%">{{ record.email }}</span>
                             <span style="width: 15%">{{ record.arrive }}</span>
                             <span style="width: 15%">{{ record.depart }}</span> 
-                            <!-- <v-col cols="1">{{ record.firstName }}</v-col>
-                            <v-col cols="1">{{ record.lastName }}</v-col>
-                            <v-col cols="2">{{ record.company }}</v-col>
-                            <v-col cols="2">{{ record.access }}</v-col>
-                            <v-col cols="3">{{ record.email }}</v-col>
-                            <v-col cols="2">{{ record.arrive }}</v-col>
-                            <v-col cols="2">{{ record.depart }}</v-col>  -->
                         </v-row>
                     </v-list-item>
                 </v-list>
