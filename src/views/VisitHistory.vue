@@ -41,7 +41,7 @@
             <v-col class="secondary" style="border-radius:0px 0px 10px 10px; width: 100%; height: 80%">
                 <v-toolbar class="primary">
                     <div style="width: 10%">
-                        <v-btn class="sort" v-on:click="sortBy('0')" elevation="0" tile>
+                        <v-btn class="sort" v-on:click="sortBy(0)" elevation="0" tile>
                             <span>First Name</span>
                             <v-row>
                                 <v-icon class="up">mdi-menu-up</v-icon>
@@ -52,7 +52,7 @@
                         </v-btn>
                     </div>
                     <div style="width: 15%">
-                        <v-btn class="sort" v-on:click="sortBy('1')">
+                        <v-btn class="sort" v-on:click="sortBy(1)">
                             <span>Last Name</span>
                             <v-row>
                                 <v-icon class="up">mdi-menu-up</v-icon>
@@ -63,7 +63,7 @@
                         </v-btn>
                     </div>
                     <div style="width: 20%">
-                        <v-btn class="sort" v-on:click="sortBy('2')">
+                        <v-btn class="sort" v-on:click="sortBy(2)">
                             <span>Company</span>
                             <v-row>
                                 <v-icon class="up">mdi-menu-up</v-icon>
@@ -74,7 +74,7 @@
                         </v-btn>
                     </div>
                     <div style="width: 25%">
-                        <v-btn class="sort" v-on:click="sortBy('3')">
+                        <v-btn class="sort" v-on:click="sortBy(3)">
                             <span>Email</span>
                             <v-row>
                                 <v-icon class="up">mdi-menu-up</v-icon>
@@ -85,7 +85,7 @@
                         </v-btn>
                     </div>
                     <div style="width: 15%">
-                        <v-btn class="sort" v-on:click="sortBy('4')">
+                        <v-btn class="sort" v-on:click="sortBy(4)">
                             <span>Arrive</span>
                             <v-row>
                                 <v-icon class="up">mdi-menu-up</v-icon>
@@ -96,7 +96,7 @@
                         </v-btn>
                     </div>
                     <div style="width: 15%">
-                        <v-btn class="sort" v-on:click="sortBy('5')">
+                        <v-btn class="sort" v-on:click="sortBy(5)">
                             <span>Depart</span>
                             <v-row>
                                 <v-icon class="up">mdi-menu-up</v-icon>
@@ -131,73 +131,91 @@ export default {
     data () {
         return {
             records: [],
-            sort: "0",
+            sort: 0,
         }
     },
     methods: {
         sortBy: function (sortBtn) {
+            this.sort += 1
+            let sort = this.sort
+
             switch (sortBtn) {
                 case 0: {
                     console.log("btn 0");
-                    // if (this.sort.slice(1) == 0) {
-
-                    // }
-                    // else if (this.sort.slice(1) == 1) {
-
-                    // }
-                    // else {
-
-                    // }
+                    if ((sort % 3) == 0) {
+                        console.log("no sort");
+                    }
+                    else if ((sort % 3) == 1) {
+                        console.log("sort1")
+                    }
+                    else {
+                        console.log("sort2")
+                    }
                     break;
                 }
                 case 1: {
                     console.log("btn 1");
-                    // if (this.sort.slice(1) == 1) {
-                        
-                    // }
-                    // else {
-                        
-                    // }
+                    if ((sort % 3) == 0) {
+                        console.log("no sort");
+                    }
+                    else if ((sort % 3) == 1) {
+                        console.log("sort1")
+                    }
+                    else {
+                        console.log("sort2")
+                    }
                     break;
                 }  
                 case 2:{
                     console.log("btn 2");
-                    // if (this.sort.slice(1) == 1){
-
-                    // }
-                    // else{
-
-                    // }
+                    if ((sort % 3) == 0) {
+                        console.log("no sort");
+                    }
+                    else if ((sort % 3) == 1) {
+                        console.log("sort1")
+                    }
+                    else {
+                        console.log("sort2")
+                    }
                     break;
                 }
                 case 3: {
                     console.log("btn 3");
-                    // if (this.sort.slice(1) == 1){
-
-                    // }
-                    // else{
-
-                    // }
+                    if ((sort % 3) == 0) {
+                        console.log("no sort");
+                    }
+                    else if ((sort % 3) == 1) {
+                        console.log("sort1")
+                    }
+                    else {
+                        console.log("sort2")
+                    }
                     break;
                 }
                 case 4: {
                     console.log("btn 4");
-                    // if (this.sort.slice(1) == 1){
-
-                    // }
-                    // else{
-                        
-                    // }
+                    if ((sort % 3) == 0) {
+                        console.log("no sort");
+                    }
+                    else if ((sort % 3) == 1) {
+                        console.log("sort1")
+                    }
+                    else {
+                        console.log("sort2")
+                    }
                     break;
                 }
                 case 5: {
                     console.log("btn 5");
-                    // if (this.sort.slice(1) == 1){
-
-                    // }
-                    // else{
-                        
-                    // }
+                    if ((sort % 3) == 0) {
+                        console.log("no sort");
+                    }
+                    else if ((sort % 3) == 1) {
+                        console.log("sort1")
+                    }
+                    else {
+                        console.log("sort2")
+                    }
                     break;
                 }
             }
