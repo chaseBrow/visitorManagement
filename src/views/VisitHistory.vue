@@ -44,10 +44,10 @@
                         <v-btn class="sort" v-on:click="sortBy(0)" elevation="0" tile>
                             <span>First Name</span>
                             <v-row>
-                                <v-icon class="up">mdi-menu-up</v-icon>
+                                <v-icon class="up" id="asc0">mdi-menu-up</v-icon>
                             </v-row>
                             <v-row>
-                                <v-icon class="down">mdi-menu-down</v-icon>
+                                <v-icon class="down" id="des0">mdi-menu-down</v-icon>
                             </v-row>
                         </v-btn>
                     </div>
@@ -55,10 +55,10 @@
                         <v-btn class="sort" v-on:click="sortBy(1)">
                             <span>Last Name</span>
                             <v-row>
-                                <v-icon class="up">mdi-menu-up</v-icon>
+                                <v-icon class="up" id="asc1">mdi-menu-up</v-icon>
                             </v-row>
                             <v-row>
-                                <v-icon class="down">mdi-menu-down</v-icon>
+                                <v-icon class="down" id="des1">mdi-menu-down</v-icon>
                             </v-row>
                         </v-btn>
                     </div>
@@ -66,10 +66,10 @@
                         <v-btn class="sort" v-on:click="sortBy(2)">
                             <span>Company</span>
                             <v-row>
-                                <v-icon class="up">mdi-menu-up</v-icon>
+                                <v-icon class="up" id="asc2">mdi-menu-up</v-icon>
                             </v-row>
                             <v-row>
-                                <v-icon class="down">mdi-menu-down</v-icon>
+                                <v-icon class="down" id="des2">mdi-menu-down</v-icon>
                             </v-row>
                         </v-btn>
                     </div>
@@ -77,10 +77,10 @@
                         <v-btn class="sort" v-on:click="sortBy(3)">
                             <span>Email</span>
                             <v-row>
-                                <v-icon class="up">mdi-menu-up</v-icon>
+                                <v-icon class="up" id="asc3">mdi-menu-up</v-icon>
                             </v-row>
                             <v-row>
-                                <v-icon class="down">mdi-menu-down</v-icon>
+                                <v-icon class="down" id="des3">mdi-menu-down</v-icon>
                             </v-row>
                         </v-btn>
                     </div>
@@ -88,10 +88,10 @@
                         <v-btn class="sort" v-on:click="sortBy(4)">
                             <span>Arrive</span>
                             <v-row>
-                                <v-icon class="up">mdi-menu-up</v-icon>
+                                <v-icon class="up" id="asc4">mdi-menu-up</v-icon>
                             </v-row>
                             <v-row>
-                                <v-icon class="down">mdi-menu-down</v-icon>
+                                <v-icon class="down" id="des4">mdi-menu-down</v-icon>
                             </v-row>
                         </v-btn>
                     </div>
@@ -99,10 +99,10 @@
                         <v-btn class="sort" v-on:click="sortBy(5)">
                             <span>Depart</span>
                             <v-row>
-                                <v-icon class="up">mdi-menu-up</v-icon>
+                                <v-icon class="up" id="asc5">mdi-menu-up</v-icon>
                             </v-row>
                             <v-row>
-                                <v-icon class="down">mdi-menu-down</v-icon>
+                                <v-icon class="down" id="des5">mdi-menu-down</v-icon>
                             </v-row>
                         </v-btn>
                     </div>
@@ -132,16 +132,29 @@ export default {
         return {
             records: [],
             sort: 0,
+            lastBtn: null
         }
     },
     methods: {
         sortBy: function (sortBtn) {
-            this.sort += 1
+            if (sortBtn == this.lastBtn){
+                this.sort += 1
+                this.sortSwitch(sortBtn)
+            }
+            else{
+                this.sort = 1
+                this.sortSwitch(sortBtn)
+            }
+            this.lastBtn = sortBtn;
+        },
+        sortSwitch: function (sortBtn) {
             let sort = this.sort
 
             switch (sortBtn) {
                 case 0: {
-                    console.log("btn 0");
+                    let asc = document.getElementById('asc0');
+                    let des = document.getElementById('des0');
+
                     if ((sort % 3) == 0) {
                         console.log("no sort");
                     }
