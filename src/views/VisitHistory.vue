@@ -44,10 +44,10 @@
                         <v-btn class="sort" elevation="0" tile>
                             <span>First Name</span>
                             <v-row>
-                                <v-icon class="up">mdi-menu-up</v-icon>
+                                <v-icon class="up" v-if="sort == '01'" >mdi-menu-up</v-icon>
                             </v-row>
                             <v-row>
-                                <v-icon class="down">mdi-menu-down</v-icon>
+                                <v-icon class="down" v-if="sort == '02'">mdi-menu-down</v-icon>
                             </v-row>
                         </v-btn>
                     </div>
@@ -99,7 +99,7 @@ export default {
     data () {
         return {
             records: [],
-            sort: "0"
+            sort: "01"
         }
     },
     methods: {
