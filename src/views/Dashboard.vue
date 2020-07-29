@@ -61,11 +61,19 @@
 				<v-list dense class="data">
 					<v-list-item v-for="person in filteredPeople" :key="person.email">
 
-						<input type="text" style="width: 10%" readonly :value="person.get('firstName')" :id="person.get('email') + person.get('firstName')">
+						<!-- <input type="text" style="width: 10%" readonly :value="person.get('firstName')" :id="person.get('email') + person.get('firstName')">
 						<input type="text" style="width: 10%" readonly :value="person.get('lastName')" :id="person.get('email') + person.get('lastName')">
 						<input type="text" style="width: 10%" readonly :value="getCompanyName(person)" :id="person.get('email') + person.get('company')">
 						<input type="text" style="width: 25%" readonly :value="person.get('email')" :id="person.get('email')">
-						<input type="text" style="width: 10%" readonly :value="person.get('access')" :id="person.get('email') + person.get('access')">
+						<input type="text" style="width: 10%" readonly :value="person.get('access')" :id="person.get('email') + person.get('access')"> -->
+						<span style="width: 10%">{{ person.get('firstName') }}</span>
+                    	<span style="width: 10%">{{ person.get('lastName') }}</span>
+                        <span style="width: 10%">{{ getCompanyName(person) }}</span>
+						<span style="width: 25%">{{ person.get('email') }}</span>
+                        <span style="width: 10%">{{ person.get('access') }}</span>
+                        
+
+
 						<v-spacer></v-spacer>
 						<div :id="person.get('email') + 'visit'" :key="person.get('email') + 'visit'">
 							<NewRecord v-bind:person="person">
@@ -202,120 +210,120 @@ export default {
 			let yesterday = date.setTime(date.getTime() - 86400000);
 			return new Date(yesterday);
 		},
-		save: async function (person) {
-			this.cancel(person);
-			person.set("firstName", document.getElementById(person.get('email') + person.get('firstName')).value);
-			person.set("lastName", document.getElementById(person.get('email') + person.get('lastName')).value);
-			person.set("company", document.getElementById(person.get('email') + person.get('company')).value);
-			person.set("email", document.getElementById(person.get('email')).value);
-			person.set("access", document.getElementById(person.get('email') + person.get('access')).value);
+		// save: async function (person) {
+		// 	this.cancel(person);
+		// 	person.set("firstName", document.getElementById(person.get('email') + person.get('firstName')).value);
+		// 	person.set("lastName", document.getElementById(person.get('email') + person.get('lastName')).value);
+		// 	person.set("company", document.getElementById(person.get('email') + person.get('company')).value);
+		// 	person.set("email", document.getElementById(person.get('email')).value);
+		// 	person.set("access", document.getElementById(person.get('email') + person.get('access')).value);
 			
-			await person.save();
+		// 	await person.save();
 
-			this.filter();
-		},
-		cancel: function (person) {
-			let edit = document.getElementById(person.get("email") + "edit");
-			edit.removeAttribute("hidden");
+		// 	this.filter();
+		// },
+		// cancel: function (person) {
+		// 	let edit = document.getElementById(person.get("email") + "edit");
+		// 	edit.removeAttribute("hidden");
 
-			let visit = document.getElementById(person.get("email") + "visit");
-			visit.removeAttribute("hidden");
+		// 	let visit = document.getElementById(person.get("email") + "visit");
+		// 	visit.removeAttribute("hidden");
 
-			let del = document.getElementById(person.get("email") + "delete");
-			del.setAttribute("hidden", true);
+		// 	let del = document.getElementById(person.get("email") + "delete");
+		// 	del.setAttribute("hidden", true);
 
-			let can = document.getElementById(person.get("email") + "cancel");
-			can.setAttribute("hidden", true);
+		// 	let can = document.getElementById(person.get("email") + "cancel");
+		// 	can.setAttribute("hidden", true);
 
-			let save = document.getElementById(person.get("email") + "save");
-			save.setAttribute("hidden", true);
+		// 	let save = document.getElementById(person.get("email") + "save");
+		// 	save.setAttribute("hidden", true);
 			
-			let firstName = document.getElementById(person.get("email") + person.get("firstName"));
-			firstName.setAttribute("readonly", true);
-			firstName.style.outline = null;
-			firstName.style.paddingLeft = null;
-			firstName.style.marginRight = null;
+		// 	let firstName = document.getElementById(person.get("email") + person.get("firstName"));
+		// 	firstName.setAttribute("readonly", true);
+		// 	firstName.style.outline = null;
+		// 	firstName.style.paddingLeft = null;
+		// 	firstName.style.marginRight = null;
 
-			let lastName = document.getElementById(person.get("email") + person.get("lastName"));
-			lastName.setAttribute("readonly", true);
-			lastName.style.outline = null;
-			lastName.style.paddingLeft = null;
-			lastName.style.marginRight = null;
+		// 	let lastName = document.getElementById(person.get("email") + person.get("lastName"));
+		// 	lastName.setAttribute("readonly", true);
+		// 	lastName.style.outline = null;
+		// 	lastName.style.paddingLeft = null;
+		// 	lastName.style.marginRight = null;
 
-			let company = document.getElementById(person.get("email") + person.get("company"));
-			company.setAttribute("readonly", true);
-			company.style.outline = null;
-			company.style.paddingLeft = null;
-			company.style.marginRight = null;
+		// 	let company = document.getElementById(person.get("email") + person.get("company"));
+		// 	company.setAttribute("readonly", true);
+		// 	company.style.outline = null;
+		// 	company.style.paddingLeft = null;
+		// 	company.style.marginRight = null;
 
-			let email = document.getElementById(person.get("email"));
-			email.setAttribute("readonly", true);
-			email.style.outline = null;
-			email.style.paddingLeft = null;
-			email.style.marginRight = null;
+		// 	let email = document.getElementById(person.get("email"));
+		// 	email.setAttribute("readonly", true);
+		// 	email.style.outline = null;
+		// 	email.style.paddingLeft = null;
+		// 	email.style.marginRight = null;
 
-			let access = document.getElementById(person.get("email") + person.get("access"));
-			access.setAttribute("readonly", true);
-			access.style.outline = null;
-			access.style.paddingLeft = null;
-			access.style.marginRight = null;
-		},
-		del: function () {
-			this.person.set("deleted", true);
-			this.person.save();
-			this.confirmDelete = !this.confirmDelete;
-		},
-		delStart: function (person) {
-			this.person = person;
-			this.confirmDelete = !this.confirmDelete;
-		},
-		editVisitor: function (person) {
+		// 	let access = document.getElementById(person.get("email") + person.get("access"));
+		// 	access.setAttribute("readonly", true);
+		// 	access.style.outline = null;
+		// 	access.style.paddingLeft = null;
+		// 	access.style.marginRight = null;
+		// },
+		// del: function () {
+		// 	this.person.set("deleted", true);
+		// 	this.person.save();
+		// 	this.confirmDelete = !this.confirmDelete;
+		// },
+		// delStart: function (person) {
+		// 	this.person = person;
+		// 	this.confirmDelete = !this.confirmDelete;
+		// },
+		// editVisitor: function (person) {
 			
-			let edit = document.getElementById(person.get("email") + "edit");
-			edit.setAttribute("hidden", true);
+		// 	let edit = document.getElementById(person.get("email") + "edit");
+		// 	edit.setAttribute("hidden", true);
 
-			let visit = document.getElementById(person.get("email") + "visit");
-			visit.setAttribute("hidden", true);
+		// 	let visit = document.getElementById(person.get("email") + "visit");
+		// 	visit.setAttribute("hidden", true);
 
-			let del = document.getElementById(person.get("email") + "delete");
-			del.removeAttribute("hidden");
+		// 	let del = document.getElementById(person.get("email") + "delete");
+		// 	del.removeAttribute("hidden");
 
-			let can = document.getElementById(person.get("email") + "cancel");
-			can.removeAttribute("hidden");
+		// 	let can = document.getElementById(person.get("email") + "cancel");
+		// 	can.removeAttribute("hidden");
 
-			let save = document.getElementById(person.get("email") + "save");
-			save.removeAttribute("hidden");
+		// 	let save = document.getElementById(person.get("email") + "save");
+		// 	save.removeAttribute("hidden");
 			
-			let firstName = document.getElementById(person.get("email") + person.get("firstName"));
-			firstName.removeAttribute("readonly");
-			firstName.style.outline = "thin solid black";
-			firstName.style.paddingLeft = "2px";
-			firstName.style.marginRight = "8px";
+		// 	let firstName = document.getElementById(person.get("email") + person.get("firstName"));
+		// 	firstName.removeAttribute("readonly");
+		// 	firstName.style.outline = "thin solid black";
+		// 	firstName.style.paddingLeft = "2px";
+		// 	firstName.style.marginRight = "8px";
 
-			let lastName = document.getElementById(person.get("email") + person.get("lastName"));
-			lastName.removeAttribute("readonly");
-			lastName.style.outline = "thin solid black";
-			lastName.style.paddingLeft = "2px";
-			lastName.style.marginRight = "8px";
+		// 	let lastName = document.getElementById(person.get("email") + person.get("lastName"));
+		// 	lastName.removeAttribute("readonly");
+		// 	lastName.style.outline = "thin solid black";
+		// 	lastName.style.paddingLeft = "2px";
+		// 	lastName.style.marginRight = "8px";
 
-			let company = document.getElementById(person.get("email") + person.get("company"));
-			company.removeAttribute("readonly");
-			company.style.outline = "thin solid black";
-			company.style.paddingLeft = "2px";
-			company.style.marginRight = "8px";
+		// 	let company = document.getElementById(person.get("email") + person.get("company"));
+		// 	company.removeAttribute("readonly");
+		// 	company.style.outline = "thin solid black";
+		// 	company.style.paddingLeft = "2px";
+		// 	company.style.marginRight = "8px";
 
-			let email = document.getElementById(person.get("email"));
-			email.removeAttribute("readonly");
-			email.style.outline = "thin solid black";
-			email.style.paddingLeft = "2px";
-			email.style.marginRight = "8px";
+		// 	let email = document.getElementById(person.get("email"));
+		// 	email.removeAttribute("readonly");
+		// 	email.style.outline = "thin solid black";
+		// 	email.style.paddingLeft = "2px";
+		// 	email.style.marginRight = "8px";
 
-			let access = document.getElementById(person.get("email") + person.get("access"));
-			access.removeAttribute("readonly");
-			access.style.outline = "thin solid black";
-			access.style.paddingLeft = "2px";
-			access.style.marginRight = "8px";
-		},
+		// 	let access = document.getElementById(person.get("email") + person.get("access"));
+		// 	access.removeAttribute("readonly");
+		// 	access.style.outline = "thin solid black";
+		// 	access.style.paddingLeft = "2px";
+		// 	access.style.marginRight = "8px";
+		// },
 		getOptions: function () {
             const user = Parse.User.current();
             this.options = user.get("options");
