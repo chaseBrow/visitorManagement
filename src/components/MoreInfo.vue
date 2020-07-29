@@ -39,6 +39,10 @@
                             <v-text-field label="Access" outlined>
                             </v-text-field>
                         </v-col>
+                        <v-col cols="4">
+                            <v-text-field label="Phone" outlined>
+                            </v-text-field>
+                        </v-col>
                     </v-row>
                 </v-card>
             </v-form>
