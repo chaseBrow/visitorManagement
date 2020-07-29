@@ -286,39 +286,43 @@ export default {
         },
         insertionSort: function (list, sortBy="firstName", sortType="des") {
             console.log(list[0].get('arrive'));
-
+            console.log(sortType);
             switch (sortBy) {
                 case 'firstName': {
+                    for (let x = 1; x < list.length; x++) {
+                        let y = 1;
+                        let visitorx = list[x].get('visitor');
+                        let visitory = list[x-y].get('visitor');
 
-                }
-                case 'lastName': {
-                    
-                }
-                case 'company': {
+                        while (visitorx.get('firstName') < visitory.get('firstName')) {
+                            let temp = list[x-y];
+                            list[x-y] = list[x-y+1];
+                            list[x-y+1] = temp;
 
+                            y++;
+                            visitory = list[x-y].get('visitor');
+                        }
+                    }
+                    break;
                 }
-                case 'email': {
+                // case 'lastName': {
+                    
+                // }
+                // case 'company': {
 
-                }
-                case 'arrive': {
+                // }
+                // case 'email': {
+
+                // }
+                // case 'arrive': {
                     
-                }
-                case 'depart': {
+                // }
+                // case 'depart': {
                     
-                }
+                // }
+                
             }
-
-            for (let x = 1; x < list.length; x++) {
-                console.log(x)
-            }
-
-
-
-
-
-            console.log(sortBy);
-            console.log(sortType);
-            return list;
+            
         },
         getRecords: async function () {
             this.records = []
