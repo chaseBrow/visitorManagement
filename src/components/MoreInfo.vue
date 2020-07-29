@@ -1,10 +1,10 @@
 <template>
     <v-container class="ma-0 pa-0">
-        <v-dialog :v-model="test" width="300px" class="primary">
+        <v-dialog v-model="dialog" width="300px" class="primary">
             <template v-slot:activator="{ on, attrs }">
-                <v-btn v-bind="attrs" v-on="on" class="primary">
+                <v-btn v-bind="attrs" v-on="on" class="primary" v-on:click="getInfo()">
                     <v-icon dense class="pr-1">mdi-card-account-details-outline</v-icon>
-                    <span>More Info</span>
+                    <span>Info</span>
                 </v-btn>
             </template>
             <v-form>
@@ -24,16 +24,19 @@
 </template>
 <script>
 export default {
-    date () {
+    data () {
         return {
             dialog: false,
             test: false,
         }
     },
     methods: {
+        getInfo: async function () {
+            this.dialog = true;
+        },
         cancel: function () {
-            this.dialog = false;
             console.log(this.dialog);
+            this.dialog = false;
         }
 
     }

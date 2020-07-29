@@ -4,7 +4,7 @@
 			<v-app-bar-nav-icon  v-on:click="drawer = !drawer"></v-app-bar-nav-icon>
 			<v-toolbar-title class="text-uppercase">
 				<span class="font-weight-light" style="font-size: x-large"> Visitor</span>
-				<span class="font-weight-bold" style="font-size: x-large">Management</span>
+				<span class="font-weight-bold" style="font-size: x-large">Mgmt</span>
 			</v-toolbar-title>
 			<v-spacer></v-spacer>
 			<NewVisitor v-if="['home'].indexOf($route.name) <= -1">
