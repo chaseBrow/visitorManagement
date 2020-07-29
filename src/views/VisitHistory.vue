@@ -136,30 +136,40 @@ export default {
         }
     },
     methods: {
-        sortBy: function (sortBtn) {
-            if (sortBtn == this.lastBtn){
-                this.sort += 1
-                this.sortSwitch(sortBtn)
+        sortBy: async function (sortBtn) {
+            if (this.sort == 0 && this.lastBtn == null) {
+                this.sort = 1;
+                this.sortSwitch(sortBtn);
             }
-            else{
-                this.sort = 1
-                this.sortSwitch(sortBtn)
+            else if (sortBtn !== this.lastBtn) {
+                this.sort = 1;
+                await this.reformatOldSwitch();
+                this.sortSwitch(sortBtn);
+            }
+            else {
+                this.sort += 1;
+                this.sortSwitch(sortBtn);
             }
             this.lastBtn = sortBtn;
         },
+        reformatOldSwitch: async function() {
+            let asc = await document.getElementById("asc" + this.lastBtn);
+            let des = await document.getElementById("des" + this.lastBtn); 
+            asc.style.color = "grey";
+            des.style.color = "grey";
+        },
         sortSwitch: function (sortBtn) {
-            let sort = this.sort
 
             switch (sortBtn) {
                 case 0: {
                     let asc = document.getElementById('asc0');
                     let des = document.getElementById('des0');
 
-                    if ((sort % 3) == 0) {
+                    if ((this.sort % 3) == 0) {
                         asc.style.color = "grey";
                         des.style.color = "grey";
                     }
-                    else if ((sort % 3) == 1) {
+                    else if ((this.sort % 3) == 1) {
                         asc.style.color = "grey";
                         des.style.color = "black";
                         this.getRecords("firstName", "des");
@@ -175,19 +185,19 @@ export default {
                     let asc = document.getElementById('asc1');
                     let des = document.getElementById('des1');
 
-                    if ((sort % 3) == 0) {
-                        asc.style.color = "white";
-                        des.style.color = "white";
+                    if ((this.sort % 3) == 0) {
+                        asc.style.color = "grey";
+                        des.style.color = "grey";
                         this.getRecords();
                     }
-                    else if ((sort % 3) == 1) {
-                        asc.style.color = "white";
+                    else if ((this.sort % 3) == 1) {
+                        asc.style.color = "grey";
                         des.style.color = "black";
                         this.getRecords("lastName", "des");
                     }
                     else {
                         asc.style.color = "black";
-                        des.style.color = "white";
+                        des.style.color = "grey";
                         this.getRecords("lastName", "asc");
                     }
                     break;
@@ -195,19 +205,19 @@ export default {
                 case 2:{
                     let asc = document.getElementById('asc2');
                     let des = document.getElementById('des2');
-                    if ((sort % 3) == 0) {
-                        asc.style.color = "white";
-                        des.style.color = "white";
+                    if ((this.sort % 3) == 0) {
+                        asc.style.color = "grey";
+                        des.style.color = "grey";
                         this.getRecords();
                     }
-                    else if ((sort % 3) == 1) {
-                        asc.style.color = "white";
+                    else if ((this.sort % 3) == 1) {
+                        asc.style.color = "grey";
                         des.style.color = "black";
                         this.getRecords("company", "des");
                     }
                     else {
                         asc.style.color = "black";
-                        des.style.color = "white";
+                        des.style.color = "grey";
                         this.getRecords("company", "asc");
                     }
                     break;
@@ -215,19 +225,19 @@ export default {
                 case 3: {
                     let asc = document.getElementById('asc3');
                     let des = document.getElementById('des3');
-                    if ((sort % 3) == 0) {
-                        asc.style.color = "white";
-                        des.style.color = "white";
+                    if ((this.sort % 3) == 0) {
+                        asc.style.color = "grey";
+                        des.style.color = "grey";
                         this.getRecords();
                     }
-                    else if ((sort % 3) == 1) {
-                        asc.style.color = "white";
+                    else if ((this.sort % 3) == 1) {
+                        asc.style.color = "grey";
                         des.style.color = "black";
                         this.getRecords("email", "des");
                     }
                     else {
                         asc.style.color = "black";
-                        des.style.color = "white";
+                        des.style.color = "grey";
                         this.getRecords("email", "asc");
                     }
                     break;
@@ -235,19 +245,19 @@ export default {
                 case 4: {
                     let asc = document.getElementById('asc4');
                     let des = document.getElementById('des4');
-                    if ((sort % 3) == 0) {
-                        asc.style.color = "white";
-                        des.style.color = "white";
-                        this.getRecords("d");
+                    if ((this.sort % 3) == 0) {
+                        asc.style.color = "grey";
+                        des.style.color = "grey";
+                        this.getRecords();
                     }
-                    else if ((sort % 3) == 1) {
-                        asc.style.color = "white";
+                    else if ((this.sort % 3) == 1) {
+                        asc.style.color = "grey";
                         des.style.color = "black";
                         this.getRecords("arrive", "des");
                     }
                     else {
                         asc.style.color = "black";
-                        des.style.color = "white";
+                        des.style.color = "grey";
                         this.getRecords("arrive", "asc");
                     }
                     break;
@@ -255,48 +265,49 @@ export default {
                 case 5: {
                     let asc = document.getElementById('asc5');
                     let des = document.getElementById('des5');
-                    if ((sort % 3) == 0) {
-                        asc.style.color = "white";
-                        des.style.color = "white";
+                    if ((this.sort % 3) == 0) {
+                        asc.style.color = "grey";
+                        des.style.color = "grey";
                         this.getRecords();
                     }
-                    else if ((sort % 3) == 1) {
-                        asc.style.color = "white";
+                    else if ((this.sort % 3) == 1) {
+                        asc.style.color = "grey";
                         des.style.color = "black";
                         this.getRecords('depart', 'des');
                     }
                     else {
                         asc.style.color = "black";
-                        des.style.color = "white";
+                        des.style.color = "grey";
                         this.getRecords('depart', 'asc');
                     }
                     break;
                 }
             }
         },
-        getRecords: async function (sortBy='depart', sortType='des') {
+        insertionSort: function (list, sortBy="firstName", sortType="des") {
+            console.log(list[0].get('arrive'));
+
+            for (let x = 1; x < list.length; x++) {
+                console.log(x)
+            }
+
+
+
+
+            console.log(sortBy);
+            console.log(sortType);
+            return list;
+        },
+        getRecords: async function () {
             this.records = []
             const Record = Parse.Object.extend("Record");
             const recordQuery = new Parse.Query(Record);
-            console.log('sorting')
-            recordQuery.exists("depart");
 
-            // if (sortType == "des"){
-            //     console.log("sorting des");
-            //     recordQuery.descending(sortBy);
-            // }
-            // else {
-            //     console.log("sorting asc");
-            //     recordQuery.ascending(sortBy);
-            // }
-            console.log(sortType);
-            recordQuery.ascending(sortBy);
+            recordQuery.exists("depart");
 
             recordQuery.include(['visitor.company']);
             let list = await recordQuery.find();
-            console.log(list);
-
-            
+            list = this.insertionSort(list);
 
             list.forEach((item) => {
                 let record = {
