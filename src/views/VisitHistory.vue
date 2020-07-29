@@ -287,9 +287,31 @@ export default {
         insertionSort: function (list, sortBy="firstName", sortType="des") {
             console.log(list[0].get('arrive'));
 
+            switch (sortBy) {
+                case 'firstName': {
+
+                }
+                case 'lastName': {
+                    
+                }
+                case 'company': {
+
+                }
+                case 'email': {
+
+                }
+                case 'arrive': {
+                    
+                }
+                case 'depart': {
+                    
+                }
+            }
+
             for (let x = 1; x < list.length; x++) {
                 console.log(x)
             }
+
 
 
 
