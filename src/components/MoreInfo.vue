@@ -14,11 +14,11 @@
                     </v-card-title>
                     <v-row>
                         <v-col cols="4">
-                            <v-text-field label="First Name" outlined>
+                            <v-text-field readonly class="visitor" label="First Name" outlined>
                             </v-text-field>
                         </v-col>
                         <v-col cols="4">
-                            <v-text-field label="Last Name" outlined>
+                            <v-text-field class="visitor" label="Last Name" outlined>
                             </v-text-field>
                         </v-col>
                         <v-col cols="4">
@@ -86,6 +86,12 @@ export default {
 		},
         getInfo: async function () {
             this.dialog = true;
+            let fields = null;
+            fields = await document.getElementsByClassName('visitor');
+            
+            for (let field of fields) {
+                console.log(field);
+            }
         },
         cancel: function () {
             console.log(this.dialog);
