@@ -7,8 +7,8 @@
 				<span class="font-weight-bold" style="font-size: x-large">Management</span>
 			</v-toolbar-title>
 			<v-spacer></v-spacer>
-			<VisitorInfo v-if="['home'].indexOf($route.name) <= -1">
-			</VisitorInfo>
+			<NewVisitor v-if="['home'].indexOf($route.name) <= -1">
+			</NewVisitor>
 			<v-btn class="primary" v-if="['home'].indexOf($route.name) <= -1" v-on:click="logOut()">
 				<span class="mr-1 black--text">Sign Out</span>
 				<v-icon color="black">mdi-exit-to-app</v-icon>
@@ -36,12 +36,12 @@
 
 <script>
 import Login from "./Login"
-import VisitorInfo from "./VisitorInfo"
+import NewVisitor from "./NewVisitor"
 import Parse from "parse"
 
 export default {
 	components: {
-		VisitorInfo,
+		NewVisitor,
 		Login
 	},
 	data() {

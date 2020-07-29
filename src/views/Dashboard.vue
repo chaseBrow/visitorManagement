@@ -67,11 +67,15 @@
 						<input type="text" style="width: 25%" readonly :value="person.get('email')" :id="person.get('email')">
 						<input type="text" style="width: 10%" readonly :value="person.get('access')" :id="person.get('email') + person.get('access')">
 						<v-spacer></v-spacer>
-						<div :id="person.get('email') + 'visit'" :key="person.get('email') + 'key'">
+						<div :id="person.get('email') + 'visit'" :key="person.get('email') + 'visit'">
 							<NewRecord v-bind:person="person">
 							</NewRecord> 
 						</div>
-						<v-btn class="primary" :id="person.get('email') + 'edit'" v-on:click="editVisitor(person)">
+						<div :id="person.get('email') + 'info'" :key="person.get('email') + 'info'" class="pa-0">
+							<MoreInfo>
+							</MoreInfo>
+						</div>
+						<!-- <v-btn class="primary" :id="person.get('email') + 'edit'" v-on:click="editVisitor(person)">
 							<span>Edit</span>
 							<v-icon dense class="pl-1">mdi-pencil</v-icon>
 						</v-btn>
@@ -84,7 +88,7 @@
 						<v-btn class="red" :id="person.get('email') + 'delete'" v-on:click="delStart(person)" hidden>
 							<span>Delete</span>
 							<v-icon dense class="pl-1">mdi-delete-forever</v-icon>
-						</v-btn>
+						</v-btn> -->
 					</v-list-item>
 				</v-list>
 			</v-col>
@@ -110,6 +114,7 @@
 <script>
 import Parse from "parse"
 import NewRecord from "../components/NewRecord"
+import MoreInfo from "../components/MoreInfo"
 export default {
 	data() {
 		return {
@@ -356,7 +361,8 @@ export default {
 		},
 	},
 	components: {
-		NewRecord
+		NewRecord,
+		MoreInfo
 	}
 }
 </script>
@@ -366,9 +372,7 @@ export default {
 .v-list-item:hover {
 	background:lightgray;
 } 
-
-
- .v-list.data {
+.v-list.data {
   border-radius: 0px;
   overflow-y: auto;
   height: 450px;
