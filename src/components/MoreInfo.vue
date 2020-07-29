@@ -32,15 +32,11 @@
                     </v-row>
                     <v-row>
                         <v-col cols="4">
-                            <v-text-field label="First Name" outlined>
+                            <v-text-field label="Email" outlined>
                             </v-text-field>
                         </v-col>
                         <v-col cols="4">
-                            <v-text-field label="First Name" outlined>
-                            </v-text-field>
-                        </v-col>
-                        <v-col cols="4">
-                            <v-text-field label="First Name" outlined>
+                            <v-text-field label="Access" outlined>
                             </v-text-field>
                         </v-col>
                     </v-row>
@@ -50,6 +46,7 @@
     </v-container>
 </template>
 <script>
+import Parse from 'parse';
 export default {
     props: ['person'],
     data () {
@@ -60,7 +57,29 @@ export default {
 			company: '',
         }
     },
+    watch: {
+		searchComp (val) {
+			this.searchCompanies(val);
+		}
+	},
     methods: {
+        searchCompanies: async function (val) {
+			const user = Parse.User.current();
+			const Users = new Parse.Query(Parse.User);
+			Users.equalTo("parentCompany", user);
+
+			let companyList = await Users.find();
+			companyList.push(user);
+			
+			let test = companyList.filter(company => {
+				let name = company.get("name").toLowerCase().includes(val.toLowerCase());
+				return name;
+			});
+			this.companyFinal = [];
+			test.forEach( e =>{
+				this.companyFinal.push(e.get("name"));
+			})
+		},
         getInfo: async function () {
             this.dialog = true;
         },
