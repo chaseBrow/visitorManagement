@@ -284,7 +284,7 @@ export default {
                 }
             }
         },
-        insertionSort: async function (list, sortBy="firstName", sortType="des") {
+        insertionSort: async function (list, sortBy="company", sortType="des") {
             console.log(sortType);
             switch (sortBy) {
                 case 'firstName': {
@@ -306,21 +306,104 @@ export default {
                     }
                     break;
                 }
-                // case 'lastName': {
-                    
-                // }
-                // case 'company': {
-
-                // }
-                // case 'email': {
-
-                // }
-                // case 'arrive': {
-                    
-                // }
-                // case 'depart': {
-                    
-                // }
+                case 'lastName': {
+                    for (let x = 1; x < list.length; x++) {
+                        let y = 1;
+                        let visitorx = await list[x].get('visitor');
+                        let visitory = await list[x-y].get('visitor');
+                        
+                        while (visitorx.get('lastName') < visitory.get('lastName')) {
+                            let temp = list[x-y];
+                            list[x-y] = list[x-y+1];
+                            list[x-y+1] = temp;
+                            if (x - y !== 0) {
+                                y++;
+                                visitory = list[x-y].get('visitor');
+                            }
+                            else break;
+                        }
+                    }
+                    break;
+                }
+                case 'company': { 
+                    for (let x = 1; x < list.length; x++) {
+                        let y = 1;
+                        let visitorx = await list[x].get('visitor');
+                        let visitory = await list[x-y].get('visitor');
+                        let companyx = await visitorx.get('company');
+                        let companyy = await visitory.get('company');
+                        
+                        while (companyx.get('name') < companyy.get('name')) {
+                            let temp = list[x-y];
+                            list[x-y] = list[x-y+1];
+                            list[x-y+1] = temp;
+                            if (x - y !== 0) {
+                                y++;
+                                visitory = list[x-y].get('visitor');
+                                companyy = visitory.get('company');
+                            }
+                            else break;
+                        }
+                    }
+                    break;
+                }
+                case 'email': {
+                    for (let x = 1; x < list.length; x++) {
+                        let y = 1;
+                        let visitorx = await list[x].get('visitor');
+                        let visitory = await list[x-y].get('visitor');
+                        
+                        while (visitorx.get('email') < visitory.get('email')) {
+                            let temp = list[x-y];
+                            list[x-y] = list[x-y+1];
+                            list[x-y+1] = temp;
+                            if (x - y !== 0) {
+                                y++;
+                                visitory = list[x-y].get('visitor');
+                            }
+                            else break;
+                        }
+                    }
+                    break;
+                }
+                case 'arrive': {
+                    for (let x = 1; x < list.length; x++) {
+                        let y = 1;
+                        let arrivex = await list[x].get('arrive');
+                        let arrivey = await list[x-y].get('arrive');
+                        
+                        while (arrivex > arrivey) {
+                            let temp = list[x-y];
+                            list[x-y] = list[x-y+1];
+                            list[x-y+1] = temp;
+                            if (x - y !== 0) {
+                                y++;
+                                arrivey = list[x-y].get('arrive');
+                            }
+                            else break;
+                        }
+                    }
+                    break;
+                }
+                case 'depart': {
+                    for (let x = 1; x < list.length; x++) {
+                        let y = 1;
+                        let departx = await list[x].get('depart');
+                        let departy = await list[x-y].get('depart');
+                        
+                        while (departx > departy) {
+                            let temp = list[x-y];
+                            list[x-y] = list[x-y+1];
+                            list[x-y+1] = temp;
+                            if (x - y !== 0) {
+                                y++;
+                                departy = list[x-y].get('depart');
+                            }
+                            else break;
+                        }
+                    }
+                    break;
+                }
             }
             return list;
         },
@@ -333,9 +416,9 @@ export default {
 
             recordQuery.include(['visitor.company']);
             let list = await recordQuery.find();
-            console.log(list);
-            // list = await this.insertionSort(list);
-            // console.log(list)
+            
+            list = await this.insertionSort(list);
+            
             list.forEach((item) => {
                 let record = {
                     firstName: null,
