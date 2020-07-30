@@ -284,23 +284,24 @@ export default {
                 }
             }
         },
-        insertionSort: function (list, sortBy="firstName", sortType="des") {
-            console.log(list[0].get('arrive'));
+        insertionSort: async function (list, sortBy="firstName", sortType="des") {
             console.log(sortType);
             switch (sortBy) {
                 case 'firstName': {
                     for (let x = 1; x < list.length; x++) {
                         let y = 1;
-                        let visitorx = list[x].get('visitor');
-                        let visitory = list[x-y].get('visitor');
-
+                        let visitorx = await list[x].get('visitor');
+                        let visitory = await list[x-y].get('visitor');
+                        
                         while (visitorx.get('firstName') < visitory.get('firstName')) {
                             let temp = list[x-y];
                             list[x-y] = list[x-y+1];
                             list[x-y+1] = temp;
-
-                            y++;
-                            visitory = list[x-y].get('visitor');
+                            if (x - y !== 0) {
+                                y++;
+                                visitory = list[x-y].get('visitor');
+                            }
+                            else break;
                         }
                     }
                     break;
@@ -320,9 +321,8 @@ export default {
                 // case 'depart': {
                     
                 // }
-                
             }
-            
+            return list;
         },
         getRecords: async function () {
             this.records = []
@@ -333,8 +333,9 @@ export default {
 
             recordQuery.include(['visitor.company']);
             let list = await recordQuery.find();
-            list = this.insertionSort(list);
-
+            console.log(list);
+            // list = await this.insertionSort(list);
+            // console.log(list)
             list.forEach((item) => {
                 let record = {
                     firstName: null,
