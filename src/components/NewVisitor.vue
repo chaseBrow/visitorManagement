@@ -64,12 +64,11 @@ export default {
             companyList.push(user);
 			
 			let test = companyList.filter(company => {
-                let name;
                 if (val) {
-                    name = company.get("name").toLowerCase().includes(val.toLowerCase());
+                    let name = company.get("name").toLowerCase().includes(val.toLowerCase());
+				    return name;
                 }
-                else name = company.get("name");
-				return name;
+                else return false;
 			});
 			this.companyFinal = [];
 			test.forEach( e =>{

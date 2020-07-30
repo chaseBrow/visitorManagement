@@ -5,85 +5,132 @@
                 <v-container>
                     <v-row class="align-start">
                         <v-col cols="4" class="py-0">
-                            <v-text-field label="First Name" outlined color="black">
+                            <v-text-field label="First Name" outlined color="black" 
+                                v-model="filterTerms.firstName"
+                                v-on:input="filterRecords()"
+                            >
                             </v-text-field>
                         </v-col>
                         <v-col cols="4" class="py-0">
-                            <v-text-field label="Last Name" outlined color="black">
+                            <v-text-field label="Last Name" outlined color="black" 
+                                v-model="filterTerms.lastName"
+                                v-on:input="filterRecords()"
+                            >
                             </v-text-field>
                         </v-col>
                         <v-col cols="2" class="py-0">
-                            <v-text-field label="Start Date" outlined color="black">
+                            <v-text-field label="Start Date" outlined color="black" 
+                                v-model="filterTerms.arrive"
+                                v-on:input="filterRecords()"
+                            >
                             </v-text-field>
                         </v-col>
                         <v-col cols="2" class="py-0">
-                            <v-text-field label="End Date" outlined color="black">
+                            <v-text-field label="End Date" outlined color="black" 
+                                v-model="filterTerms.depart"
+                                v-on:input="filterRecords()"
+                            >
                             </v-text-field>
                         </v-col>
                     </v-row>
                     <v-row class="aling-center">
                         <v-col cols="4" class="py-0">
-                            <v-text-field label="Company" outlined color="black">
-                            </v-text-field>
+                            <v-autocomplete outlined label="Company" color="black" cache-items hide-no-data
+								:items="companyFinal"
+      							:search-input.sync="searchComp"
+								v-model="filterTerms.company"
+								v-on:change="filterRecords()"
+							>
+							</v-autocomplete>
                         </v-col>
                         <v-col cols="4" class="py-0">
-                            <v-text-field label="Access" outlined color="black">
-                            </v-text-field>
-                        </v-col>
-                        <v-col cols="4" class="py-0">
-                            <v-text-field label="Email" outlined color="black">
+                            <v-text-field label="Email" outlined color="black" 
+                                v-model="filterTerms.email"
+                                v-on:input="filterRecords()"
+                            >
                             </v-text-field>
                         </v-col>
                     </v-row>
-                    <v-btn v-on:click="getRecords()"> Get Records </v-btn>
                 </v-container>
             </v-form>
             <v-col class="secondary" style="border-radius:0px 0px 10px 10px; width: 100%; height: 80%">
                 <v-toolbar class="primary">
                     <div style="width: 10%">
-                        <v-btn class="sort" elevation="0" tile>
+                        <v-btn class="sort primary" v-on:click="sortBy(0)" elevation="0">
                             <span>First Name</span>
                             <v-row>
-                                <v-icon class="up" v-if="sort == '01'" >mdi-menu-up</v-icon>
+                                <v-icon class="up" id="asc0">mdi-menu-up</v-icon>
                             </v-row>
                             <v-row>
-                                <v-icon class="down" v-if="sort == '02'">mdi-menu-down</v-icon>
+                                <v-icon class="down" id="des0">mdi-menu-down</v-icon>
                             </v-row>
                         </v-btn>
                     </div>
                     <div style="width: 15%">
-                        <v-btn class="sort">Last Name</v-btn>
+                        <v-btn class="sort primary" v-on:click="sortBy(1)" elevation="0">
+                            <span>Last Name</span>
+                            <v-row>
+                                <v-icon class="up" id="asc1">mdi-menu-up</v-icon>
+                            </v-row>
+                            <v-row>
+                                <v-icon class="down" id="des1">mdi-menu-down</v-icon>
+                            </v-row>
+                        </v-btn>
                     </div>
                     <div style="width: 20%">
-                        <v-btn class="sort">Company</v-btn>
+                        <v-btn class="sort primary" v-on:click="sortBy(2)" elevation="0">
+                            <span>Company</span>
+                            <v-row>
+                                <v-icon class="up" id="asc2">mdi-menu-up</v-icon>
+                            </v-row>
+                            <v-row>
+                                <v-icon class="down" id="des2">mdi-menu-down</v-icon>
+                            </v-row>
+                        </v-btn>
                     </div>
                     <div style="width: 25%">
-                        <v-btn class="sort">Email</v-btn>
+                        <v-btn class="sort primary" v-on:click="sortBy(3)" elevation="0">
+                            <span>Email</span>
+                            <v-row>
+                                <v-icon class="up" id="asc3">mdi-menu-up</v-icon>
+                            </v-row>
+                            <v-row>
+                                <v-icon class="down" id="des3">mdi-menu-down</v-icon>
+                            </v-row>
+                        </v-btn>
                     </div>
                     <div style="width: 15%">
-                        <v-btn class="sort">Arrive</v-btn>
+                        <v-btn class="sort primary" v-on:click="sortBy(4)" elevation="0">
+                            <span>Arrive</span>
+                            <v-row>
+                                <v-icon class="up" id="asc4">mdi-menu-up</v-icon>
+                            </v-row>
+                            <v-row>
+                                <v-icon class="down" id="des4">mdi-menu-down</v-icon>
+                            </v-row>
+                        </v-btn>
                     </div>
                     <div style="width: 15%">
-                        <v-btn class="sort">Depart</v-btn>
+                        <v-btn class="sort primary" v-on:click="sortBy(5)" elevation="0">
+                            <span>Depart</span>
+                            <v-row>
+                                <v-icon class="up" id="asc5">mdi-menu-up</v-icon>
+                            </v-row>
+                            <v-row>
+                                <v-icon class="down" id="des5">mdi-menu-down</v-icon>
+                            </v-row>
+                        </v-btn>
                     </div>
                 </v-toolbar>
                 <v-list style="padding: 16px">
-                    <v-list-item v-for="record in records" :key="record.email + record.arrive">
+                    <v-list-item v-for="record in recordsFinal" :key="record.email + record.arrive">
                         <v-row>
                             <span style="width: 10%">{{ record.firstName }}</span>
                             <span style="width: 15%">{{ record.lastName }}</span>
                             <span style="width: 20%">{{ record.company }}</span>
-                            <!-- <span style="width: 20%">{{ record.access }}</span> -->
                             <span style="width: 25%">{{ record.email }}</span>
                             <span style="width: 15%">{{ record.arrive }}</span>
                             <span style="width: 15%">{{ record.depart }}</span> 
-                            <!-- <v-col cols="1">{{ record.firstName }}</v-col>
-                            <v-col cols="1">{{ record.lastName }}</v-col>
-                            <v-col cols="2">{{ record.company }}</v-col>
-                            <v-col cols="2">{{ record.access }}</v-col>
-                            <v-col cols="3">{{ record.email }}</v-col>
-                            <v-col cols="2">{{ record.arrive }}</v-col>
-                            <v-col cols="2">{{ record.depart }}</v-col>  -->
                         </v-row>
                     </v-list-item>
                 </v-list>
@@ -99,22 +146,336 @@ export default {
     data () {
         return {
             records: [],
-            sort: "01"
+            recordsFinal: [],
+            recordsSorted: [],
+            sort: 0,
+            lastBtn: null,
+            filterTerms: {
+                firstName: null,
+                lastName: null,
+                company: null,
+                email: null,
+                arrive: null,
+                depart: null,
+            },
+            companyFinal: [],
+			searchComp: null,
         }
     },
+    watch: {
+		searchComp (val) {
+			this.searchCompanies(val);
+		}
+	},
+    beforeMount(){
+        this.getRecords();
+    },
     methods: {
-        getRecords: async function () {
-            this.records = []
-            const Record = Parse.Object.extend("Record");
-            const recordQuery = new Parse.Query(Record);
-            recordQuery.exists("depart");
-            recordQuery.descending('depart');
-            recordQuery.include(['visitor.company']);
-            let list = await recordQuery.find();
+        filterRecords: function () {
+            console.log("filter");
+            let list = this.recordsSorted.filter((item) => {
+                let first = true, last = true, comp = true, email = true;
+                if (this.filterTerms.firstName) {
+                    first =  item.firstName.toLowerCase().includes(this.filterTerms.firstName.toLowerCase());
+                }
+                if (this.filterTerms.lastName) {
+                    console.log(this.filterTerms.lastName);
+                    last = item.lastName.toLowerCase().includes(this.filterTerms.lastName.toLowerCase());
+                }
+                if (this.filterTerms.company) {
+                    console.log(this.filterTerms.company);
+                    comp = item.company.toLowerCase().includes(this.filterTerms.company.toLowerCase());
+                }
+                if (this.filterTerms.email) {
+                    email = item.email.toLowerCase().includes(this.filterTerms.email.toLowerCase());
+                }
 
-            
 
-            list.forEach((item) => {
+                if (first == true && last == true && email == true && comp == true) {
+                    return true;
+                }
+                else return false;
+            });
+
+
+
+
+            this.recordsFinal = list;
+        },
+        sortBy: async function (sortBtn) {
+            if (this.sort == 0 && this.lastBtn == null) {
+                this.sort = 1;
+                this.sortSwitch(sortBtn);
+            }
+            else if (sortBtn !== this.lastBtn) {
+                this.sort = 1;
+                await this.reformatOldSwitch();
+                this.sortSwitch(sortBtn);
+            }
+            else {
+                this.sort += 1;
+                this.sortSwitch(sortBtn);
+            }
+            this.lastBtn = sortBtn;
+        },
+        reformatOldSwitch: async function() {
+            let asc = await document.getElementById("asc" + this.lastBtn);
+            let des = await document.getElementById("des" + this.lastBtn); 
+            asc.style.color = "grey";
+            des.style.color = "grey";
+        },
+        sortSwitch: function (sortBtn) {
+            switch (sortBtn) {
+                case 0: {
+                    let asc = document.getElementById('asc0');
+                    let des = document.getElementById('des0');
+
+                    if ((this.sort % 3) == 0) {
+                        asc.style.color = "grey";
+                        des.style.color = "grey";
+                        this.sortRecords();
+                    }
+                    else if ((this.sort % 3) == 1) {
+                        asc.style.color = "grey";
+                        des.style.color = "black";
+                        this.sortRecords(undefined, "firstName", "des");
+                    }
+                    else {
+                        asc.style.color = "black";
+                        des.style.color = "grey";
+                        this.sortRecords(undefined, "firstName", "asc");
+                    }
+                    break;
+                }
+                case 1: {
+                    let asc = document.getElementById('asc1');
+                    let des = document.getElementById('des1');
+
+                    if ((this.sort % 3) == 0) {
+                        asc.style.color = "grey";
+                        des.style.color = "grey";
+                        this.sortRecords();
+                    }
+                    else if ((this.sort % 3) == 1) {
+                        asc.style.color = "grey";
+                        des.style.color = "black";
+                        this.sortRecords(undefined, "lastName", "des");
+                    }
+                    else {
+                        asc.style.color = "black";
+                        des.style.color = "grey";
+                        this.sortRecords(undefined, "lastName", "asc");
+                    }
+                    break;
+                }  
+                case 2:{
+                    let asc = document.getElementById('asc2');
+                    let des = document.getElementById('des2');
+                    if ((this.sort % 3) == 0) {
+                        asc.style.color = "grey";
+                        des.style.color = "grey";
+                        this.sortRecords();
+                    }
+                    else if ((this.sort % 3) == 1) {
+                        asc.style.color = "grey";
+                        des.style.color = "black";
+                        this.sortRecords(undefined, "company", "des");
+                    }
+                    else {
+                        asc.style.color = "black";
+                        des.style.color = "grey";
+                        this.sortRecords(undefined, "company", "asc");
+                    }
+                    break;
+                }
+                case 3: {
+                    let asc = document.getElementById('asc3');
+                    let des = document.getElementById('des3');
+                    if ((this.sort % 3) == 0) {
+                        asc.style.color = "grey";
+                        des.style.color = "grey";
+                        this.sortRecords();
+                    }
+                    else if ((this.sort % 3) == 1) {
+                        asc.style.color = "grey";
+                        des.style.color = "black";
+                        this.sortRecords(undefined, "email", "des");
+                    }
+                    else {
+                        asc.style.color = "black";
+                        des.style.color = "grey";
+                        this.sortRecords(undefined, "email", "asc");
+                    }
+                    break;
+                }
+                case 4: {
+                    let asc = document.getElementById('asc4');
+                    let des = document.getElementById('des4');
+                    if ((this.sort % 3) == 0) {
+                        asc.style.color = "grey";
+                        des.style.color = "grey";
+                        this.sortRecords();
+                    }
+                    else if ((this.sort % 3) == 1) {
+                        asc.style.color = "grey";
+                        des.style.color = "black";
+                        this.sortRecords(undefined, "arrive", "des");
+                    }
+                    else {
+                        asc.style.color = "black";
+                        des.style.color = "grey";
+                        this.sortRecords(undefined, "arrive", "asc");
+                    }
+                    break;
+                }
+                case 5: {
+                    let asc = document.getElementById('asc5');
+                    let des = document.getElementById('des5');
+                    if ((this.sort % 3) == 0) {
+                        asc.style.color = "grey";
+                        des.style.color = "grey";
+                        this.sortRecords();
+                    }
+                    else if ((this.sort % 3) == 1) {
+                        asc.style.color = "grey";
+                        des.style.color = "black";
+                        this.sortRecords(undefined, 'depart', 'des');
+                    }
+                    else {
+                        asc.style.color = "black";
+                        des.style.color = "grey";
+                        this.sortRecords(undefined, 'depart', 'asc');
+                    }
+                    break;
+                }
+            }
+        },
+        sortRecords: async function (list=this.records, sortBy="company", sortType="des") {
+            switch (sortBy) {
+                case 'firstName': {
+                    for (let x = 1; x < list.length; x++) {
+                        let y = 1;
+                        let visitorx = await list[x].get('visitor');
+                        let visitory = await list[x-y].get('visitor');
+                        
+                        while (visitorx.get('firstName').toLowerCase() < visitory.get('firstName').toLowerCase()) {
+                            let temp = list[x-y];
+                            list[x-y] = list[x-y+1];
+                            list[x-y+1] = temp;
+                            if (x - y !== 0) {
+                                y++;
+                                visitory = list[x-y].get('visitor');
+                            }
+                            else break;
+                        }
+                    }
+                    break;
+                }
+                case 'lastName': {
+                    for (let x = 1; x < list.length; x++) {
+                        let y = 1;
+                        let visitorx = await list[x].get('visitor');
+                        let visitory = await list[x-y].get('visitor');
+                        
+                        while (visitorx.get('lastName').toLowerCase() < visitory.get('lastName').toLowerCase()) {
+                            let temp = list[x-y];
+                            list[x-y] = list[x-y+1];
+                            list[x-y+1] = temp;
+                            if (x - y !== 0) {
+                                y++;
+                                visitory = list[x-y].get('visitor');
+                            }
+                            else break;
+                        }
+                    }
+                    break;
+                }
+                case 'company': { 
+                    for (let x = 1; x < list.length; x++) {
+                        let y = 1;
+                        let visitorx = await list[x].get('visitor');
+                        let visitory = await list[x-y].get('visitor');
+                        let companyx = await visitorx.get('company');
+                        let companyy = await visitory.get('company');
+                        
+                        while (companyx.get('name').toLowerCase() < companyy.get('name').toLowerCase()) {
+                            let temp = list[x-y];
+                            list[x-y] = list[x-y+1];
+                            list[x-y+1] = temp;
+                            if (x - y !== 0) {
+                                y++;
+                                visitory = list[x-y].get('visitor');
+                                companyy = visitory.get('company');
+                            }
+                            else break;
+                        }
+                    }
+                    break;
+                }
+                case 'email': {
+                    for (let x = 1; x < list.length; x++) {
+                        let y = 1;
+                        let visitorx = await list[x].get('visitor');
+                        let visitory = await list[x-y].get('visitor');
+                        
+                        while (visitorx.get('email').toLowerCase() < visitory.get('email').toLowerCase()) {
+                            let temp = list[x-y];
+                            list[x-y] = list[x-y+1];
+                            list[x-y+1] = temp;
+                            if (x - y !== 0) {
+                                y++;
+                                visitory = list[x-y].get('visitor');
+                            }
+                            else break;
+                        }
+                    }
+                    break;
+                }
+                case 'arrive': {
+                    for (let x = 1; x < list.length; x++) {
+                        let y = 1;
+                        let arrivex = await list[x].get('arrive');
+                        let arrivey = await list[x-y].get('arrive');
+                        
+                        while (arrivex > arrivey) {
+                            let temp = list[x-y];
+                            list[x-y] = list[x-y+1];
+                            list[x-y+1] = temp;
+                            if (x - y !== 0) {
+                                y++;
+                                arrivey = list[x-y].get('arrive');
+                            }
+                            else break;
+                        }
+                    }
+                    break;
+                }
+                case 'depart': {
+                    for (let x = 1; x < list.length; x++) {
+                        let y = 1;
+                        let departx = await list[x].get('depart');
+                        let departy = await list[x-y].get('depart');
+                        
+                        while (departx > departy) {
+                            let temp = list[x-y];
+                            list[x-y] = list[x-y+1];
+                            list[x-y+1] = temp;
+                            if (x - y !== 0) {
+                                y++;
+                                departy = list[x-y].get('depart');
+                            }
+                            else break;
+                        }
+                    }
+                    break;
+                }
+            }
+            if (sortType == "asc") {
+                list.reverse();
+            }
+            this.records = list;
+            this.recordsSorted = [];
+            this.records.forEach((item) => {
                 let record = {
                     firstName: null,
                     lastName: null,
@@ -136,9 +497,20 @@ export default {
                 record.email = visitor.get("email");
                 record.access= visitor.get("access");
 
-                this.records.push(record);
+                this.recordsSorted.push(record);
             });
-               
+            this.filterRecords();
+        },
+        getRecords: async function () {
+            this.records = []
+            const Record = Parse.Object.extend("Record");
+            const recordQuery = new Parse.Query(Record);
+
+            recordQuery.exists("depart");
+
+            recordQuery.include(['visitor.company']);
+            this.records = await recordQuery.find();
+            await this.sortRecords();
         },
         formatDate: function(date) {
             let month = '0' + (date.getMonth() + 1);
@@ -167,7 +539,27 @@ export default {
 
             let formattedDate = month.slice(-2) + "/" + day + "/" + year + " - " + hour.slice(-2) + ":" + minute.slice(-2) + dayTime;
             return formattedDate;
-        }
+        },
+        searchCompanies: async function (val) {
+			const user = Parse.User.current();
+			const Users = new Parse.Query(Parse.User);
+			Users.equalTo("parentCompany", user);
+
+			let companyList = await Users.find();
+			companyList.push(user);
+			
+			let test = companyList.filter((company) => {
+                if (val) {
+                    let name = company.get("name").toLowerCase().includes(val.toLowerCase());
+				    return name;
+                }
+                else return false;
+			});
+			this.companyFinal = [];
+			test.forEach( e =>{
+				this.companyFinal.push(e.get("name"));
+			})
+		},
     }
 };
 </script>
@@ -185,10 +577,12 @@ export default {
     position: relative;
     top: -5px;
     left: 10px;
+    color: grey;
 }
 .v-icon.down {
     position: relative;
     top: 5px;
     left: 10px;
+    color: grey;
 }
 </style>

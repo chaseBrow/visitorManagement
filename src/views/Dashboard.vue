@@ -162,8 +162,11 @@ export default {
 			companyList.push(user);
 			
 			let test = companyList.filter(company => {
-				let name = company.get("name").toLowerCase().includes(val.toLowerCase());
-				return name;
+				if (val) {
+                    let name = company.get("name").toLowerCase().includes(val.toLowerCase());
+				    return name;
+                }
+                else return false;
 			});
 			this.companyFinal = [];
 			test.forEach( e =>{
