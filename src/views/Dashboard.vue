@@ -68,9 +68,9 @@
 						<input type="text" style="width: 10%" readonly :value="person.get('access')" :id="person.get('email') + person.get('access')"> -->
 						<span style="width: 10%">{{ person.get('firstName') }}</span>
                     	<span style="width: 10%">{{ person.get('lastName') }}</span>
-                        <span style="width: 10%">{{ getCompanyName(person) }}</span>
-						<span style="width: 25%">{{ person.get('email') }}</span>
-                        <span style="width: 10%">{{ person.get('access') }}</span>
+                        <span style="width: 10%; font-size: 0.95rem">{{ getCompanyName(person) }}</span>
+						<span style="width: 25%; font-size: 0.9rem">{{ person.get('email') }}</span>
+                        <span style="width: 10%; font-size: 0.9rem">{{ person.get('access') }}</span>
                         
 
 

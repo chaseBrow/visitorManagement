@@ -14,15 +14,15 @@
                     </v-card-title>
                     <v-row>
                         <v-col cols="4">
-                            <v-text-field readonly class="visitor" label="First Name" outlined>
+                            <v-text-field readonly lass="visitor" label="First Name" outlined>
                             </v-text-field>
                         </v-col>
                         <v-col cols="4">
-                            <v-text-field class="visitor" label="Last Name" outlined>
+                            <v-text-field readonly class="visitor" label="Last Name" outlined>
                             </v-text-field>
                         </v-col>
                         <v-col cols="4">
-                            <v-autocomplete outlined label="Company" color="black" cache-items hide-no-data
+                            <v-autocomplete readonly outlined label="Company" color="black" cache-items hide-no-data
 								:items="companyFinal"
       							:search-input.sync="searchComp"
 								v-model="company"
@@ -32,15 +32,15 @@
                     </v-row>
                     <v-row>
                         <v-col cols="4">
-                            <v-text-field label="Email" outlined>
+                            <v-text-field readonly label="Email" outlined>
                             </v-text-field>
                         </v-col>
                         <v-col cols="4">
-                            <v-text-field label="Access" outlined>
-                            </v-text-field>
+                            <v-select readonly label="Access" outlined :items="options" v-model="access" v-on:focus="getOptions">
+                            </v-select>
                         </v-col>
                         <v-col cols="4">
-                            <v-text-field label="Phone" outlined>
+                            <v-text-field readonly label="Phone" outlined>
                             </v-text-field>
                         </v-col>
                     </v-row>
@@ -58,7 +58,9 @@ export default {
             dialog: false,
             companyFinal: [],
 			searchComp: null,
-			company: '',
+            company: '',
+            options: [],
+            access: null,
         }
     },
     watch: {
@@ -67,6 +69,10 @@ export default {
 		}
 	},
     methods: {
+        getOptions: function () {
+            const user = Parse.User.current();
+            this.options = user.get("options");
+        },
         searchCompanies: async function (val) {
 			const user = Parse.User.current();
 			const Users = new Parse.Query(Parse.User);
@@ -86,7 +92,7 @@ export default {
 		},
         getInfo: async function () {
             this.dialog = true;
-            let fields = null;
+            let fields = [];
             fields = await document.getElementsByClassName('visitor');
             
             for (let field of fields) {
