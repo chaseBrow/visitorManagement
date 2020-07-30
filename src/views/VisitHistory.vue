@@ -12,15 +12,24 @@
                             </v-text-field>
                         </v-col>
                         <v-col cols="4" class="py-0">
-                            <v-text-field label="Last Name" outlined color="black" v-model="filterTerms.lastName">
+                            <v-text-field label="Last Name" outlined color="black" 
+                                v-model="filterTerms.lastName"
+                                v-on:input="filterRecords()"
+                            >
                             </v-text-field>
                         </v-col>
                         <v-col cols="2" class="py-0">
-                            <v-text-field label="Start Date" outlined color="black" v-model="filterTerms.arrive">
+                            <v-text-field label="Start Date" outlined color="black" 
+                                v-model="filterTerms.arrive"
+                                v-on:input="filterRecords()"
+                            >
                             </v-text-field>
                         </v-col>
                         <v-col cols="2" class="py-0">
-                            <v-text-field label="End Date" outlined color="black" v-model="filterTerms.depart">
+                            <v-text-field label="End Date" outlined color="black" 
+                                v-model="filterTerms.depart"
+                                v-on:input="filterRecords()"
+                            >
                             </v-text-field>
                         </v-col>
                     </v-row>
@@ -35,7 +44,10 @@
 							</v-autocomplete>
                         </v-col>
                         <v-col cols="4" class="py-0">
-                            <v-text-field label="Email" outlined color="black" v-model="filterTerms.email">
+                            <v-text-field label="Email" outlined color="black" 
+                                v-model="filterTerms.email"
+                                v-on:input="filterRecords()"
+                            >
                             </v-text-field>
                         </v-col>
                     </v-row>
@@ -161,7 +173,7 @@ export default {
     methods: {
         filterRecords: function () {
             let list = this.recordsSorted.filter((item) => {
-                let first, last, comp, email, arrive, depart;
+                let first = true, last = true, comp = true, email = true;
                 if (this.filterTerms.firstName) {
                     first =  item.firstName.toLowerCase().includes(this.filterTerms.firstName.toLowerCase());
                 }
