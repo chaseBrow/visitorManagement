@@ -5,33 +5,37 @@
                 <v-container>
                     <v-row class="align-start">
                         <v-col cols="4" class="py-0">
-                            <v-text-field label="First Name" outlined color="black">
+                            <v-text-field label="First Name" outlined color="black" 
+                                v-model="filterTerms.firstName"
+                                v-on:input="filterRecords()"
+                            >
                             </v-text-field>
                         </v-col>
                         <v-col cols="4" class="py-0">
-                            <v-text-field label="Last Name" outlined color="black">
+                            <v-text-field label="Last Name" outlined color="black" v-model="filterTerms.lastName">
                             </v-text-field>
                         </v-col>
                         <v-col cols="2" class="py-0">
-                            <v-text-field label="Start Date" outlined color="black">
+                            <v-text-field label="Start Date" outlined color="black" v-model="filterTerms.arrive">
                             </v-text-field>
                         </v-col>
                         <v-col cols="2" class="py-0">
-                            <v-text-field label="End Date" outlined color="black">
+                            <v-text-field label="End Date" outlined color="black" v-model="filterTerms.depart">
                             </v-text-field>
                         </v-col>
                     </v-row>
                     <v-row class="aling-center">
                         <v-col cols="4" class="py-0">
-                            <v-text-field label="Company" outlined color="black">
-                            </v-text-field>
+                            <v-autocomplete outlined label="Company" color="black" cache-items hide-no-data
+								:items="companyFinal"
+      							:search-input.sync="searchComp"
+								v-model="filterTerms.company"
+								v-on:input="filterRecords()"
+							>
+							</v-autocomplete>
                         </v-col>
                         <v-col cols="4" class="py-0">
-                            <v-text-field label="Access" outlined color="black">
-                            </v-text-field>
-                        </v-col>
-                        <v-col cols="4" class="py-0">
-                            <v-text-field label="Email" outlined color="black">
+                            <v-text-field label="Email" outlined color="black" v-model="filterTerms.email">
                             </v-text-field>
                         </v-col>
                     </v-row>
@@ -131,14 +135,58 @@ export default {
         return {
             records: [],
             recordsFinal: [],
+            recordsSorted: [],
             sort: 0,
-            lastBtn: null
+            lastBtn: null,
+            filterTerms: {
+                firstName: null,
+                lastName: null,
+                company: null,
+                email: null,
+                arrive: null,
+                depart: null,
+            },
+            companyFinal: [],
+			searchComp: null,
         }
     },
+    watch: {
+		searchComp (val) {
+			this.searchCompanies(val);
+		}
+	},
     beforeMount(){
         this.getRecords();
     },
     methods: {
+        filterRecords: function () {
+            let list = this.recordsSorted.filter((item) => {
+                let first, last, comp, email, arrive, depart;
+                if (this.filterTerms.firstName) {
+                    first =  item.firstName.toLowerCase().includes(this.filterTerms.firstName.toLowerCase());
+                }
+                if (this.filterTerms.lastName) {
+                    last = item.lastName.toLowerCase().includes(this.filterTerms.lastName.toLowerCase());
+                }
+                if (this.filterTerms.company) {
+                    comp = item.company.toLowerCase().includes(this.filterTerms.company.toLowerCase());
+                }
+                if (this.filterTerms.email) {
+                    email = item.email.toLowerCase().includes(this.filterTerms.email.toLowerCase());
+                }
+
+
+                if (first == true && last == true && email == true && comp == true) {
+                    return true;
+                }
+                else return false;
+            });
+
+
+
+
+            this.recordsFinal = list;
+        },
         sortBy: async function (sortBtn) {
             if (this.sort == 0 && this.lastBtn == null) {
                 this.sort = 1;
@@ -411,7 +459,7 @@ export default {
                 list.reverse();
             }
             this.records = list;
-            this.recordsFinal = [];
+            this.recordsSorted = [];
             this.records.forEach((item) => {
                 let record = {
                     firstName: null,
@@ -434,8 +482,9 @@ export default {
                 record.email = visitor.get("email");
                 record.access= visitor.get("access");
 
-                this.recordsFinal.push(record);
+                this.recordsSorted.push(record);
             });
+            this.filterRecords();
         },
         getRecords: async function () {
             this.records = []
@@ -475,7 +524,24 @@ export default {
 
             let formattedDate = month.slice(-2) + "/" + day + "/" + year + " - " + hour.slice(-2) + ":" + minute.slice(-2) + dayTime;
             return formattedDate;
-        }
+        },
+        searchCompanies: async function (val) {
+			const user = Parse.User.current();
+			const Users = new Parse.Query(Parse.User);
+			Users.equalTo("parentCompany", user);
+
+			let companyList = await Users.find();
+			companyList.push(user);
+			
+			let test = companyList.filter(company => {
+				let name = company.get("name").toLowerCase().includes(val.toLowerCase());
+				return name;
+			});
+			this.companyFinal = [];
+			test.forEach( e =>{
+				this.companyFinal.push(e.get("name"));
+			})
+		},
     }
 };
 </script>
