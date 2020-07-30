@@ -39,7 +39,7 @@
 								:items="companyFinal"
       							:search-input.sync="searchComp"
 								v-model="filterTerms.company"
-								v-on:input="filterRecords()"
+								v-on:change="filterRecords()"
 							>
 							</v-autocomplete>
                         </v-col>
@@ -172,15 +172,18 @@ export default {
     },
     methods: {
         filterRecords: function () {
+            console.log("filter");
             let list = this.recordsSorted.filter((item) => {
                 let first = true, last = true, comp = true, email = true;
                 if (this.filterTerms.firstName) {
                     first =  item.firstName.toLowerCase().includes(this.filterTerms.firstName.toLowerCase());
                 }
                 if (this.filterTerms.lastName) {
+                    console.log(this.filterTerms.lastName);
                     last = item.lastName.toLowerCase().includes(this.filterTerms.lastName.toLowerCase());
                 }
                 if (this.filterTerms.company) {
+                    console.log(this.filterTerms.company);
                     comp = item.company.toLowerCase().includes(this.filterTerms.company.toLowerCase());
                 }
                 if (this.filterTerms.email) {
@@ -545,9 +548,12 @@ export default {
 			let companyList = await Users.find();
 			companyList.push(user);
 			
-			let test = companyList.filter(company => {
-				let name = company.get("name").toLowerCase().includes(val.toLowerCase());
-				return name;
+			let test = companyList.filter((company) => {
+                if (val) {
+                    let name = company.get("name").toLowerCase().includes(val.toLowerCase());
+				    return name;
+                }
+                else return false;
 			});
 			this.companyFinal = [];
 			test.forEach( e =>{
