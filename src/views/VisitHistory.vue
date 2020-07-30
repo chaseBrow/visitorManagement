@@ -35,7 +35,6 @@
                             </v-text-field>
                         </v-col>
                     </v-row>
-                    <v-btn v-on:click="getRecords()"> Get Records </v-btn>
                 </v-container>
             </v-form>
             <v-col class="secondary" style="border-radius:0px 0px 10px 10px; width: 100%; height: 80%">
@@ -108,7 +107,7 @@
                     </div>
                 </v-toolbar>
                 <v-list style="padding: 16px">
-                    <v-list-item v-for="record in records" :key="record.email + record.arrive">
+                    <v-list-item v-for="record in recordsFinal" :key="record.email + record.arrive">
                         <v-row>
                             <span style="width: 10%">{{ record.firstName }}</span>
                             <span style="width: 15%">{{ record.lastName }}</span>
@@ -131,9 +130,13 @@ export default {
     data () {
         return {
             records: [],
+            recordsFinal: [],
             sort: 0,
             lastBtn: null
         }
+    },
+    beforeMount(){
+        this.getRecords();
     },
     methods: {
         sortBy: async function (sortBtn) {
@@ -159,7 +162,6 @@ export default {
             des.style.color = "grey";
         },
         sortSwitch: function (sortBtn) {
-
             switch (sortBtn) {
                 case 0: {
                     let asc = document.getElementById('asc0');
@@ -168,16 +170,17 @@ export default {
                     if ((this.sort % 3) == 0) {
                         asc.style.color = "grey";
                         des.style.color = "grey";
+                        this.sortRecords();
                     }
                     else if ((this.sort % 3) == 1) {
                         asc.style.color = "grey";
                         des.style.color = "black";
-                        this.getRecords("firstName", "des");
+                        this.sortRecords(undefined, "firstName", "des");
                     }
                     else {
                         asc.style.color = "black";
                         des.style.color = "grey";
-                        this.getRecords("firstName", "asc");
+                        this.sortRecords(undefined, "firstName", "asc");
                     }
                     break;
                 }
@@ -188,17 +191,17 @@ export default {
                     if ((this.sort % 3) == 0) {
                         asc.style.color = "grey";
                         des.style.color = "grey";
-                        this.getRecords();
+                        this.sortRecords();
                     }
                     else if ((this.sort % 3) == 1) {
                         asc.style.color = "grey";
                         des.style.color = "black";
-                        this.getRecords("lastName", "des");
+                        this.sortRecords(undefined, "lastName", "des");
                     }
                     else {
                         asc.style.color = "black";
                         des.style.color = "grey";
-                        this.getRecords("lastName", "asc");
+                        this.sortRecords(undefined, "lastName", "asc");
                     }
                     break;
                 }  
@@ -208,17 +211,17 @@ export default {
                     if ((this.sort % 3) == 0) {
                         asc.style.color = "grey";
                         des.style.color = "grey";
-                        this.getRecords();
+                        this.sortRecords();
                     }
                     else if ((this.sort % 3) == 1) {
                         asc.style.color = "grey";
                         des.style.color = "black";
-                        this.getRecords("company", "des");
+                        this.sortRecords(undefined, "company", "des");
                     }
                     else {
                         asc.style.color = "black";
                         des.style.color = "grey";
-                        this.getRecords("company", "asc");
+                        this.sortRecords(undefined, "company", "asc");
                     }
                     break;
                 }
@@ -228,17 +231,17 @@ export default {
                     if ((this.sort % 3) == 0) {
                         asc.style.color = "grey";
                         des.style.color = "grey";
-                        this.getRecords();
+                        this.sortRecords();
                     }
                     else if ((this.sort % 3) == 1) {
                         asc.style.color = "grey";
                         des.style.color = "black";
-                        this.getRecords("email", "des");
+                        this.sortRecords(undefined, "email", "des");
                     }
                     else {
                         asc.style.color = "black";
                         des.style.color = "grey";
-                        this.getRecords("email", "asc");
+                        this.sortRecords(undefined, "email", "asc");
                     }
                     break;
                 }
@@ -248,17 +251,17 @@ export default {
                     if ((this.sort % 3) == 0) {
                         asc.style.color = "grey";
                         des.style.color = "grey";
-                        this.getRecords();
+                        this.sortRecords();
                     }
                     else if ((this.sort % 3) == 1) {
                         asc.style.color = "grey";
                         des.style.color = "black";
-                        this.getRecords("arrive", "des");
+                        this.sortRecords(undefined, "arrive", "des");
                     }
                     else {
                         asc.style.color = "black";
                         des.style.color = "grey";
-                        this.getRecords("arrive", "asc");
+                        this.sortRecords(undefined, "arrive", "asc");
                     }
                     break;
                 }
@@ -268,24 +271,23 @@ export default {
                     if ((this.sort % 3) == 0) {
                         asc.style.color = "grey";
                         des.style.color = "grey";
-                        this.getRecords();
+                        this.sortRecords();
                     }
                     else if ((this.sort % 3) == 1) {
                         asc.style.color = "grey";
                         des.style.color = "black";
-                        this.getRecords('depart', 'des');
+                        this.sortRecords(undefined, 'depart', 'des');
                     }
                     else {
                         asc.style.color = "black";
                         des.style.color = "grey";
-                        this.getRecords('depart', 'asc');
+                        this.sortRecords(undefined, 'depart', 'asc');
                     }
                     break;
                 }
             }
         },
-        insertionSort: async function (list, sortBy="company", sortType="des") {
-            console.log(sortType);
+        sortRecords: async function (list=this.records, sortBy="company", sortType="des") {
             switch (sortBy) {
                 case 'firstName': {
                     for (let x = 1; x < list.length; x++) {
@@ -293,7 +295,7 @@ export default {
                         let visitorx = await list[x].get('visitor');
                         let visitory = await list[x-y].get('visitor');
                         
-                        while (visitorx.get('firstName') < visitory.get('firstName')) {
+                        while (visitorx.get('firstName').toLowerCase() < visitory.get('firstName').toLowerCase()) {
                             let temp = list[x-y];
                             list[x-y] = list[x-y+1];
                             list[x-y+1] = temp;
@@ -312,7 +314,7 @@ export default {
                         let visitorx = await list[x].get('visitor');
                         let visitory = await list[x-y].get('visitor');
                         
-                        while (visitorx.get('lastName') < visitory.get('lastName')) {
+                        while (visitorx.get('lastName').toLowerCase() < visitory.get('lastName').toLowerCase()) {
                             let temp = list[x-y];
                             list[x-y] = list[x-y+1];
                             list[x-y+1] = temp;
@@ -333,7 +335,7 @@ export default {
                         let companyx = await visitorx.get('company');
                         let companyy = await visitory.get('company');
                         
-                        while (companyx.get('name') < companyy.get('name')) {
+                        while (companyx.get('name').toLowerCase() < companyy.get('name').toLowerCase()) {
                             let temp = list[x-y];
                             list[x-y] = list[x-y+1];
                             list[x-y+1] = temp;
@@ -353,7 +355,7 @@ export default {
                         let visitorx = await list[x].get('visitor');
                         let visitory = await list[x-y].get('visitor');
                         
-                        while (visitorx.get('email') < visitory.get('email')) {
+                        while (visitorx.get('email').toLowerCase() < visitory.get('email').toLowerCase()) {
                             let temp = list[x-y];
                             list[x-y] = list[x-y+1];
                             list[x-y+1] = temp;
@@ -405,21 +407,12 @@ export default {
                     break;
                 }
             }
-            return list;
-        },
-        getRecords: async function () {
-            this.records = []
-            const Record = Parse.Object.extend("Record");
-            const recordQuery = new Parse.Query(Record);
-
-            recordQuery.exists("depart");
-
-            recordQuery.include(['visitor.company']);
-            let list = await recordQuery.find();
-            
-            list = await this.insertionSort(list);
-            
-            list.forEach((item) => {
+            if (sortType == "asc") {
+                list.reverse();
+            }
+            this.records = list;
+            this.recordsFinal = [];
+            this.records.forEach((item) => {
                 let record = {
                     firstName: null,
                     lastName: null,
@@ -441,9 +434,19 @@ export default {
                 record.email = visitor.get("email");
                 record.access= visitor.get("access");
 
-                this.records.push(record);
+                this.recordsFinal.push(record);
             });
-               
+        },
+        getRecords: async function () {
+            this.records = []
+            const Record = Parse.Object.extend("Record");
+            const recordQuery = new Parse.Query(Record);
+
+            recordQuery.exists("depart");
+
+            recordQuery.include(['visitor.company']);
+            this.records = await recordQuery.find();
+            await this.sortRecords();
         },
         formatDate: function(date) {
             let month = '0' + (date.getMonth() + 1);
