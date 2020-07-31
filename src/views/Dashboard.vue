@@ -7,14 +7,14 @@
 						<v-col cols="2" class="pb-0">
 							<v-text-field label="First Name" outlined color="black" 
 								v-model="filterTerms.firstName"
-								v-on:input="filter"
+								v-on:input="filterPeople()"
 							>
 							</v-text-field>
 						</v-col>
 						<v-col cols="2" class="pb-0">
 							<v-text-field  label="Last Name" outlined color="black" 
 								v-model="filterTerms.lastName"
-								v-on:input="filter"
+								v-on:input="filterPeople()"
 							>
 							</v-text-field>
 						</v-col>
@@ -22,21 +22,21 @@
 							<v-autocomplete outlined label="Company" color="black" cache-items hide-no-data
 								:items="companyFinal"
       							:search-input.sync="searchComp"
-								v-model="company"
-								v-on:input="filter"
+								v-model="filterTerms.company"
+								v-on:input="filterPeople()"
 							>
 							</v-autocomplete>
 						</v-col>
 						<v-col cols="3" class="pb-0">
 							<v-text-field label="Email" outlined color="black"
 								v-model="filterTerms.email"
-								v-on:input="filter"
+								v-on:input="filterPeople()"
 							>
 							</v-text-field>
 						</v-col>
 						<v-col cols="2" class="pb-0">
 							 <v-select label="Access" outlined color="black" :items="options" v-model="filterTerms.access" 
-							 v-on:focus="getOptions" v-on:change="filter"
+							 v-on:focus="getOptions" v-on:change="filterPeople()"
 							>
 							</v-select>
 						</v-col>
@@ -79,21 +79,6 @@
 				</v-list>
 			</v-col>
 		</v-row>
-		<v-dialog v-model="confirmDelete">
-			<v-card>
-				<v-card-title>Confirm Delete</v-card-title>
-				<v-card-text>The visitor and their records will remain on the database, but no longer will appear in visitor searches </v-card-text>
-				<v-card-actions>
-					<v-spacer></v-spacer>
-					<v-btn color="grey" v-on:click="confirmDelete = !confirmDelete">
-						Cancel
-					</v-btn>
-					<v-btn color="red" v-on:click="del()">
-						Delete
-					</v-btn>
-				</v-card-actions>
-			</v-card>
-		</v-dialog>
 	</v-container>
 </template>
 
@@ -104,20 +89,21 @@ import MoreInfo from "../components/MoreInfo"
 export default {
 	data() {
 		return {
-			person: null,
-			confirmDelete: false,
+			filteredPeople: [],
+			recVisitors: null,
+
+			companyFinal: [],
+			searchComp: null,
+			activeCompanies: [],
+			visitors: [],
 			filterTerms: {
 				firstName: '',
 				lastName: '',
 				email: '',
 				access: '',
+				company: '',
 			},
 			options: [],
-			filteredPeople: [],
-			companyFinal: [],
-			searchComp: null,
-			company: '',
-			recVisitors: null,
 		}
 	},
 	watch: {
@@ -125,21 +111,28 @@ export default {
 			this.searchCompanies(val);
 		}
 	},
+	async beforeMount(){
+		await this.getCompanies();
+		this.getVisitors();
+    },
 	methods: {
 		getCompanyName: function (person) {
 			let comp = person.get("company");
 			let name = comp.get("name");
 			return name;
 		},
-		searchCompanies: async function (val) {
+		getCompanies: async function () {
 			const user = Parse.User.current();
 			const Users = new Parse.Query(Parse.User);
 			Users.equalTo("parentCompany", user);
 
 			let companyList = await Users.find();
-			companyList.push(user);
 			
-			let test = companyList.filter(company => {
+			companyList.push(user);
+			this.activeCompanies = companyList;
+		},
+		searchCompanies: async function (val) {
+			let test = this.activeCompanies.filter(company => {
 				if (val) {
                     let name = company.get("name").toLowerCase().includes(val.toLowerCase());
 				    return name;
@@ -156,7 +149,7 @@ export default {
 			this.filterTerms.lastName = '';
 			this.filterTerms.email = '';
 			this.filterTerms.access = '';
-			this.company = '';
+			this.filterTerms.company = '';
 
 
 			const Record = Parse.Object.extend("Record");
@@ -194,45 +187,43 @@ export default {
 		getOptions: function () {
             const user = Parse.User.current();
             this.options = user.get("options");
-        },
-		filter: function () {
+		},
+		getVisitors: async function () {
 			const Visitors = Parse.Object.extend("Visitor");
 			const queryVisitor = new Parse.Query(Visitors);
-
-			queryVisitor.limit(20);
+			
 			queryVisitor.notEqualTo("deleted", true);
 			queryVisitor.include(["company.name"]);
-			queryVisitor.find().then((visitors) => {
-				this.filteredPeople = visitors.filter(this.filterPeople);
-			},
-			(error) =>	{ 
-				console.log("there was an error:" + error.message)
-			});
+			queryVisitor.containedIn('company', this.activeCompanies);
+			this.visitors = await queryVisitor.find();
+			this.filterPeople();
 		},
-
-		filterPeople: function (visitor) {
-			let first = true, last = true,company = true, email = true, access = true;
-			if (visitor.get("firstName")) {
-				first = visitor.get("firstName").toLowerCase().includes(this.filterTerms.firstName.toLowerCase());
-			}
-			if (visitor.get("lastName")) {
-				last = visitor.get("lastName").toLowerCase().includes(this.filterTerms.lastName.toLowerCase());
-			}
-			let val = visitor.get("company")
-			company = val.get("name").includes(this.company);
-
-			if (visitor.get("email")) {
-				email = visitor.get("email").toLowerCase().includes(this.filterTerms.email.toLowerCase());
-			}
-			if (visitor.get("access")) {
-				access = visitor.get("access").toLowerCase().includes(this.filterTerms.access.toLowerCase());
-			}
-			if (first == true && last == true && company == true && email == true && access == true) {
-				return true;
-			}
-			else {
-				return false;
-			}
+		filterPeople: function (visitors=this.visitors) {
+			this.filteredPeople = visitors.filter((visitor) => {
+				let first = true, last = true,comp = true, email = true, access = true;
+				if (visitor.get("firstName") && this.filterTerms.firstName) {
+					first = visitor.get("firstName").toLowerCase().includes(this.filterTerms.firstName.toLowerCase());
+				}
+				if (visitor.get("lastName") && this.filterTerms.lastName) {
+					last = visitor.get("lastName").toLowerCase().includes(this.filterTerms.lastName.toLowerCase());
+				}
+				let val = visitor.get("company");
+				if (this.filterTerms.company) {
+					comp = val.get("name").includes(this.filterTerms.company);
+				}
+				if (visitor.get("email") && this.filterTerms.email) {
+					email = visitor.get("email").toLowerCase().includes(this.filterTerms.email.toLowerCase());
+				}
+				if (visitor.get("access") && this.filterTerms.access) {
+					access = visitor.get("access").toLowerCase().includes(this.filterTerms.access.toLowerCase());
+				}
+				if (first == true && last == true && comp == true && email == true && access == true) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			});
 		},
 	},
 	components: {
