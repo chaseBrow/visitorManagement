@@ -89,9 +89,10 @@ import MoreInfo from "../components/MoreInfo"
 export default {
 	data() {
 		return {
-			filteredPeople: [],
 			recVisitors: null,
 
+
+			filteredPeople: [],
 			companyFinal: [],
 			searchComp: null,
 			activeCompanies: [],
@@ -156,8 +157,7 @@ export default {
 			const recQuery = new Parse.Query(Record);
 
 
-			recQuery.greaterThan("createdAt", this.getDate());
-			recQuery.limit(20);
+			recQuery.greaterThan("updatedAt", this.getDate());
 			recQuery.descending("createdAt");
 			recQuery.include("visitor");
 			
