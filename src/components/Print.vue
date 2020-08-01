@@ -4,7 +4,7 @@
   	</v-container>
 </template>
 
-<script  type="text/javascript" src="http://www.labelwriter.com/software/dls/sdk/js/DYMO.Label.Framework.3.0.js">
+<script>
   	export default {
         data() {
             return {
@@ -14,12 +14,7 @@
             }
         },
   		mounted() {
-			// let test = document.createElement('script');
-			// test.setAttribute('src', 'http://www.labelwriter.com/software/dls/sdk/js/DYMO.Label.Framework.3.0.js');
-			// document.head.appendChild(test);
-            // console.log("sdk installed");
-            // console.log("test 1")
-            dymo.label.framework.init(this.onRender());
+            //dymo.label.framework.init(this.onRender());
 		},
 		methods: {
             printBtn: function () {
