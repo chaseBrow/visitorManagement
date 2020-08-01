@@ -123,7 +123,7 @@
                     </div>
                 </v-toolbar>
                 <v-list style="padding: 16px">
-                    <v-list-item v-for="record in recordsFinal" :key="record.email + record.arrive">
+                    <v-list-item v-for="record in recordsDisplay" :key="record.email + record.arrive">
                         <v-row>
                             <span style="width: 10%">{{ record.firstName }}</span>
                             <span style="width: 15%">{{ record.lastName }}</span>
@@ -133,7 +133,8 @@
                             <span style="width: 15%">{{ record.depart }}</span> 
                         </v-row>
                     </v-list-item>
-                    <v-pagination :length="pages" v-model="currentPage"></v-pagination>
+                    <v-pagination :length="pages" v-model="currentPage" v-on:input="displayRecords()">
+                    </v-pagination>
                 </v-list>
             </v-col>
         </v-row>
@@ -176,21 +177,14 @@ export default {
         this.getRecords();
     },
     methods: {
-        displayRecords: function (list) {
-            // this.recordsFinal = list.slice(0*(this.currentPage - 1), 4*this.currentPage);
-            let pageList = [];
-            for (let pageStart = 0; pageStart <= this.pages; pageStart += 4){
-                let page = list.slice(pageStart, pageStart + 4);
-                pageList.push(page);
-            }
-            this.recordsFinal = pageList[this.currentPage - 1];
+        displayRecords: function () {
+            this.recordsDisplay = this.recordsFinal.slice(12*(this.currentPage - 1), 12*this.currentPage);
         },
-        calcPages: function (list) {
-            this.pages = Math.ceil(list.length / 4);
-            this.displayRecords(list);
+        calcPages: function () {
+            this.pages = Math.ceil(this.recordsFinal.length / 12);
+            this.displayRecords();
         },
         filterRecords: function () {
-            console.log("filter");
             let list = this.recordsSorted.filter((item) => {
                 let first = true, last = true, comp = true, email = true;
                 if (this.filterTerms.firstName) {
@@ -214,8 +208,8 @@ export default {
                 }
                 else return false;
             });
-
-            this.calcPages(list);
+            this.recordsFinal = list;
+            this.calcPages();
         },
         sortBy: async function (sortBtn) {
             if (this.sort == 0 && this.lastBtn == null) {
