@@ -165,7 +165,6 @@ export default {
             },
             companyFinal: [],
             searchComp: null,
-
             currentPage: 1,
             pages: null,
         }
@@ -180,10 +179,10 @@ export default {
     },
     methods: {
         displayRecords: function () {
-            this.recordsDisplay = this.recordsFinal.slice(12*(this.currentPage - 1), 12*this.currentPage);
+            this.recordsDisplay = this.recordsFinal.slice(20*(this.currentPage - 1), 20*this.currentPage);
         },
         calcPages: function () {
-            this.pages = Math.ceil(this.recordsFinal.length / 12);
+            this.pages = Math.ceil(this.recordsFinal.length / 20);
             this.displayRecords();
         },
         filterRecords: function () {
