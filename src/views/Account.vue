@@ -1,11 +1,19 @@
 <template>
-  <h1> </h1>
+  	<v-container>
+    	<Print> </Print>
+  	</v-container>
 </template>
 
 <script>
-  export default {
-   
-  };
+import Print from '../components/Print'
+  	export default {
+  		components: {
+			  Print
+		},
+		methods: {
+
+		}
+  	};
 </script>
 <style scoped>
 
