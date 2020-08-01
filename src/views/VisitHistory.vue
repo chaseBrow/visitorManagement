@@ -133,6 +133,7 @@
                             <span style="width: 15%">{{ record.depart }}</span> 
                         </v-row>
                     </v-list-item>
+                    <v-pagination :length="pages" v-model="currentPage"></v-pagination>
                 </v-list>
             </v-col>
         </v-row>
@@ -147,6 +148,7 @@ export default {
         return {
             records: [],
             recordsFinal: [],
+            recordsDisplay: [],
             recordsSorted: [],
             sort: 0,
             lastBtn: null,
@@ -159,7 +161,10 @@ export default {
                 depart: null,
             },
             companyFinal: [],
-			searchComp: null,
+            searchComp: null,
+
+            currentPage: 1,
+            pages: null,
         }
     },
     watch: {
@@ -171,6 +176,19 @@ export default {
         this.getRecords();
     },
     methods: {
+        displayRecords: function (list) {
+            // this.recordsFinal = list.slice(0*(this.currentPage - 1), 4*this.currentPage);
+            let pageList = [];
+            for (let pageStart = 0; pageStart <= this.pages; pageStart += 4){
+                let page = list.slice(pageStart, pageStart + 4);
+                pageList.push(page);
+            }
+            this.recordsFinal = pageList[this.currentPage - 1];
+        },
+        calcPages: function (list) {
+            this.pages = Math.ceil(list.length / 4);
+            this.displayRecords(list);
+        },
         filterRecords: function () {
             console.log("filter");
             let list = this.recordsSorted.filter((item) => {
@@ -197,10 +215,7 @@ export default {
                 else return false;
             });
 
-
-
-
-            this.recordsFinal = list;
+            this.calcPages(list);
         },
         sortBy: async function (sortBtn) {
             if (this.sort == 0 && this.lastBtn == null) {
