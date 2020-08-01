@@ -123,19 +123,21 @@
                     </div>
                 </v-toolbar>
                 <v-list style="padding: 16px">
-                    <v-list-item v-for="record in recordsDisplay" :key="record.email + record.arrive">
-                        <v-row>
-                            <span style="width: 10%">{{ record.firstName }}</span>
-                            <span style="width: 15%">{{ record.lastName }}</span>
-                            <span style="width: 20%">{{ record.company }}</span>
-                            <span style="width: 25%">{{ record.email }}</span>
-                            <span style="width: 15%">{{ record.arrive }}</span>
-                            <span style="width: 15%">{{ record.depart }}</span> 
-                        </v-row>
-                    </v-list-item>
-                    <v-pagination :length="pages" v-model="currentPage" v-on:input="displayRecords()">
-                    </v-pagination>
+                    <v-virtual-scroll :items="recordsDisplay">
+                        <v-list-item v-for="record in recordsDisplay" :key="record.email + record.arrive">
+                            <v-row>
+                                <span style="width: 10%">{{ record.firstName }}</span>
+                                <span style="width: 15%">{{ record.lastName }}</span>
+                                <span style="width: 20%">{{ record.company }}</span>
+                                <span style="width: 25%">{{ record.email }}</span>
+                                <span style="width: 15%">{{ record.arrive }}</span>
+                                <span style="width: 15%">{{ record.depart }}</span> 
+                            </v-row>
+                        </v-list-item>
+                    </v-virtual-scroll>
                 </v-list>
+                <v-pagination :length="pages" v-model="currentPage" v-on:input="displayRecords()">
+                </v-pagination>
             </v-col>
         </v-row>
 
@@ -593,5 +595,9 @@ export default {
     top: 5px;
     left: 10px;
     color: grey;
+}
+.v-list {
+    height: 70%;
+    overflow-y: scroll;
 }
 </style>
