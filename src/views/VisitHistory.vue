@@ -19,16 +19,34 @@
                             </v-text-field>
                         </v-col>
                         <v-col cols="2" class="py-0">
-                            <v-text-field label="Start Date" outlined color="black" 
-                                v-model="filterTerms.arrive"
-                                v-on:input="filterRecords()"
+                            <v-menu
+                                v-model="menu"
+                                transition="scale-transition"
+                                offset-y
+                                min-width="290px"
                             >
-                            </v-text-field>
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-text-field
+                                        v-model="date"
+                                        label="Start Date"
+                                        readonly
+                                        v-bind="attrs"
+                                        v-on="on"
+                                        outlined
+                                        clearable
+                                        color="black"
+                                    >
+                                    </v-text-field>
+                                </template>
+                                <v-date-picker v-model="date" no-title scrollable>
+                                </v-date-picker>
+                            </v-menu>
                         </v-col>
                         <v-col cols="2" class="py-0">
                             <v-text-field label="End Date" outlined color="black" 
                                 v-model="filterTerms.depart"
                                 v-on:input="filterRecords()"
+                                type="date"
                             >
                             </v-text-field>
                         </v-col>
@@ -123,18 +141,16 @@
                     </div>
                 </v-toolbar>
                 <v-list style="padding: 16px">
-                    <v-virtual-scroll :items="recordsDisplay">
-                        <v-list-item v-for="record in recordsDisplay" :key="record.email + record.arrive">
-                            <v-row>
-                                <span style="width: 10%">{{ record.firstName }}</span>
-                                <span style="width: 15%">{{ record.lastName }}</span>
-                                <span style="width: 20%">{{ record.company }}</span>
-                                <span style="width: 25%">{{ record.email }}</span>
-                                <span style="width: 15%">{{ record.arrive }}</span>
-                                <span style="width: 15%">{{ record.depart }}</span> 
-                            </v-row>
-                        </v-list-item>
-                    </v-virtual-scroll>
+                    <v-list-item v-for="record in recordsDisplay" :key="record.email + record.arrive">
+                        <v-row>
+                            <span style="width: 10%">{{ record.firstName }}</span>
+                            <span style="width: 15%">{{ record.lastName }}</span>
+                            <span style="width: 20%">{{ record.company }}</span>
+                            <span style="width: 25%">{{ record.email }}</span>
+                            <span style="width: 15%">{{ record.arrive }}</span>
+                            <span style="width: 15%">{{ record.depart }}</span> 
+                        </v-row>
+                    </v-list-item>
                 </v-list>
                 <v-pagination :length="pages" v-model="currentPage" v-on:input="displayRecords()">
                 </v-pagination>
@@ -167,6 +183,12 @@ export default {
             searchComp: null,
             currentPage: 1,
             pages: null,
+
+
+
+            date: '',
+            menu: false,
+
         }
     },
     watch: {
