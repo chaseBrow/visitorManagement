@@ -254,22 +254,18 @@ export default {
                 if (this.filterTerms.email) {
                     email = item.email.toLowerCase().includes(this.filterTerms.email.toLowerCase());
                 }
-                console.log(this.arriveFormatted);
-                console.log(this.filterTerms.arrive);
 
-                // if (this.filterTerms.arrive && this.filterTerms.depart) {
-                //     // date = (formatForFilter(item.arrive) <= this.filterTerms.depart && item.arrive >= this.filterTerms.arrive);
+                if (this.filterTerms.arrive && this.filterTerms.depart) {
+                    date = (item.arrive.substring(0,9) <= this.departFormatted && item.arrive.substring(0, 9) >= this.arriveFormatted);
                     
-                //     console.log(item.arrive);
-                // }
-                // else if (this.filterTerms.arrive) {
-                //     console.log("arrive");
-                // }
-                // else if (this.filterTerms.depart) {
-                //     console.log("depart");
-                // }
+                }
+                else if (this.filterTerms.arrive) {
+                    date = (item.arrive.substring(0,9) >= this.arriveFormatted);
+                }
+                else if (this.filterTerms.depart) {
+                    date = (item.arrive.substring(0,9) <= this.departFormatted)
+                }
                 
-                console.log("clear");
                 if (first == true && last == true && email == true && comp == true && date == true) {
                     return true;
                 }
