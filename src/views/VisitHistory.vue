@@ -20,38 +20,56 @@
                         </v-col>
                         <v-col cols="2" class="py-0">
                             <v-menu
-                                v-model="menu"
+                                v-model="stMenu"
                                 transition="scale-transition"
                                 offset-y
                                 min-width="290px"
                             >
                                 <template v-slot:activator="{ on, attrs }">
                                     <v-text-field
-                                        v-model="date"
+                                        v-model="filterTerms.arrive"
                                         label="Start Date"
                                         readonly
                                         v-bind="attrs"
                                         v-on="on"
                                         outlined
                                         clearable
+                                        v-on:input="filterRecords()"
                                         color="black"
                                     >
                                     </v-text-field>
                                 </template>
-                                <v-date-picker v-model="date" no-title scrollable>
+                                <v-date-picker v-model="filterTerms.arrive" no-title scrollable v-on:input="filterRecords()">
                                 </v-date-picker>
                             </v-menu>
                         </v-col>
                         <v-col cols="2" class="py-0">
-                            <v-text-field label="End Date" outlined color="black" 
-                                v-model="filterTerms.depart"
-                                v-on:input="filterRecords()"
-                                type="date"
+                            <v-menu
+                                v-model="endMenu"
+                                transition="scale-transition"
+                                offset-y
+                                min-width="290px"
                             >
-                            </v-text-field>
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-text-field
+                                        v-model="filterTerms.depart"
+                                        label="End Date"
+                                        readonly
+                                        v-bind="attrs"
+                                        v-on="on"
+                                        outlined
+                                        clearable
+                                        v-on:input="filterRecords()"
+                                        color="black"
+                                    >
+                                    </v-text-field>
+                                </template>
+                                <v-date-picker v-model="filterTerms.depart" no-title scrollable v-on:input="filterRecords()">
+                                </v-date-picker>
+                            </v-menu>
                         </v-col>
                     </v-row>
-                    <v-row class="aling-center">
+                    <v-row class="align-start">
                         <v-col cols="4" class="py-0">
                             <v-autocomplete outlined label="Company" color="black" cache-items hide-no-data
 								:items="companyFinal"
@@ -140,9 +158,9 @@
                         </v-btn>
                     </div>
                 </v-toolbar>
-                <v-list style="padding: 16px">
-                    <v-list-item v-for="record in recordsDisplay" :key="record.email + record.arrive">
-                        <v-row>
+                <v-list style="padding: 16px"> 
+                    <v-list-item v-for="record in recordsDisplay" :key="record.email + record.arrive" style="padding: 0px">
+                        <v-row style="padding: 0px 16px 0px 16px">
                             <span style="width: 10%">{{ record.firstName }}</span>
                             <span style="width: 15%">{{ record.lastName }}</span>
                             <span style="width: 20%">{{ record.company }}</span>
@@ -184,11 +202,17 @@ export default {
             currentPage: 1,
             pages: null,
 
+            stMenu: false,
+            endMenu: false,
 
-
-            date: '',
-            menu: false,
-
+        }
+    },
+    computed: {
+        arriveFormatted: function () {
+            return this.formatDateInputs(this.filterTerms.arrive);
+        },
+        departFormatted: function () {
+            return this.formatDateInputs(this.filterTerms.depart);
         }
     },
     watch: {
@@ -200,6 +224,12 @@ export default {
         this.getRecords();
     },
     methods: {
+        formatDateInputs: function (inputtedDate) {
+            if (!inputtedDate) return null
+
+            const [year, month, date] = inputtedDate.split("-");
+            return `${month}/${date}/${year}`
+        },
         displayRecords: function () {
             this.recordsDisplay = this.recordsFinal.slice(20*(this.currentPage - 1), 20*this.currentPage);
         },
@@ -209,7 +239,7 @@ export default {
         },
         filterRecords: function () {
             let list = this.recordsSorted.filter((item) => {
-                let first = true, last = true, comp = true, email = true;
+                let first = true, last = true, comp = true, email = true, date = true;
                 if (this.filterTerms.firstName) {
                     first =  item.firstName.toLowerCase().includes(this.filterTerms.firstName.toLowerCase());
                 }
@@ -224,9 +254,23 @@ export default {
                 if (this.filterTerms.email) {
                     email = item.email.toLowerCase().includes(this.filterTerms.email.toLowerCase());
                 }
+                console.log(this.arriveFormatted);
+                console.log(this.filterTerms.arrive);
 
-
-                if (first == true && last == true && email == true && comp == true) {
+                // if (this.filterTerms.arrive && this.filterTerms.depart) {
+                //     // date = (formatForFilter(item.arrive) <= this.filterTerms.depart && item.arrive >= this.filterTerms.arrive);
+                    
+                //     console.log(item.arrive);
+                // }
+                // else if (this.filterTerms.arrive) {
+                //     console.log("arrive");
+                // }
+                // else if (this.filterTerms.depart) {
+                //     console.log("depart");
+                // }
+                
+                console.log("clear");
+                if (first == true && last == true && email == true && comp == true && date == true) {
                     return true;
                 }
                 else return false;
@@ -546,7 +590,7 @@ export default {
         },
         formatDate: function(date) {
             let month = '0' + (date.getMonth() + 1);
-            let day = date.getDate();
+            let day = '0' + date.getDate();
             let year = date.getFullYear();
             let hour = date.getHours();
             let minute = '0' + date.getMinutes();
@@ -569,7 +613,7 @@ export default {
                 hour = '0' + (hour - 12);
             }
 
-            let formattedDate = month.slice(-2) + "/" + day + "/" + year + " - " + hour.slice(-2) + ":" + minute.slice(-2) + dayTime;
+            let formattedDate = month.slice(-2) + "/" + day.slice(-2) + "/" + year + " - " + hour.slice(-2) + ":" + minute.slice(-2) + dayTime;
             return formattedDate;
         },
         searchCompanies: async function (val) {
