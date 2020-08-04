@@ -47,23 +47,18 @@ const router = new VueRouter({
   routes
 });
 
-async function testLogin() {
-  //await Parse.User.logIn("testUser", "password");
-  // Parse.User.logOut();
-}
-  
-
 router.beforeEach((to, from, next) => {
-  testLogin().then( () => {
-    const User = Parse.User.current();
+	const User = Parse.User.current();
     if (to.meta.requiresAuth == true && User) {
-      next();
+      	next();
     }
     else if (to.meta.requiresAuth == true && !User){
-      next('/');
-    }
+     	 next('/');
+	}
+	else if (from.fullPath == '/' && User) {
+		next('/dashboard')
+	}
     else next();
-  });
 });
 
 
