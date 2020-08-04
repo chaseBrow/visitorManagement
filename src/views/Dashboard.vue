@@ -7,14 +7,14 @@
 						<v-col cols="2" class="pb-0">
 							<v-text-field label="First Name" outlined color="black" 
 								v-model="filterTerms.firstName"
-								v-on:input="filter"
+								v-on:input="filterPeople()"
 							>
 							</v-text-field>
 						</v-col>
 						<v-col cols="2" class="pb-0">
 							<v-text-field  label="Last Name" outlined color="black" 
 								v-model="filterTerms.lastName"
-								v-on:input="filter"
+								v-on:input="filterPeople()"
 							>
 							</v-text-field>
 						</v-col>
@@ -22,21 +22,21 @@
 							<v-autocomplete outlined label="Company" color="black" cache-items hide-no-data
 								:items="companyFinal"
       							:search-input.sync="searchComp"
-								v-model="company"
-								v-on:input="filter"
+								v-model="filterTerms.company"
+								v-on:input="filterPeople()"
 							>
 							</v-autocomplete>
 						</v-col>
 						<v-col cols="3" class="pb-0">
 							<v-text-field label="Email" outlined color="black"
 								v-model="filterTerms.email"
-								v-on:input="filter"
+								v-on:input="filterPeople()"
 							>
 							</v-text-field>
 						</v-col>
 						<v-col cols="2" class="pb-0">
 							 <v-select label="Access" outlined color="black" :items="options" v-model="filterTerms.access" 
-							 v-on:focus="getOptions" v-on:change="filter"
+							 v-on:focus="getOptions" v-on:change="filterPeople()"
 							>
 							</v-select>
 						</v-col>
@@ -60,20 +60,12 @@
 
 				<v-list dense class="data">
 					<v-list-item v-for="person in filteredPeople" :key="person.email">
-
-						<!-- <input type="text" style="width: 10%" readonly :value="person.get('firstName')" :id="person.get('email') + person.get('firstName')">
-						<input type="text" style="width: 10%" readonly :value="person.get('lastName')" :id="person.get('email') + person.get('lastName')">
-						<input type="text" style="width: 10%" readonly :value="getCompanyName(person)" :id="person.get('email') + person.get('company')">
-						<input type="text" style="width: 25%" readonly :value="person.get('email')" :id="person.get('email')">
-						<input type="text" style="width: 10%" readonly :value="person.get('access')" :id="person.get('email') + person.get('access')"> -->
 						<span style="width: 10%">{{ person.get('firstName') }}</span>
                     	<span style="width: 10%">{{ person.get('lastName') }}</span>
                         <span style="width: 10%; font-size: 0.95rem">{{ getCompanyName(person) }}</span>
 						<span style="width: 25%; font-size: 0.9rem">{{ person.get('email') }}</span>
                         <span style="width: 10%; font-size: 0.9rem">{{ person.get('access') }}</span>
                         
-
-
 						<v-spacer></v-spacer>
 						<div :id="person.get('email') + 'visit'" :key="person.get('email') + 'visit'">
 							<NewRecord v-bind:person="person">
@@ -83,39 +75,10 @@
 							<MoreInfo>
 							</MoreInfo>
 						</div>
-						<!-- <v-btn class="primary" :id="person.get('email') + 'edit'" v-on:click="editVisitor(person)">
-							<span>Edit</span>
-							<v-icon dense class="pl-1">mdi-pencil</v-icon>
-						</v-btn>
-						<v-btn class="green" fab small :id="person.get('email') + 'save'" v-on:click="save(person)" hidden>
-							<v-icon dense>mdi-content-save</v-icon>
-						</v-btn>
-						<v-btn class="grey mx-1" fab small :id="person.get('email') + 'cancel'" v-on:click="cancel(person)" hidden>
-							<v-icon dense>mdi-cancel</v-icon>
-						</v-btn>
-						<v-btn class="red" :id="person.get('email') + 'delete'" v-on:click="delStart(person)" hidden>
-							<span>Delete</span>
-							<v-icon dense class="pl-1">mdi-delete-forever</v-icon>
-						</v-btn> -->
 					</v-list-item>
 				</v-list>
 			</v-col>
 		</v-row>
-		<v-dialog v-model="confirmDelete">
-			<v-card>
-				<v-card-title>Confirm Delete</v-card-title>
-				<v-card-text>The visitor and their records will remain on the database, but no longer will appear in visitor searches </v-card-text>
-				<v-card-actions>
-					<v-spacer></v-spacer>
-					<v-btn color="grey" v-on:click="confirmDelete = !confirmDelete">
-						Cancel
-					</v-btn>
-					<v-btn color="red" v-on:click="del()">
-						Delete
-					</v-btn>
-				</v-card-actions>
-			</v-card>
-		</v-dialog>
 	</v-container>
 </template>
 
@@ -126,20 +89,22 @@ import MoreInfo from "../components/MoreInfo"
 export default {
 	data() {
 		return {
-			person: null,
-			confirmDelete: false,
+			recVisitors: null,
+
+
+			filteredPeople: [],
+			companyFinal: [],
+			searchComp: null,
+			activeCompanies: [],
+			visitors: [],
 			filterTerms: {
 				firstName: '',
 				lastName: '',
 				email: '',
 				access: '',
+				company: '',
 			},
 			options: [],
-			filteredPeople: [],
-			companyFinal: [],
-			searchComp: null,
-			company: '',
-			recVisitors: null,
 		}
 	},
 	watch: {
@@ -147,21 +112,28 @@ export default {
 			this.searchCompanies(val);
 		}
 	},
+	async beforeMount(){
+		await this.getCompanies();
+		this.getVisitors();
+    },
 	methods: {
 		getCompanyName: function (person) {
 			let comp = person.get("company");
 			let name = comp.get("name");
 			return name;
 		},
-		searchCompanies: async function (val) {
+		getCompanies: async function () {
 			const user = Parse.User.current();
 			const Users = new Parse.Query(Parse.User);
 			Users.equalTo("parentCompany", user);
 
 			let companyList = await Users.find();
-			companyList.push(user);
 			
-			let test = companyList.filter(company => {
+			companyList.push(user);
+			this.activeCompanies = companyList;
+		},
+		searchCompanies: async function (val) {
+			let test = this.activeCompanies.filter(company => {
 				if (val) {
                     let name = company.get("name").toLowerCase().includes(val.toLowerCase());
 				    return name;
@@ -178,15 +150,14 @@ export default {
 			this.filterTerms.lastName = '';
 			this.filterTerms.email = '';
 			this.filterTerms.access = '';
-			this.company = '';
+			this.filterTerms.company = '';
 
 
 			const Record = Parse.Object.extend("Record");
 			const recQuery = new Parse.Query(Record);
 
 
-			recQuery.greaterThan("createdAt", this.getDate());
-			recQuery.limit(20);
+			recQuery.greaterThan("updatedAt", this.getDate());
 			recQuery.descending("createdAt");
 			recQuery.include("visitor");
 			
@@ -213,162 +184,46 @@ export default {
 			let yesterday = date.setTime(date.getTime() - 86400000);
 			return new Date(yesterday);
 		},
-		// save: async function (person) {
-		// 	this.cancel(person);
-		// 	person.set("firstName", document.getElementById(person.get('email') + person.get('firstName')).value);
-		// 	person.set("lastName", document.getElementById(person.get('email') + person.get('lastName')).value);
-		// 	person.set("company", document.getElementById(person.get('email') + person.get('company')).value);
-		// 	person.set("email", document.getElementById(person.get('email')).value);
-		// 	person.set("access", document.getElementById(person.get('email') + person.get('access')).value);
-			
-		// 	await person.save();
-
-		// 	this.filter();
-		// },
-		// cancel: function (person) {
-		// 	let edit = document.getElementById(person.get("email") + "edit");
-		// 	edit.removeAttribute("hidden");
-
-		// 	let visit = document.getElementById(person.get("email") + "visit");
-		// 	visit.removeAttribute("hidden");
-
-		// 	let del = document.getElementById(person.get("email") + "delete");
-		// 	del.setAttribute("hidden", true);
-
-		// 	let can = document.getElementById(person.get("email") + "cancel");
-		// 	can.setAttribute("hidden", true);
-
-		// 	let save = document.getElementById(person.get("email") + "save");
-		// 	save.setAttribute("hidden", true);
-			
-		// 	let firstName = document.getElementById(person.get("email") + person.get("firstName"));
-		// 	firstName.setAttribute("readonly", true);
-		// 	firstName.style.outline = null;
-		// 	firstName.style.paddingLeft = null;
-		// 	firstName.style.marginRight = null;
-
-		// 	let lastName = document.getElementById(person.get("email") + person.get("lastName"));
-		// 	lastName.setAttribute("readonly", true);
-		// 	lastName.style.outline = null;
-		// 	lastName.style.paddingLeft = null;
-		// 	lastName.style.marginRight = null;
-
-		// 	let company = document.getElementById(person.get("email") + person.get("company"));
-		// 	company.setAttribute("readonly", true);
-		// 	company.style.outline = null;
-		// 	company.style.paddingLeft = null;
-		// 	company.style.marginRight = null;
-
-		// 	let email = document.getElementById(person.get("email"));
-		// 	email.setAttribute("readonly", true);
-		// 	email.style.outline = null;
-		// 	email.style.paddingLeft = null;
-		// 	email.style.marginRight = null;
-
-		// 	let access = document.getElementById(person.get("email") + person.get("access"));
-		// 	access.setAttribute("readonly", true);
-		// 	access.style.outline = null;
-		// 	access.style.paddingLeft = null;
-		// 	access.style.marginRight = null;
-		// },
-		// del: function () {
-		// 	this.person.set("deleted", true);
-		// 	this.person.save();
-		// 	this.confirmDelete = !this.confirmDelete;
-		// },
-		// delStart: function (person) {
-		// 	this.person = person;
-		// 	this.confirmDelete = !this.confirmDelete;
-		// },
-		// editVisitor: function (person) {
-			
-		// 	let edit = document.getElementById(person.get("email") + "edit");
-		// 	edit.setAttribute("hidden", true);
-
-		// 	let visit = document.getElementById(person.get("email") + "visit");
-		// 	visit.setAttribute("hidden", true);
-
-		// 	let del = document.getElementById(person.get("email") + "delete");
-		// 	del.removeAttribute("hidden");
-
-		// 	let can = document.getElementById(person.get("email") + "cancel");
-		// 	can.removeAttribute("hidden");
-
-		// 	let save = document.getElementById(person.get("email") + "save");
-		// 	save.removeAttribute("hidden");
-			
-		// 	let firstName = document.getElementById(person.get("email") + person.get("firstName"));
-		// 	firstName.removeAttribute("readonly");
-		// 	firstName.style.outline = "thin solid black";
-		// 	firstName.style.paddingLeft = "2px";
-		// 	firstName.style.marginRight = "8px";
-
-		// 	let lastName = document.getElementById(person.get("email") + person.get("lastName"));
-		// 	lastName.removeAttribute("readonly");
-		// 	lastName.style.outline = "thin solid black";
-		// 	lastName.style.paddingLeft = "2px";
-		// 	lastName.style.marginRight = "8px";
-
-		// 	let company = document.getElementById(person.get("email") + person.get("company"));
-		// 	company.removeAttribute("readonly");
-		// 	company.style.outline = "thin solid black";
-		// 	company.style.paddingLeft = "2px";
-		// 	company.style.marginRight = "8px";
-
-		// 	let email = document.getElementById(person.get("email"));
-		// 	email.removeAttribute("readonly");
-		// 	email.style.outline = "thin solid black";
-		// 	email.style.paddingLeft = "2px";
-		// 	email.style.marginRight = "8px";
-
-		// 	let access = document.getElementById(person.get("email") + person.get("access"));
-		// 	access.removeAttribute("readonly");
-		// 	access.style.outline = "thin solid black";
-		// 	access.style.paddingLeft = "2px";
-		// 	access.style.marginRight = "8px";
-		// },
 		getOptions: function () {
             const user = Parse.User.current();
             this.options = user.get("options");
-        },
-		filter: function () {
+		},
+		getVisitors: async function () {
 			const Visitors = Parse.Object.extend("Visitor");
 			const queryVisitor = new Parse.Query(Visitors);
-
-			queryVisitor.limit(20);
+			
 			queryVisitor.notEqualTo("deleted", true);
 			queryVisitor.include(["company.name"]);
-			queryVisitor.find().then((visitors) => {
-				this.filteredPeople = visitors.filter(this.filterPeople);
-			},
-			(error) =>	{ 
-				console.log("there was an error:" + error.message)
-			});
+			queryVisitor.containedIn('company', this.activeCompanies);
+			this.visitors = await queryVisitor.find();
+			this.filterPeople();
 		},
-
-		filterPeople: function (visitor) {
-			let first = true, last = true,company = true, email = true, access = true;
-			if (visitor.get("firstName")) {
-				first = visitor.get("firstName").toLowerCase().includes(this.filterTerms.firstName.toLowerCase());
-			}
-			if (visitor.get("lastName")) {
-				last = visitor.get("lastName").toLowerCase().includes(this.filterTerms.lastName.toLowerCase());
-			}
-			let val = visitor.get("company")
-			company = val.get("name").includes(this.company);
-
-			if (visitor.get("email")) {
-				email = visitor.get("email").toLowerCase().includes(this.filterTerms.email.toLowerCase());
-			}
-			if (visitor.get("access")) {
-				access = visitor.get("access").toLowerCase().includes(this.filterTerms.access.toLowerCase());
-			}
-			if (first == true && last == true && company == true && email == true && access == true) {
-				return true;
-			}
-			else {
-				return false;
-			}
+		filterPeople: function (visitors=this.visitors) {
+			this.filteredPeople = visitors.filter((visitor) => {
+				let first = true, last = true,comp = true, email = true, access = true;
+				if (visitor.get("firstName") && this.filterTerms.firstName) {
+					first = visitor.get("firstName").toLowerCase().includes(this.filterTerms.firstName.toLowerCase());
+				}
+				if (visitor.get("lastName") && this.filterTerms.lastName) {
+					last = visitor.get("lastName").toLowerCase().includes(this.filterTerms.lastName.toLowerCase());
+				}
+				let val = visitor.get("company");
+				if (this.filterTerms.company) {
+					comp = val.get("name").includes(this.filterTerms.company);
+				}
+				if (visitor.get("email") && this.filterTerms.email) {
+					email = visitor.get("email").toLowerCase().includes(this.filterTerms.email.toLowerCase());
+				}
+				if (visitor.get("access") && this.filterTerms.access) {
+					access = visitor.get("access").toLowerCase().includes(this.filterTerms.access.toLowerCase());
+				}
+				if (first == true && last == true && comp == true && email == true && access == true) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			});
 		},
 	},
 	components: {
