@@ -48,13 +48,16 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    const User = Parse.User.current();
+	const User = Parse.User.current();
     if (to.meta.requiresAuth == true && User) {
       	next();
     }
     else if (to.meta.requiresAuth == true && !User){
      	 next('/');
-    }
+	}
+	else if (from.fullPath == '/' && User) {
+		next('/dashboard')
+	}
     else next();
 });
 
