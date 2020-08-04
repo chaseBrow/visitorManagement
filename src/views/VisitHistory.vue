@@ -19,21 +19,57 @@
                             </v-text-field>
                         </v-col>
                         <v-col cols="2" class="py-0">
-                            <v-text-field label="Start Date" outlined color="black" 
-                                v-model="filterTerms.arrive"
-                                v-on:input="filterRecords()"
+                            <v-menu
+                                v-model="stMenu"
+                                transition="scale-transition"
+                                offset-y
+                                min-width="290px"
                             >
-                            </v-text-field>
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-text-field
+                                        v-model="filterTerms.arrive"
+                                        label="Start Date"
+                                        readonly
+                                        v-bind="attrs"
+                                        v-on="on"
+                                        outlined
+                                        clearable
+                                        v-on:input="filterRecords()"
+                                        color="black"
+                                    >
+                                    </v-text-field>
+                                </template>
+                                <v-date-picker v-model="filterTerms.arrive" no-title scrollable v-on:input="filterRecords()">
+                                </v-date-picker>
+                            </v-menu>
                         </v-col>
                         <v-col cols="2" class="py-0">
-                            <v-text-field label="End Date" outlined color="black" 
-                                v-model="filterTerms.depart"
-                                v-on:input="filterRecords()"
+                            <v-menu
+                                v-model="endMenu"
+                                transition="scale-transition"
+                                offset-y
+                                min-width="290px"
                             >
-                            </v-text-field>
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-text-field
+                                        v-model="filterTerms.depart"
+                                        label="End Date"
+                                        readonly
+                                        v-bind="attrs"
+                                        v-on="on"
+                                        outlined
+                                        clearable
+                                        v-on:input="filterRecords()"
+                                        color="black"
+                                    >
+                                    </v-text-field>
+                                </template>
+                                <v-date-picker v-model="filterTerms.depart" no-title scrollable v-on:input="filterRecords()">
+                                </v-date-picker>
+                            </v-menu>
                         </v-col>
                     </v-row>
-                    <v-row class="aling-center">
+                    <v-row class="align-start">
                         <v-col cols="4" class="py-0">
                             <v-autocomplete outlined label="Company" color="black" cache-items hide-no-data
 								:items="companyFinal"
@@ -122,9 +158,9 @@
                         </v-btn>
                     </div>
                 </v-toolbar>
-                <v-list style="padding: 16px">
-                    <v-list-item v-for="record in recordsFinal" :key="record.email + record.arrive">
-                        <v-row>
+                <v-list style="padding: 16px"> 
+                    <v-list-item v-for="record in recordsDisplay" :key="record.email + record.arrive" style="padding: 0px">
+                        <v-row style="padding: 0px 16px 0px 16px">
                             <span style="width: 10%">{{ record.firstName }}</span>
                             <span style="width: 15%">{{ record.lastName }}</span>
                             <span style="width: 20%">{{ record.company }}</span>
@@ -134,6 +170,8 @@
                         </v-row>
                     </v-list-item>
                 </v-list>
+                <v-pagination :length="pages" v-model="currentPage" v-on:input="displayRecords()">
+                </v-pagination>
             </v-col>
         </v-row>
 
@@ -147,6 +185,7 @@ export default {
         return {
             records: [],
             recordsFinal: [],
+            recordsDisplay: [],
             recordsSorted: [],
             sort: 0,
             lastBtn: null,
@@ -159,7 +198,21 @@ export default {
                 depart: null,
             },
             companyFinal: [],
-			searchComp: null,
+            searchComp: null,
+            currentPage: 1,
+            pages: null,
+
+            stMenu: false,
+            endMenu: false,
+
+        }
+    },
+    computed: {
+        arriveFormatted: function () {
+            return this.formatDateInputs(this.filterTerms.arrive);
+        },
+        departFormatted: function () {
+            return this.formatDateInputs(this.filterTerms.depart);
         }
     },
     watch: {
@@ -171,10 +224,22 @@ export default {
         this.getRecords();
     },
     methods: {
+        formatDateInputs: function (inputtedDate) {
+            if (!inputtedDate) return null
+
+            const [year, month, date] = inputtedDate.split("-");
+            return `${month}/${date}/${year}`
+        },
+        displayRecords: function () {
+            this.recordsDisplay = this.recordsFinal.slice(20*(this.currentPage - 1), 20*this.currentPage);
+        },
+        calcPages: function () {
+            this.pages = Math.ceil(this.recordsFinal.length / 20);
+            this.displayRecords();
+        },
         filterRecords: function () {
-            console.log("filter");
             let list = this.recordsSorted.filter((item) => {
-                let first = true, last = true, comp = true, email = true;
+                let first = true, last = true, comp = true, email = true, date = true;
                 if (this.filterTerms.firstName) {
                     first =  item.firstName.toLowerCase().includes(this.filterTerms.firstName.toLowerCase());
                 }
@@ -190,17 +255,24 @@ export default {
                     email = item.email.toLowerCase().includes(this.filterTerms.email.toLowerCase());
                 }
 
-
-                if (first == true && last == true && email == true && comp == true) {
+                if (this.filterTerms.arrive && this.filterTerms.depart) {
+                    date = (item.arrive.substring(0,9) <= this.departFormatted && item.arrive.substring(0, 9) >= this.arriveFormatted);
+                    
+                }
+                else if (this.filterTerms.arrive) {
+                    date = (item.arrive.substring(0,9) >= this.arriveFormatted);
+                }
+                else if (this.filterTerms.depart) {
+                    date = (item.arrive.substring(0,9) <= this.departFormatted)
+                }
+                
+                if (first == true && last == true && email == true && comp == true && date == true) {
                     return true;
                 }
                 else return false;
             });
-
-
-
-
             this.recordsFinal = list;
+            this.calcPages();
         },
         sortBy: async function (sortBtn) {
             if (this.sort == 0 && this.lastBtn == null) {
@@ -514,7 +586,7 @@ export default {
         },
         formatDate: function(date) {
             let month = '0' + (date.getMonth() + 1);
-            let day = date.getDate();
+            let day = '0' + date.getDate();
             let year = date.getFullYear();
             let hour = date.getHours();
             let minute = '0' + date.getMinutes();
@@ -537,7 +609,7 @@ export default {
                 hour = '0' + (hour - 12);
             }
 
-            let formattedDate = month.slice(-2) + "/" + day + "/" + year + " - " + hour.slice(-2) + ":" + minute.slice(-2) + dayTime;
+            let formattedDate = month.slice(-2) + "/" + day.slice(-2) + "/" + year + " - " + hour.slice(-2) + ":" + minute.slice(-2) + dayTime;
             return formattedDate;
         },
         searchCompanies: async function (val) {
@@ -584,5 +656,9 @@ export default {
     top: 5px;
     left: 10px;
     color: grey;
+}
+.v-list {
+    height: 70%;
+    overflow-y: scroll;
 }
 </style>
