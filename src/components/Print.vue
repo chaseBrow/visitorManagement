@@ -9,7 +9,6 @@
         props: ['firstName', 'lastName', 'company'],
 		methods: {
             printBtn: function () {
-                import('../assets/print');
             }
 		}
   	};
