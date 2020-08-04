@@ -38,7 +38,8 @@ export default {
 		   password: "",
 		   username: "",
         }
-    },
+	},
+	
     methods: {
         login: async function () {
 			await Parse.User.logIn(this.username, this.password);
