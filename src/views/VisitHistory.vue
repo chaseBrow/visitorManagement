@@ -252,32 +252,23 @@ export default {
     },
     methods: {
         daysAgo: function (daysAgo) {
-            // this.filterTerms.arrive = "2020-07-27";
             
             if (daysAgo == 0) {
                 console.log('year to date');
             }
-            let dateAgo = new Date()
-            dateAgo.setTime(dateAgo.getTime() - 86400000 * daysAgo);
-            console.log(dateAgo.getMonth()); //yyyy-mm-dd
+            let date = new Date()
+            date.setTime(date.getTime() - 86400000 * daysAgo);
+            console.log(date.getMonth() + 1);
             
+            let year = date.getFullYear();
+            let month = "0" + (date.getMonth() + 1);
+            let day = "0" + date.getDate();
 
 
+            this.filterTerms.arrive = year + '-' + month.slice(-2) + '-' + day.slice(-2);
 
-            // this.filterRecords();
+            this.filterRecords();
         },
-
-
-
-        // getDate: function () {
-		// 	let date = new Date();
-		// 	let yesterday = date.setTime(date.getTime() - 86400000);
-		// 	return new Date(yesterday);
-        // },
-        
-
-
-
         formatDateInputs: function (inputtedDate) {
             if (!inputtedDate) return null
 
