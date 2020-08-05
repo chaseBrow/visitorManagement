@@ -45,16 +45,14 @@
                     <v-col cols="4" class="mt-n2 mb-2 pt-0 pa-2 d-flex align-center">
                         <v-card class="orange pb-0 pa-4" style="border-radius: 8px">
                             <v-row>
-                                <v-col cols="6" class="d-flex justify-space-between pb-1">
+                                <v-col cols="12" class="d-flex justify-space-between pb-1">
                                     <v-btn v-on:click="daysAgo(30)">
-                                        30
+                                        30 days
                                     </v-btn>
                                     
                                     <v-btn v-on:click="daysAgo(90)">
-                                        90
+                                        90 days
                                     </v-btn>
-                                </v-col>
-                                <v-col cols="6" class="d-flex justify-center pb-1">
                                     <v-btn v-on:click="daysAgo(0)">
                                         Year to Date
                                     </v-btn>
@@ -252,21 +250,19 @@ export default {
     },
     methods: {
         daysAgo: function (daysAgo) {
-            
-            if (daysAgo == 0) {
-                console.log('year to date');
-            }
             let date = new Date()
             date.setTime(date.getTime() - 86400000 * daysAgo);
-            console.log(date.getMonth() + 1);
             
             let year = date.getFullYear();
             let month = "0" + (date.getMonth() + 1);
             let day = "0" + date.getDate();
 
+            if (daysAgo == 0) {
+                month = "01";
+                day = "01";
+            }
 
             this.filterTerms.arrive = year + '-' + month.slice(-2) + '-' + day.slice(-2);
-
             this.filterRecords();
         },
         formatDateInputs: function (inputtedDate) {
