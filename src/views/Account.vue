@@ -1,36 +1,38 @@
 <template>
   	<v-container>
     	<v-row>
-			<v-col cols="8" class="secondary" >
+			<v-col cols="4" class="secondary" >
 				<v-row>
 					<span style="padding: 0px 0px 0px 20px; font-size: 32px; font-weight: bold;">Account Information</span>
-				</v-row>
-				<v-row>
-					<v-col cols="2" class="d-flex justify-end px-0">
-						<v-btn> 	
+					<v-spacer></v-spacer>
+					<div id="edit">
+						<v-btn class="mr-6 mt-2 accent" v-on:click="editBtn()">
 							Edit
 						</v-btn>
-					</v-col>
-					<v-col cols="8">
-						<v-text-field label="Username" rounded readonly background-color="secondary" v-model="user.username" style="font-size: 18px"> 
-							<!-- add outlined and remove readonly -->
-						</v-text-field>
-					</v-col>
-				</v-row>
-				<v-row>
-					<v-col cols="2" class="d-flex justify-end px-0">
-						<v-btn> 	
-							Edit
+					</div>
+					<div id="save" style="display: none">
+						<v-btn class="mr-3 mt-2 success" v-on:click="saveBtn()">
+							Save
 						</v-btn>
-					</v-col>
-					<v-col cols="8">
-						<v-text-field label="Email" rounded readonly background-color="secondary" v-model="user.email" style="font-size: 18px"> 
-							<!-- add outlined and remove readonly -->
-						</v-text-field>
-					</v-col>
+					</div>
+					<div style="display: none" id="cancel"> 
+						<v-btn class="mr-3 mt-2 info" v-on:click="cancelBtn()">
+							Cancel
+						</v-btn>
+					</div>
 				</v-row>
-				<v-row class="ml-6">
-					<v-btn>
+				<div>
+					<v-text-field label="Username" v-bind="{readonly: !edit, rounded: !edit, outlined: edit}" 
+						background-color="secondary" v-model="user.username" style="font-size: 18px"
+					> 
+					</v-text-field>
+					<v-text-field label="Email" v-bind="{readonly: !edit, rounded: !edit, outlined: edit}" 
+						background-color="secondary" v-model="user.email" style="font-size: 18px"
+					> 
+					</v-text-field>
+				</div>
+				<v-row>
+					<v-btn class="ml-6 accent">
 						Reset Password
 					</v-btn>
 				</v-row>
@@ -54,19 +56,63 @@ import Parse from 'parse'
 					username: "testUser",
 					email: null,
 				},
+				edit: false,
 			}
-		},
-  		components: {
-
 		},
 		beforeMount () {
 			this.getUser();
 		},
 		methods: {
+			editBtn: function () {
+				this.edit = true;
+				console.log("edit");
+				let edit, save, cancel;
+				
+				edit = document.getElementById('edit');
+				edit.style.display = 'none';	
+
+				save = document.getElementById('save');
+				save.style.display = 'inline';
+				
+				cancel = document.getElementById('cancel');
+				cancel.style.display = 'inline';
+			},
+			saveBtn: function () {
+				console.log("save")
+				this.edit = false;
+
+				let edit, save, cancel;
+
+				edit = document.getElementById('edit');
+				edit.style.display = 'inline';
+
+				save = document.getElementById('save');
+				save.style.display = 'none';
+
+				cancel = document.getElementById('cancel');
+				cancel.style.display = 'none';
+			},
+			cancelBtn: function () {
+				this.edit = false;
+
+				let edit, save, cancel;
+
+				edit = document.getElementById('edit');
+				edit.style.display = 'inline';
+
+				save = document.getElementById('save');
+				save.style.display = 'none';
+
+				cancel = document.getElementById('cancel');
+				cancel.style.display = 'none';
+
+				this.getUser();
+			},
 			getUser: function () {
 				let User = Parse.User.current();
-				this.user.usernmae = User.get('username');
+				this.user.username = User.get('username');
 				this.user.email = User.get('email');
+				
 			}
 
 		}
