@@ -23,11 +23,11 @@
 				</v-row>
 				<div>
 					<v-text-field label="Username" v-bind="{readonly: !edit, rounded: !edit, outlined: edit}" 
-						background-color="secondary" v-model="user.username" style="font-size: 18px"
+						background-color="secondary" v-model="user.tempName" style="font-size: 18px"
 					> 
 					</v-text-field>
 					<v-text-field label="Email" v-bind="{readonly: !edit, rounded: !edit, outlined: edit}" 
-						background-color="secondary" v-model="user.email" style="font-size: 18px"
+						background-color="secondary" v-model="user.tempEmail" style="font-size: 18px"
 					> 
 					</v-text-field>
 				</div>
@@ -52,9 +52,12 @@
 				</v-card-title>
 				<v-text-field type="password" v-bind="{error: error}" :error-messages="errorMsg" class="mx-5" outlined label="password" v-model="user.password">
 				</v-text-field>
-				<div class="d-flex justify-center">
+				<div class="d-flex justify-space-around">
 					<v-btn class="success mb-5" v-on:click="submitBtn()">
 						Submit
+					</v-btn>
+					<v-btn class="accent mb-5" v-on:click="submitCancel()">
+						Cancel
 					</v-btn>
 				</div>
 			</v-card>
@@ -70,7 +73,9 @@ import Parse from 'parse'
 		data () {
 			return {
 				user: {
+					tempName: null,
 					username: "testUser",
+					tempEmail: null,
 					email: null,
 					password: null,
 				},
@@ -86,12 +91,20 @@ import Parse from 'parse'
 		methods: {
 			submitBtn: async function () {
 				await Parse.User.logIn(this.user.username, this.user.password).then((user) => {
-					user.set('username', this.user.username);
-					user.set('email', this.user.email);
+					user.set('username', this.user.tempName);
+					user.set('email', this.user.tempEmail);
+					user.save();
+
+					this.dialog = false;
 				}, (error) => {
 					this.error = true;
 					this.errorMsg = error.message;
 				});
+			},
+			submitCancel: function () {
+				this.user.tempName = this.user.username;
+				this.user.tempEmail = this.user.email;
+				this.dialog = false;
 			},
 			editBtn: function () {
 				this.edit = true;
@@ -105,10 +118,11 @@ import Parse from 'parse'
 				
 				cancel = document.getElementById('cancel');
 				cancel.style.display = 'inline';
-
-				// this.user.password = 
 			},
 			saveBtn: function () {
+				this.error = false;
+				this.errorMsg = null;
+				this.user.password = null;
 				this.dialog = true;
 
 				this.edit = false;
@@ -142,7 +156,9 @@ import Parse from 'parse'
 			},
 			getUser: function () {
 				let User = Parse.User.current();
+				this.user.tempName = User.get('username');
 				this.user.username = User.get('username');
+				this.user.tempEmail = User.get('email');
 				this.user.email = User.get('email');
 				
 			}
