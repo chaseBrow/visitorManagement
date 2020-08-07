@@ -56,9 +56,9 @@
                         </v-col>
                     </v-row>
                     <v-row class="d-flex justify-space-around">
-                        <v-checkbox readonly v-model="user.maySchedule" label="May Schedule Others">
+                        <v-checkbox readonly v-model="user.maySchedule" label="May Schedule Others" :id="user.maySchedule">
                         </v-checkbox>
-                        <v-checkbox readonly v-model="user.mayRequest" label="May Request Remote Hands">
+                        <v-checkbox readonly v-model="user.mayRequest" label="May Request Remote Hands" :id="user.mayRequest">
                         </v-checkbox>
                     </v-row>
                 </v-card>
