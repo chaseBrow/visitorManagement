@@ -12,7 +12,7 @@
                     <v-card-title>
                         Visitor Information
                         <v-spacer></v-spacer>
-                        <v-btn class="accent">
+                        <v-btn class="accent" v-on:click="editBtn()">
                             Edit
                         </v-btn>
                         <v-btn class="success"> 
@@ -28,22 +28,22 @@
                     
                     <v-row>
                         <v-col cols="4">
-                            <v-text-field rounded readonly v-model="user.firstName" label="First Name" :id="user.firstName">
+                            <v-text-field v-model="user.firstName" label="First Name" v-bind="{rounded: edit, readonly: edit, outlined: !edit}">
                             </v-text-field>
                             <!-- remove rounded and readonly add outlined -->
                         </v-col>
                         <v-col cols="4">
-                            <v-text-field rounded readonly v-model="user.lastName" label="Last Name" :id="user.lastName">
+                            <v-text-field v-bind="{rounded: edit, readonly: edit, outlined: !edit}" v-model="user.lastName" label="Last Name">
                             </v-text-field>
                         </v-col>
                         <v-col cols="4">
                             <v-text-field rounded readonly v-model="user.company" label="Company" :id="user.company + 'text'">
                             </v-text-field>
-                            <v-autocomplete outlined label="Company" color="black" cache-items hide-no-data
+                            <v-autocomplete v-bind="{outlined: !edit}" label="Company" color="black" cache-items hide-no-data
 								:items="companyFinal"
       							:search-input.sync="searchComp"
 								v-model="user.company"
-                                style="visibility: hidden; position: fixed"
+                                style="display: none;"
                                 :id="user.company"
 							>
 							</v-autocomplete>
@@ -51,7 +51,7 @@
                     </v-row>
                     <v-row>
                         <v-col cols="4">
-                            <v-text-field rounded readonly label="Email" v-model="user.email" :id="user.email">
+                            <v-text-field v-bind="{rounded: edit, readonly: edit, outlined: !edit}" label="Email" v-model="user.email">
                             </v-text-field>
                         </v-col>
                         <v-col cols="4">
@@ -59,20 +59,20 @@
                             </v-text-field>
                             <v-select outlined label="Access" :items="options" v-model="user.access" 
                                 v-on:focus="getOptions"
-                                style="visibility: hidden; position: fixed"
+                                style="display: none"
                                 :id="user.access"
                             >
                             </v-select>
                         </v-col>
                         <v-col cols="4">
-                            <v-text-field rounded readonly label="Phone" v-model="user.phone" :id="user.phone">
+                            <v-text-field v-bind="{rounded: edit, readonly: edit, outlined: !edit}" label="Phone" v-model="user.phone">
                             </v-text-field>
                         </v-col>
                     </v-row>
                     <v-row class="d-flex justify-space-around">
-                        <v-checkbox readonly v-model="user.maySchedule" label="May Schedule Others" :id="user.maySchedule">
+                        <v-checkbox v-bind="{readonly: edit}" v-model="user.maySchedule" label="May Schedule Others">
                         </v-checkbox>
-                        <v-checkbox readonly v-model="user.mayRequest" label="May Request Remote Hands" :id="user.mayRequest">
+                        <v-checkbox v-bind="{readonly: edit}" v-model="user.mayRemote" label="May Request Remote Hands">
                         </v-checkbox>
                     </v-row>
                 </v-card>
@@ -97,10 +97,11 @@ export default {
                 access: null,
                 phone: null,
                 maySchedule: null,
-                mayRequest: null,
+                mayRemote: null,
             },
             options: [],
             access: null,
+            edit: true,
         }
     },
     watch: {
@@ -117,7 +118,7 @@ export default {
         this.user.access = this.person.get('access');
         this.user.phone = this.person.get('phone');
         this.user.maySchedule = this.person.get('maySchedule');
-        this.user.mayRequest = this.person.get('mayRequest');
+        this.user.mayRemote = this.person.get('mayRemote');
     },
     methods: {
         getOptions: function () {
@@ -154,8 +155,19 @@ export default {
         delete: function () {
 
         },
-        edit: function () {
-            
+        editBtn: function () {
+            this.edit = false;
+            let comp1, comp2, acc1, acc2;
+            comp1 = document.getElementById(this.user.company + 'text');
+            console.log(comp1);
+            comp1.style.display = 'none';
+            comp2 = document.getElementById(this.user.company);
+            comp2.style.display= 'inline';
+            acc1 = document.getElementById(this.user.access + 'text');
+            acc1.style.display = 'none';
+            acc2 = document.getElementById(this.user.access);
+            acc2.style.display= 'inline';
+
         },
     }
     
