@@ -37,16 +37,18 @@
                             </v-text-field>
                         </v-col>
                         <v-col cols="4">
-                            <v-text-field rounded readonly v-model="user.company" label="Company" :id="user.company + 'text'">
-                            </v-text-field>
-                            <v-autocomplete v-bind="{outlined: !edit}" label="Company" color="black" cache-items hide-no-data
-								:items="companyFinal"
-      							:search-input.sync="searchComp"
-								v-model="user.company"
-                                style="display: none;"
-                                :id="user.company"
-							>
+                            <div  :id="user.company + 'text'">
+                                <v-text-field rounded readonly v-model="user.company" label="Company">
+                                </v-text-field>
+                            </div>
+                            <div :id="user.company" style="display:none">
+                                <v-autocomplete v-bind="{outlined: !edit}" label="Company" color="black" cache-items hide-no-data
+                                    :items="companyFinal"
+                                    :search-input.sync="searchComp"
+                                    v-model="user.company"
+                                >
 							</v-autocomplete>
+                            </div>
                         </v-col>
                     </v-row>
                     <v-row>
@@ -55,14 +57,16 @@
                             </v-text-field>
                         </v-col>
                         <v-col cols="4">
-                            <v-text-field rounded readonly v-model="user.access" label="Access" :id="user.access + 'text'">
-                            </v-text-field>
-                            <v-select outlined label="Access" :items="options" v-model="user.access" 
-                                v-on:focus="getOptions"
-                                style="display: none"
-                                :id="user.access"
-                            >
-                            </v-select>
+                            <div :id="user.access + 'text'">
+                                <v-text-field rounded readonly v-model="user.access" label="Access">
+                                </v-text-field>
+                            </div>
+                            <div style="display: none" :id="user.access">
+                                <v-select outlined label="Access" :items="options" v-model="user.access" 
+                                    v-on:focus="getOptions"
+                                >
+                                </v-select>
+                            </div>
                         </v-col>
                         <v-col cols="4">
                             <v-text-field v-bind="{rounded: edit, readonly: edit, outlined: !edit}" label="Phone" v-model="user.phone">
@@ -159,7 +163,6 @@ export default {
             this.edit = false;
             let comp1, comp2, acc1, acc2;
             comp1 = document.getElementById(this.user.company + 'text');
-            console.log(comp1);
             comp1.style.display = 'none';
             comp2 = document.getElementById(this.user.company);
             comp2.style.display= 'inline';
