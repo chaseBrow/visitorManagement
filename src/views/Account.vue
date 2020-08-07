@@ -1,7 +1,7 @@
 <template>
   	<v-container>
     	<v-row>
-			<v-col cols="4" class="secondary" >
+			<v-col cols="6" class="secondary" >
 				<v-row>
 					<span style="padding: 0px 0px 0px 20px; font-size: 32px; font-weight: bold;">Account Information</span>
 					<v-spacer></v-spacer>
@@ -45,8 +45,18 @@
 			</v-col>
 		</v-row>
 
-		<v-dialog v-model="dialog">
-			<v-card> HELLLOOOOO
+		<v-dialog v-model="dialog" persistent width="400px">
+			<v-card>
+				<v-card-title>
+					Enter Password
+				</v-card-title>
+				<v-text-field type="password" v-bind="{error: error}" :error-messages="errorMsg" class="mx-5" outlined label="password" v-model="user.password">
+				</v-text-field>
+				<div class="d-flex justify-center">
+					<v-btn class="success mb-5" v-on:click="submitBtn()">
+						Submit
+					</v-btn>
+				</div>
 			</v-card>
 		</v-dialog>
 
@@ -66,14 +76,24 @@ import Parse from 'parse'
 				},
 				edit: false,
 				dialog: false,
+				error: false,
+				errorMsg: null,
 			}
 		},
 		beforeMount () {
 			this.getUser();
 		},
 		methods: {
+			submitBtn: async function () {
+				await Parse.User.logIn(this.user.username, this.user.password).then((user) => {
+					user.set('username', this.user.username);
+					user.set('email', this.user.email);
+				}, (error) => {
+					this.error = true;
+					this.errorMsg = error.message;
+				});
+			},
 			editBtn: function () {
-				this.dialog = true;
 				this.edit = true;
 				let edit, save, cancel;
 				
@@ -89,9 +109,8 @@ import Parse from 'parse'
 				// this.user.password = 
 			},
 			saveBtn: function () {
-				//let User = Parse.User.logIn(this.user.username, password);
-				
-				
+				this.dialog = true;
+
 				this.edit = false;
 
 				let edit, save, cancel;
