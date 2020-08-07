@@ -14,33 +14,42 @@
                     </v-card-title>
                     <v-row>
                         <v-col cols="4">
-                            <v-text-field readonly lass="visitor" label="First Name" outlined>
+                            <v-text-field rounded readonly v-model="user.firstName" label="First Name">
+                            </v-text-field>
+                            <!-- remove rounded and readonly add outlined -->
+                        </v-col>
+                        <v-col cols="4">
+                            <v-text-field rounded readonly v-model="user.lastName" label="Last Name">
                             </v-text-field>
                         </v-col>
                         <v-col cols="4">
-                            <v-text-field readonly class="visitor" label="Last Name" outlined>
+                            <v-text-field rounded readonly v-model="user.company" label="Company">
                             </v-text-field>
-                        </v-col>
-                        <v-col cols="4">
-                            <v-autocomplete readonly outlined label="Company" color="black" cache-items hide-no-data
+                            <v-autocomplete outlined label="Company" color="black" cache-items hide-no-data
 								:items="companyFinal"
       							:search-input.sync="searchComp"
-								v-model="company"
+								v-model="user.company"
+                                style="visibility: hidden"
 							>
 							</v-autocomplete>
                         </v-col>
                     </v-row>
                     <v-row>
                         <v-col cols="4">
-                            <v-text-field readonly label="Email" outlined>
+                            <v-text-field rounded readonly label="Email" v-model="user.email">
                             </v-text-field>
                         </v-col>
                         <v-col cols="4">
-                            <v-select readonly label="Access" outlined :items="options" v-model="access" v-on:focus="getOptions">
+                            <v-text-field rounded readonly v-model="user.lastName" label="Access">
+                            </v-text-field>
+                            <v-select outlined label="Access" :items="options" v-model="user.access" 
+                                v-on:focus="getOptions"
+                                style="visibility: hidden"
+                            >
                             </v-select>
                         </v-col>
                         <v-col cols="4">
-                            <v-text-field readonly label="Phone" outlined>
+                            <v-text-field rounded readonly label="Phone" v-model="user.phone">
                             </v-text-field>
                         </v-col>
                     </v-row>
@@ -58,7 +67,14 @@ export default {
             dialog: false,
             companyFinal: [],
 			searchComp: null,
-            company: '',
+            user: {
+                firstName: null,
+                lastName: null,
+                company: "test",
+                email: null,
+                access: null,
+                phone: null,
+            },
             options: [],
             access: null,
         }
@@ -67,7 +83,17 @@ export default {
 		searchComp (val) {
 			this.searchCompanies(val);
 		}
-	},
+    },
+    beforeMount () {
+        let comp = this.person.get('company');
+        this.user.firstName = this.person.get('firstName');
+        this.user.lastName = this.person.get('lastName');
+        //this.user.company = comp.get('name');
+        this.user.email = this.person.get('email');
+        this.user.access = this.person.get('access');
+        this.user.phone = this.person.get('phone');
+        console.log(comp)
+    },
     methods: {
         getOptions: function () {
             const user = Parse.User.current();
@@ -112,5 +138,4 @@ export default {
 }
 </script>
 <style scoped>
-
 </style>
