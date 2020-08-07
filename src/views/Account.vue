@@ -44,6 +44,13 @@
 			<v-col cols="12" class="green">
 			</v-col>
 		</v-row>
+
+		<v-dialog v-model="dialog">
+			<v-card> HELLLOOOOO
+			</v-card>
+		</v-dialog>
+
+
   	</v-container>
 </template>
 
@@ -55,8 +62,10 @@ import Parse from 'parse'
 				user: {
 					username: "testUser",
 					email: null,
+					password: null,
 				},
 				edit: false,
+				dialog: false,
 			}
 		},
 		beforeMount () {
@@ -64,8 +73,8 @@ import Parse from 'parse'
 		},
 		methods: {
 			editBtn: function () {
+				this.dialog = true;
 				this.edit = true;
-				console.log("edit");
 				let edit, save, cancel;
 				
 				edit = document.getElementById('edit');
@@ -76,9 +85,13 @@ import Parse from 'parse'
 				
 				cancel = document.getElementById('cancel');
 				cancel.style.display = 'inline';
+
+				// this.user.password = 
 			},
 			saveBtn: function () {
-				console.log("save")
+				//let User = Parse.User.logIn(this.user.username, password);
+				
+				
 				this.edit = false;
 
 				let edit, save, cancel;
