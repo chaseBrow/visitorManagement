@@ -29,7 +29,7 @@
 								:items="companyFinal"
       							:search-input.sync="searchComp"
 								v-model="user.company"
-                                style="visibility: hidden"
+                                style="visibility: hidden; position: fixed"
 							>
 							</v-autocomplete>
                         </v-col>
@@ -44,7 +44,7 @@
                             </v-text-field>
                             <v-select outlined label="Access" :items="options" v-model="user.access" 
                                 v-on:focus="getOptions"
-                                style="visibility: hidden"
+                                style="visibility: hidden; position: fixed"
                             >
                             </v-select>
                         </v-col>
@@ -52,6 +52,12 @@
                             <v-text-field rounded readonly label="Phone" v-model="user.phone">
                             </v-text-field>
                         </v-col>
+                    </v-row>
+                    <v-row class="d-flex align-start justify-center ">
+                        <v-checkbox class="red" label="May Schedule Others">
+                        </v-checkbox>
+                        <v-checkbox class="blue" label="May Request Remote Hands">
+                        </v-checkbox>
                     </v-row>
                 </v-card>
             </v-form>
