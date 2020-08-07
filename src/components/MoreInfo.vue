@@ -2,7 +2,7 @@
     <v-container class="ma-0 pa-0">
         <v-dialog v-model="dialog" width="80%" class="primary">
             <template v-slot:activator="{ on, attrs }">
-                <v-btn v-bind="attrs" v-on="on" class="primary">
+                <v-btn v-bind="attrs" v-on="on" class="accent">
                     <v-icon dense class="pr-1">mdi-card-account-details-outline</v-icon>
                     <span>Info</span>
                 </v-btn>
@@ -11,7 +11,21 @@
                 <v-card class="pa-4">
                     <v-card-title>
                         Visitor Information
+                        <v-spacer></v-spacer>
+                        <v-btn class="accent">
+                            Edit
+                        </v-btn>
+                        <v-btn class="success"> 
+                            Save
+                        </v-btn>
+                        <v-btn class="info">
+                            Cancel
+                        </v-btn>
+                        <v-btn class="warning">
+                            Delete
+                        </v-btn>
                     </v-card-title>
+                    
                     <v-row>
                         <v-col cols="4">
                             <v-text-field rounded readonly v-model="user.firstName" label="First Name" :id="user.firstName">

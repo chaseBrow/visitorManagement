@@ -53,7 +53,7 @@
 					<span style="width: 25%">Email</span>
 					<span style="width: 10%">Access</span>
 					<v-spacer></v-spacer>
-					<v-btn class="secondary black--text" v-on:click="recentVisitors()"> 
+					<v-btn class="accent black--text" v-on:click="recentVisitors()"> 
 						Recent Visitors
 					</v-btn>
 				</v-toolbar>
