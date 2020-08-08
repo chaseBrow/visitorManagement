@@ -12,18 +12,26 @@
                     <v-card-title>
                         Visitor Information
                         <v-spacer></v-spacer>
-                        <v-btn class="accent" v-on:click="editBtn()">
-                            Edit
-                        </v-btn>
-                        <v-btn class="success"> 
-                            Save
-                        </v-btn>
-                        <v-btn class="info">
-                            Cancel
-                        </v-btn>
-                        <v-btn class="warning">
-                            Delete
-                        </v-btn>
+                        <div id="edit">
+                            <v-btn class="accent" v-on:click="editBtn()">
+                                Edit
+                            </v-btn>
+                        </div>
+                        <div id="save" style="display: none">
+                            <v-btn class="success" v-on:click="saveBtn()"> 
+                                Save
+                            </v-btn>
+                        </div>
+                        <div id="cancel" style="display: none">
+                            <v-btn class="info" v-on:click="cancelBtn()">
+                                Cancel
+                            </v-btn>
+                        </div>
+                        <div id="delete" style="display: none">
+                            <v-btn class="warning" v-on:click="deleteBtn()">
+                                Delete
+                            </v-btn>
+                        </div>
                     </v-card-title>
                     
                     <v-row>
@@ -149,19 +157,19 @@ export default {
 				this.companyFinal.push(e.get("name"));
 			})
         },
-        save: function () {
+        saveBtn: function () {
 
         },
-        cancel: function () {
+        cancelBtn: function () {
             console.log(this.dialog);
             this.dialog = false;
         },
-        delete: function () {
+        deleteBtn: function () {
 
         },
         editBtn: function () {
             this.edit = false;
-            let comp1, comp2, acc1, acc2;
+            let comp1, comp2, acc1, acc2, edit, save, cancel, del;
             comp1 = document.getElementById(this.user.company + 'text');
             comp1.style.display = 'none';
             comp2 = document.getElementById(this.user.company);
@@ -170,6 +178,18 @@ export default {
             acc1.style.display = 'none';
             acc2 = document.getElementById(this.user.access);
             acc2.style.display= 'inline';
+
+            edit = document.getElementById('edit');
+            edit.style.display = 'none';
+
+            save = document.getElementById('save');
+            save.style.display = 'inline';
+
+            cancel = document.getElementById('cancel');
+            cancel.style.display = 'inline';
+
+            del = document.getElementById('delete');
+            del.style.display = 'inline';
 
         },
     }
