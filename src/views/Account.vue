@@ -51,7 +51,7 @@
 					<v-list-item v-for="option in accessOptions" :key="option">
 						<span>{{ option }}</span>
 						<v-spacer> </v-spacer>
-						<v-btn fab x-small class="accent">
+						<v-btn fab x-small class="accent" v-on:click="deleteAccessOption(option)">
 							<v-icon>mdi-minus</v-icon>
 						</v-btn>
 					</v-list-item>
@@ -126,6 +126,7 @@ import Parse from 'parse'
 							this.accessOptions.splice(this.accessOptions.indexOf(optionName), 1);
 							user.set('options', this.accessOptions);
 							user.save();
+							this.getAccessOptions();
 						});
 					});
 				}
@@ -134,6 +135,7 @@ import Parse from 'parse'
 						this.accessOptions.splice(this.accessOptions.indexOf(optionName), 1)
 						user.set('options', this.accessOptions);
 						user.save();
+						this.getAccessOptions();
 					});
 				}
 			},
