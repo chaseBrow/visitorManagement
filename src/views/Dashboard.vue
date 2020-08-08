@@ -1,6 +1,6 @@
 <template>
 	<v-container fluid fill-height background>
-		<v-row class="mx-4" style="height: 100%">
+		<v-row class="mx-4" style="height: fit-content">
 			<v-form class="primary form">
 				<v-container>	
 					<v-row class="align-start">
@@ -45,7 +45,7 @@
 			</v-form>
 
 
-			<v-col cols="12" class="primary" style="border-radius: 0px 0px 10px 10px; height: auto">
+			<v-col cols="12" class="primary" style="border-radius: 0px 0px 10px 10px; height: fit-content">
 				<v-toolbar class="secondary">
 					<span class="white--text" style="width: 10%;">First Name</span>
 					<span class="white--text" style="width: 10%">Last Name</span>
@@ -256,7 +256,7 @@ textarea:focus, input:focus{
 }
 .form {
 	border-radius: 10px 10px 0px 0px; 
-	height: auto; 
+	height: fit-content; 
 	width: 100%;
 }
 
