@@ -1,7 +1,7 @@
 <template>
   	<v-container>
     	<v-row>
-			<v-col cols="6" class="secondary" >
+			<v-col cols="6" class="pink" >
 				<v-row>
 					<span style="padding: 0px 0px 0px 20px; font-size: 32px; font-weight: bold;">Account Information</span>
 					<v-spacer></v-spacer>
@@ -23,11 +23,11 @@
 				</v-row>
 				<div>
 					<v-text-field label="Username" v-bind="{readonly: !edit, rounded: !edit, outlined: edit}" 
-						background-color="secondary" v-model="user.tempName" style="font-size: 18px"
+						v-model="user.tempName" style="font-size: 18px"
 					> 
 					</v-text-field>
 					<v-text-field label="Email" v-bind="{readonly: !edit, rounded: !edit, outlined: edit}" 
-						background-color="secondary" v-model="user.tempEmail" style="font-size: 18px"
+						 v-model="user.tempEmail" style="font-size: 18px"
 					> 
 					</v-text-field>
 				</div>
@@ -38,6 +38,24 @@
 				</v-row>
 			</v-col>
 			<v-col cols="4" class="red">
+				<v-list>
+					<v-toolbar>
+						<v-toolbar-title> 
+							Access Options
+						</v-toolbar-title>
+						<v-spacer></v-spacer>
+						<v-btn fab x-small class="accent">
+							<v-icon>mdi-plus</v-icon>
+						</v-btn>
+					</v-toolbar>
+					<v-list-item v-for="option in accessOptions" :key="option">
+						<span>{{ option }}</span>
+						<v-spacer> </v-spacer>
+						<v-btn fab x-small class="accent">
+							<v-icon>mdi-minus</v-icon>
+						</v-btn>
+					</v-list-item>
+				</v-list>
 			</v-col>
     	</v-row>
 		<v-row>
@@ -83,12 +101,24 @@ import Parse from 'parse'
 				dialog: false,
 				error: false,
 				errorMsg: null,
+				accessOptions: [],
 			}
 		},
 		beforeMount () {
 			this.getUser();
+			this.getAccessOptions();
 		},
 		methods: {
+			getAccessOptions: async function () {
+				let user = Parse.User.current();
+				this.accessOptions = user.get("options");
+			},
+			addAccessOption: async function () {
+				
+			},
+			deleteAccessOption: async function () {
+				
+			},
 			submitBtn: async function () {
 				await Parse.User.logIn(this.user.username, this.user.password).then((user) => {
 					user.set('username', this.user.tempName);
@@ -160,7 +190,6 @@ import Parse from 'parse'
 				this.user.username = User.get('username');
 				this.user.tempEmail = User.get('email');
 				this.user.email = User.get('email');
-				
 			}
 
 		}
