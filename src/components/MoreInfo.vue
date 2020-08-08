@@ -1,6 +1,8 @@
 <template>
     <v-container class="ma-0 pa-0">
-        <v-dialog v-bind="{persistent: edit}" v-model="dialog" width="80%" class="primary">
+        <v-dialog v-bind="{persistent: edit}" v-model="dialog" width="80%" class="primary"
+            @click:outside="$emit('reload')"
+        >
             <template v-slot:activator="{ on, attrs }">
                 <v-btn v-bind="attrs" v-on="on" class="accent">
                     <v-icon dense class="pr-1">mdi-card-account-details-outline</v-icon>
@@ -234,6 +236,7 @@ export default {
             this.dialogDel = false;
             this.cancelBtn();
             this.dialog = false;
+            this.$emit('reload');
         },
         deleteBtn: function () {
             this.dialogDel = true;

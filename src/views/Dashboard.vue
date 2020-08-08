@@ -72,7 +72,7 @@
 							</NewRecord> 
 						</div>
 						<div :id="person.get('email') + 'info'" :key="person.get('email') + 'info'" class="pa-0">
-							<MoreInfo v-bind:person="person">
+							<MoreInfo v-bind:person="person" v-on:reload="getVisitors()">
 							</MoreInfo>
 						</div>
 					</v-list-item>
