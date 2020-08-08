@@ -3,7 +3,7 @@
     <Navbar>
 
     </Navbar>
-    <v-content>
+    <v-content class="primary">
       <router-view>
 
       </router-view>

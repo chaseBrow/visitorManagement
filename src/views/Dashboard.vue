@@ -5,14 +5,14 @@
 				<v-container>	
 					<v-row class="align-start">
 						<v-col cols="2" class="pb-0">
-							<v-text-field label="First Name" outlined color="black" 
+							<v-text-field label="First Name" outlined color="black"
 								v-model="filterTerms.firstName"
 								v-on:input="filterPeople()"
 							>
 							</v-text-field>
 						</v-col>
-						<v-col cols="2" class="pb-0">
-							<v-text-field  label="Last Name" outlined color="black" 
+						<v-col cols="2" class="pb-0" >
+							<v-text-field  label="Last Name" outlined color="black"
 								v-model="filterTerms.lastName"
 								v-on:input="filterPeople()"
 							>
@@ -45,26 +45,26 @@
 			</v-form>
 
 
-			<v-col cols="12" class="secondary" style="border-radius: 0px 0px 10px 10px; height: auto">
-				<v-toolbar class="primary">
-					<span style="width: 10%">First Name</span>
-					<span style="width: 10%">Last Name</span>
-					<span style="width: 10%">Company</span>
-					<span style="width: 25%">Email</span>
-					<span style="width: 10%">Access</span>
+			<v-col cols="12" class="primary" style="border-radius: 0px 0px 10px 10px; height: auto">
+				<v-toolbar class="secondary">
+					<span class="white--text" style="width: 10%;">First Name</span>
+					<span class="white--text" style="width: 10%">Last Name</span>
+					<span class="white--text" style="width: 10%">Company</span>
+					<span class="white--text" style="width: 25%">Email</span>
+					<span class="white--text" style="width: 10%">Access</span>
 					<v-spacer></v-spacer>
-					<v-btn class="accent black--text" v-on:click="recentVisitors()"> 
+					<v-btn class="accent white--text" v-on:click="recentVisitors()"> 
 						Recent Visitors
 					</v-btn>
 				</v-toolbar>
 
-				<v-list dense class="data">
+				<v-list dense class="data secondary">
 					<v-list-item v-for="person in filteredPeople" :key="person.email">
-						<span style="width: 10%">{{ person.get('firstName') }}</span>
-                    	<span style="width: 10%">{{ person.get('lastName') }}</span>
-                        <span style="width: 10%; font-size: 0.95rem">{{ getCompanyName(person) }}</span>
-						<span style="width: 25%; font-size: 0.9rem">{{ person.get('email') }}</span>
-                        <span style="width: 10%; font-size: 0.9rem">{{ person.get('access') }}</span>
+						<span class="white--text" style="width: 10%">{{ person.get('firstName') }}</span>
+                    	<span class="white--text" style="width: 10%">{{ person.get('lastName') }}</span>
+                        <span class="white--text" style="width: 10%; font-size: 0.95rem">{{ getCompanyName(person) }}</span>
+						<span class="white--text" style="width: 25%; font-size: 0.9rem">{{ person.get('email') }}</span>
+                        <span class="white--text" style="width: 10%; font-size: 0.9rem">{{ person.get('access') }}</span>
                         
 						<v-spacer></v-spacer>
 						<div :id="person.get('email') + 'visit'" :key="person.get('email') + 'visit'">
@@ -234,9 +234,16 @@ export default {
 </script>
 
 <style scoped>
+.text-field {
+	background-color: lightcoral;
+	color: greenyellow;
+	border-color: greenyellow;
+	outline-color: hotpink;
+	flood-color: indigo;
+}
 
 .v-list-item:hover {
-	background:lightgray;
+	background: #454545;
 } 
 .v-list.data {
   border-radius: 0px;

@@ -1,17 +1,17 @@
 <template>
 	<nav>
 		<v-app-bar app dense class="secondary">
-			<v-app-bar-nav-icon  v-on:click="drawer = !drawer"></v-app-bar-nav-icon>
+			<v-app-bar-nav-icon  v-on:click="drawer = !drawer" color="white"></v-app-bar-nav-icon>
 			<v-toolbar-title class="text-uppercase">
-				<span class="font-weight-light" style="font-size: x-large"> Visitor</span>
-				<span class="font-weight-bold" style="font-size: x-large">Mgmt</span>
+				<span class="font-weight-light" style="font-size: x-large; color: white"> Visitor</span>
+				<span class="font-weight-bold" style="font-size: x-large; color: white">Mgmt</span>
 			</v-toolbar-title>
 			<v-spacer></v-spacer>
 			<NewVisitor v-if="['home'].indexOf($route.name) <= -1">
 			</NewVisitor>
-			<v-btn class="primary" v-if="['home'].indexOf($route.name) <= -1" v-on:click="logOut()">
-				<span class="mr-1 black--text">Sign Out</span>
-				<v-icon color="black">mdi-exit-to-app</v-icon>
+			<v-btn class="accent" v-if="['home'].indexOf($route.name) <= -1" v-on:click="logOut()">
+				<span class="mr-1 white--text">Sign Out</span>
+				<v-icon color="white">mdi-exit-to-app</v-icon>
 			</v-btn>
 			<Login v-if="['home'].indexOf($route.name) == 0">
 			</Login>
