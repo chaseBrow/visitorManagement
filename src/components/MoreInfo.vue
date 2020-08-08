@@ -25,7 +25,7 @@
                             </v-btn>
                         </div>
                         <div id="cancel" style="display: none">
-                            <v-btn class="mr-3" elevation="0" color="info" outlined="true" v-on:click="cancelBtn()">
+                            <v-btn class="mr-3" elevation="0" color="info" outlined v-on:click="cancelBtn()">
                                 Cancel
                             </v-btn>
                         </div>
@@ -101,14 +101,14 @@
                     Confirm Delete 
                 </v-card-title>
                 <v-card-text>
-                    You will no longer be able to add visit records for this visitor.  All previous visits will still be avaliable on the Record History tab.
+                    You will no longer be able to add visit records for this visitor.  All previous visits will still be avaliable on the Visit History tab.
                 </v-card-text>
                 <div class="d-flex justify-center">
-                    <v-btn class="warning mr-6 mb-6" v-on:click="confirmDel()" v-bind="{loading: delLoading}">
-                        Delete
-                    </v-btn>
-                    <v-btn class="info mb-6">
+                    <v-btn class="mr-6 mb-6" color="info" outlined>
                         Cancel
+                    </v-btn>
+                    <v-btn class="warning mb-6" v-on:click="confirmDel()" v-bind="{loading: delLoading}">
+                        Delete
                     </v-btn>
                 </div>
             </v-card>

@@ -46,14 +46,13 @@
                         <v-card class="secondary pb-0 pa-4" style="border-radius: 8px">
                             <v-row>
                                 <v-col cols="12" class="d-flex justify-space-between pb-1">
-                                    <v-btn v-on:click="daysAgo(30)">
+                                    <v-btn class="accent" v-on:click="daysAgo(30)">
                                         30 days
                                     </v-btn>
-                                    
-                                    <v-btn v-on:click="daysAgo(90)">
+                                    <v-btn class="accent" v-on:click="daysAgo(90)">
                                         90 days
                                     </v-btn>
-                                    <v-btn v-on:click="daysAgo(0)">
+                                    <v-btn class="accent" v-on:click="daysAgo(0)">
                                         Year to Date
                                     </v-btn>
                                 </v-col>
@@ -76,7 +75,7 @@
                                                 outlined
                                                 clearable
                                                 v-on:input="filterRecords()"
-                                                color="black"
+                                                color="white"
                                             >
                                             </v-text-field>
                                         </template>
@@ -101,7 +100,7 @@
                                                 outlined
                                                 clearable
                                                 v-on:input="filterRecords()"
-                                                color="black"
+                                                color="white"
                                             >
                                             </v-text-field>
                                         </template>
@@ -304,7 +303,7 @@ export default {
                     date = (item.arrive.substring(0,9) >= this.arriveFormatted);
                 }
                 else if (this.filterTerms.depart) {
-                    date = (item.arrive.substring(0,9) <= this.departFormatted)
+                    date = (item.depart.substring(0,9) <= this.departFormatted)
                 }
                 
                 if (first == true && last == true && email == true && comp == true && date == true) {
