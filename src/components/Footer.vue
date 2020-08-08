@@ -1,6 +1,6 @@
 <template>
     <v-footer
-            color="primary lighten-1"
+            color="secondary lighten-1"
             padless
     >
         <v-row
@@ -18,7 +18,7 @@
                 {{ link }}
             </v-btn>
             <v-col
-                    class="primary lighten-2 py-4 text-center white--text"
+                    class="secondary lighten-2 py-4 text-center white--text"
                     cols="12"
             >
                 {{ new Date().getFullYear() }} — <strong>Chase Brown</strong>

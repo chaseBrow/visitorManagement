@@ -1,7 +1,7 @@
 <template>
     <v-container background fluid fill-height>
         <v-row class="mx-4" style="height: 100%">
-            <v-form class="form primary" style="height: auto">
+            <v-form class="form primary">
                 <v-row>
                     <v-col cols="8">
                         <v-container>
@@ -43,17 +43,16 @@
                         </v-container>
                     </v-col>
                     <v-col cols="4" class="mt-n2 mb-2 pt-0 pa-2 d-flex align-center">
-                        <v-card class="orange pb-0 pa-4" style="border-radius: 8px">
+                        <v-card class="secondary pb-0 pa-4" style="border-radius: 8px">
                             <v-row>
                                 <v-col cols="12" class="d-flex justify-space-between pb-1">
-                                    <v-btn v-on:click="daysAgo(30)">
+                                    <v-btn class="accent" v-on:click="daysAgo(30)">
                                         30 days
                                     </v-btn>
-                                    
-                                    <v-btn v-on:click="daysAgo(90)">
+                                    <v-btn class="accent" v-on:click="daysAgo(90)">
                                         90 days
                                     </v-btn>
-                                    <v-btn v-on:click="daysAgo(0)">
+                                    <v-btn class="accent" v-on:click="daysAgo(0)">
                                         Year to Date
                                     </v-btn>
                                 </v-col>
@@ -76,7 +75,7 @@
                                                 outlined
                                                 clearable
                                                 v-on:input="filterRecords()"
-                                                color="black"
+                                                color="white"
                                             >
                                             </v-text-field>
                                         </template>
@@ -101,7 +100,7 @@
                                                 outlined
                                                 clearable
                                                 v-on:input="filterRecords()"
-                                                color="black"
+                                                color="white"
                                             >
                                             </v-text-field>
                                         </template>
@@ -114,10 +113,10 @@
                     </v-col>
                 </v-row>
             </v-form>
-            <v-col class="secondary" style="border-radius:0px 0px 10px 10px; width: 100%; height: 80%">
-                <v-toolbar class="primary">
+            <v-col class="primary" style="border-radius:0px 0px 10px 10px; width: 100%; height: 80%">
+                <v-toolbar class="secondary">
                     <div style="width: 10%">
-                        <v-btn class="sort primary" v-on:click="sortBy(0)" elevation="0">
+                        <v-btn class="sort secondary text--white" v-on:click="sortBy(0)" elevation="0">
                             <span>First Name</span>
                             <v-row>
                                 <v-icon class="up" id="asc0">mdi-menu-up</v-icon>
@@ -128,7 +127,7 @@
                         </v-btn>
                     </div>
                     <div style="width: 15%">
-                        <v-btn class="sort primary" v-on:click="sortBy(1)" elevation="0">
+                        <v-btn class="sort secondary text--white" v-on:click="sortBy(1)" elevation="0">
                             <span>Last Name</span>
                             <v-row>
                                 <v-icon class="up" id="asc1">mdi-menu-up</v-icon>
@@ -139,7 +138,7 @@
                         </v-btn>
                     </div>
                     <div style="width: 20%">
-                        <v-btn class="sort primary" v-on:click="sortBy(2)" elevation="0">
+                        <v-btn class="sort secondary text--white" v-on:click="sortBy(2)" elevation="0">
                             <span>Company</span>
                             <v-row>
                                 <v-icon class="up" id="asc2">mdi-menu-up</v-icon>
@@ -150,7 +149,7 @@
                         </v-btn>
                     </div>
                     <div style="width: 25%">
-                        <v-btn class="sort primary" v-on:click="sortBy(3)" elevation="0">
+                        <v-btn class="sort secondary text--white" v-on:click="sortBy(3)" elevation="0">
                             <span>Email</span>
                             <v-row>
                                 <v-icon class="up" id="asc3">mdi-menu-up</v-icon>
@@ -161,7 +160,7 @@
                         </v-btn>
                     </div>
                     <div style="width: 15%">
-                        <v-btn class="sort primary" v-on:click="sortBy(4)" elevation="0">
+                        <v-btn class="sort secondary text--white" v-on:click="sortBy(4)" elevation="0">
                             <span>Arrive</span>
                             <v-row>
                                 <v-icon class="up" id="asc4">mdi-menu-up</v-icon>
@@ -172,7 +171,7 @@
                         </v-btn>
                     </div>
                     <div style="width: 15%">
-                        <v-btn class="sort primary" v-on:click="sortBy(5)" elevation="0">
+                        <v-btn class="sort secondary text--white" v-on:click="sortBy(5)" elevation="0">
                             <span>Depart</span>
                             <v-row>
                                 <v-icon class="up" id="asc5">mdi-menu-up</v-icon>
@@ -183,15 +182,15 @@
                         </v-btn>
                     </div>
                 </v-toolbar>
-                <v-list style="padding: 16px"> 
+                <v-list style="padding: 16px" class="secondary"> 
                     <v-list-item v-for="record in recordsDisplay" :key="record.email + record.arrive" style="padding: 0px">
                         <v-row style="padding: 0px 16px 0px 16px">
-                            <span style="width: 10%">{{ record.firstName }}</span>
-                            <span style="width: 15%">{{ record.lastName }}</span>
-                            <span style="width: 20%">{{ record.company }}</span>
-                            <span style="width: 25%">{{ record.email }}</span>
-                            <span style="width: 15%">{{ record.arrive }}</span>
-                            <span style="width: 15%">{{ record.depart }}</span> 
+                            <span class="white--text" style="width: 10%">{{ record.firstName }}</span>
+                            <span class="white--text" style="width: 15%">{{ record.lastName }}</span>
+                            <span class="white--text" style="width: 20%">{{ record.company }}</span>
+                            <span class="white--text" style="width: 25%">{{ record.email }}</span>
+                            <span class="white--text" style="width: 15%">{{ record.arrive }}</span>
+                            <span class="white--text" style="width: 15%">{{ record.depart }}</span> 
                         </v-row>
                     </v-list-item>
                 </v-list>
@@ -304,7 +303,7 @@ export default {
                     date = (item.arrive.substring(0,9) >= this.arriveFormatted);
                 }
                 else if (this.filterTerms.depart) {
-                    date = (item.arrive.substring(0,9) <= this.departFormatted)
+                    date = (item.depart.substring(0,9) <= this.departFormatted)
                 }
                 
                 if (first == true && last == true && email == true && comp == true && date == true) {
@@ -350,11 +349,11 @@ export default {
                     }
                     else if ((this.sort % 3) == 1) {
                         asc.style.color = "grey";
-                        des.style.color = "black";
+                        des.style.color = '#82004A';
                         this.sortRecords(undefined, "firstName", "des");
                     }
                     else {
-                        asc.style.color = "black";
+                        asc.style.color = '#82004A';
                         des.style.color = "grey";
                         this.sortRecords(undefined, "firstName", "asc");
                     }
@@ -371,11 +370,11 @@ export default {
                     }
                     else if ((this.sort % 3) == 1) {
                         asc.style.color = "grey";
-                        des.style.color = "black";
+                        des.style.color = '#82004A';
                         this.sortRecords(undefined, "lastName", "des");
                     }
                     else {
-                        asc.style.color = "black";
+                        asc.style.color = '#82004A';
                         des.style.color = "grey";
                         this.sortRecords(undefined, "lastName", "asc");
                     }
@@ -391,11 +390,11 @@ export default {
                     }
                     else if ((this.sort % 3) == 1) {
                         asc.style.color = "grey";
-                        des.style.color = "black";
+                        des.style.color = '#82004A';
                         this.sortRecords(undefined, "company", "des");
                     }
                     else {
-                        asc.style.color = "black";
+                        asc.style.color = '#82004A';
                         des.style.color = "grey";
                         this.sortRecords(undefined, "company", "asc");
                     }
@@ -411,11 +410,11 @@ export default {
                     }
                     else if ((this.sort % 3) == 1) {
                         asc.style.color = "grey";
-                        des.style.color = "black";
+                        des.style.color = '#82004A';
                         this.sortRecords(undefined, "email", "des");
                     }
                     else {
-                        asc.style.color = "black";
+                        asc.style.color = '#82004A';
                         des.style.color = "grey";
                         this.sortRecords(undefined, "email", "asc");
                     }
@@ -431,11 +430,11 @@ export default {
                     }
                     else if ((this.sort % 3) == 1) {
                         asc.style.color = "grey";
-                        des.style.color = "black";
+                        des.style.color = '#82004A';
                         this.sortRecords(undefined, "arrive", "des");
                     }
                     else {
-                        asc.style.color = "black";
+                        asc.style.color = '#82004A';
                         des.style.color = "grey";
                         this.sortRecords(undefined, "arrive", "asc");
                     }
@@ -451,11 +450,11 @@ export default {
                     }
                     else if ((this.sort % 3) == 1) {
                         asc.style.color = "grey";
-                        des.style.color = "black";
+                        des.style.color = '#82004A';
                         this.sortRecords(undefined, 'depart', 'des');
                     }
                     else {
-                        asc.style.color = "black";
+                        asc.style.color = '#82004A';
                         des.style.color = "grey";
                         this.sortRecords(undefined, 'depart', 'asc');
                     }
@@ -677,10 +676,11 @@ export default {
 };
 </script>
 <style scoped>
+
 .v-form.form {
     border-radius: 10px 10px 0px 0px;
     width: 100%;
-    height: 20%;
+    height: fit-content;
     padding: 0px 20px 0px 20px;
 }
 .v-btn.sort {
@@ -702,5 +702,9 @@ export default {
 .v-list {
     height: 70%;
     overflow-y: scroll;
+    border-radius: 0px;
 }
+.v-list-item:hover {
+	background: #454545;
+} 
 </style>

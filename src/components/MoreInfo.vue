@@ -20,12 +20,12 @@
                             </v-btn>
                         </div>
                         <div id="save" style="display: none">
-                            <v-btn class="success" v-on:click="saveBtn()"> 
+                            <v-btn class="success mr-3" v-on:click="saveBtn()"> 
                                 Save
                             </v-btn>
                         </div>
                         <div id="cancel" style="display: none">
-                            <v-btn class="info" v-on:click="cancelBtn()">
+                            <v-btn class="mr-3" elevation="0" color="info" outlined v-on:click="cancelBtn()">
                                 Cancel
                             </v-btn>
                         </div>
@@ -38,24 +38,25 @@
                     
                     <v-row>
                         <v-col cols="4">
-                            <v-text-field v-model="user.firstName" label="First Name" v-bind="{rounded: !edit, readonly: !edit, outlined: edit}">
+                            <v-text-field color="accent" v-model="user.firstName" label="First Name" v-bind="{rounded: !edit, readonly: !edit, outlined: edit}">
                             </v-text-field>
                         </v-col>
                         <v-col cols="4">
-                            <v-text-field v-bind="{rounded: !edit, readonly: !edit, outlined: edit}" v-model="user.lastName" label="Last Name">
+                            <v-text-field color="accent" v-bind="{rounded: !edit, readonly: !edit, outlined: edit}" v-model="user.lastName" label="Last Name">
                             </v-text-field>
                         </v-col>
                         <v-col cols="4">
                             <div  :id="user.company + 'text'">
-                                <v-text-field rounded readonly v-model="user.company" label="Company">
+                                <v-text-field color="accent" rounded readonly v-model="user.company" label="Company">
                                 </v-text-field>
                             </div>
                             <div :id="user.company" style="display:none">
-                                <v-autocomplete v-bind="{outlined: edit}" label="Company" color="black" cache-items hide-no-data
+                                <v-autocomplete v-bind="{outlined: edit}" label="Company" color="accent" cache-items hide-no-data
                                     :items="companyFinal"
                                     :search-input.sync="searchComp"
                                     v-model="user.company"
                                     :id="user.company + 'focus'"
+
                                 >
 							</v-autocomplete>
                             </div>
@@ -63,31 +64,32 @@
                     </v-row>
                     <v-row>
                         <v-col cols="4">
-                            <v-text-field v-bind="{rounded: !edit, readonly: !edit, outlined: edit}" label="Email" v-model="user.email">
+                            <v-text-field color="accent" v-bind="{rounded: !edit, readonly: !edit, outlined: edit}" label="Email" v-model="user.email">
                             </v-text-field>
                         </v-col>
                         <v-col cols="4">
                             <div :id="user.access + 'text'">
-                                <v-text-field rounded readonly v-model="user.access" label="Access">
+                                <v-text-field color="accent" rounded readonly v-model="user.access" label="Access">
                                 </v-text-field>
                             </div>
                             <div style="display: none" :id="user.access">
                                 <v-select outlined label="Access" :items="options" v-model="user.access" 
                                     v-on:focus="getOptions"
                                     :id="user.access + 'focus'"
+                                    color="accent"
                                 >
                                 </v-select>
                             </div>
                         </v-col>
                         <v-col cols="4">
-                            <v-text-field v-bind="{rounded: !edit, readonly: !edit, outlined: edit}" label="Phone" v-model="user.phone">
+                            <v-text-field color="accent" v-bind="{rounded: !edit, readonly: !edit, outlined: edit}" label="Phone" v-model="user.phone">
                             </v-text-field>
                         </v-col>
                     </v-row>
                     <v-row class="d-flex justify-space-around">
-                        <v-checkbox v-bind="{readonly: !edit}" v-model="user.maySchedule" label="May Schedule Others">
+                        <v-checkbox v-bind="{readonly: !edit}" color="accent" v-model="user.maySchedule" label="May Schedule Others">
                         </v-checkbox>
-                        <v-checkbox v-bind="{readonly: !edit}" v-model="user.mayRemote" label="May Request Remote Hands">
+                        <v-checkbox color="accent" v-bind="{readonly: !edit}" v-model="user.mayRemote" label="May Request Remote Hands">
                         </v-checkbox>
                     </v-row>
                 </v-card>
@@ -99,14 +101,14 @@
                     Confirm Delete 
                 </v-card-title>
                 <v-card-text>
-                    You will no longer be able to add visit records for this visitor.  All previous visits will still be avaliable on the Record History tab.
+                    You will no longer be able to add visit records for this visitor.  All previous visits will still be avaliable on the Visit History tab.
                 </v-card-text>
                 <div class="d-flex justify-center">
-                    <v-btn class="warning mr-6 mb-6" v-on:click="confirmDel()" v-bind="{loading: delLoading}">
-                        Delete
-                    </v-btn>
-                    <v-btn class="info mb-6">
+                    <v-btn class="mr-6 mb-6" color="info" outlined>
                         Cancel
+                    </v-btn>
+                    <v-btn class="warning mb-6" v-on:click="confirmDel()" v-bind="{loading: delLoading}">
+                        Delete
                     </v-btn>
                 </div>
             </v-card>
