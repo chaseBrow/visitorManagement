@@ -132,9 +132,9 @@ export default {
             this.user.company = comp.get('name');
             this.user.email = this.person.get('email');
             this.user.access = this.person.get('access');
-            this.user.phone = this.person.get('phone');
-            this.user.maySchedule = this.person.get('maySchedule');
-            this.user.mayRemote = this.person.get('mayRemote');
+            // this.user.phone = this.person.get('phone');
+            // this.user.maySchedule = this.person.get('maySchedule');
+            // this.user.mayRemote = this.person.get('mayRemote');
             this.edit = false;
         },
         getOptions: function () {
@@ -161,10 +161,24 @@ export default {
 				this.companyFinal.push(e.get("name"));
 			})
         },
-        saveBtn: function () {
+        saveBtn: async function () {
+            this.person.set('firstName', this.user.firstName);
+            this.person.set('lastName', this.user.lastName);
+            this.person.set('email', this.user.email);
+            this.person.set('access', this.user.access);
+            this.person.set('phone', this.user.phone);
+            this.person.set('maySchedule', this.user.maySchedule);
+            this.person.set('mayRemote', this.user.mayRemote);
 
-
-            this.reset();
+            let Companies = new Parse.Query(Parse.User);
+            Companies.equalTo('name', this.user.company);
+            let comp = await Companies.first()
+            this.person.set('company', comp);
+            
+            
+            await this.person.save();
+            console.log(this.person.get('company'));
+            this.cancelBtn();
         },
         cancelBtn: function () {
             let comp1, comp2, acc1, acc2, edit, save, cancel, del;
