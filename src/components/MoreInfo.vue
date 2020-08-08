@@ -38,24 +38,25 @@
                     
                     <v-row>
                         <v-col cols="4">
-                            <v-text-field v-model="user.firstName" label="First Name" v-bind="{rounded: !edit, readonly: !edit, outlined: edit}">
+                            <v-text-field color="accent" v-model="user.firstName" label="First Name" v-bind="{rounded: !edit, readonly: !edit, outlined: edit}">
                             </v-text-field>
                         </v-col>
                         <v-col cols="4">
-                            <v-text-field v-bind="{rounded: !edit, readonly: !edit, outlined: edit}" v-model="user.lastName" label="Last Name">
+                            <v-text-field color="accent" v-bind="{rounded: !edit, readonly: !edit, outlined: edit}" v-model="user.lastName" label="Last Name">
                             </v-text-field>
                         </v-col>
                         <v-col cols="4">
                             <div  :id="user.company + 'text'">
-                                <v-text-field rounded readonly v-model="user.company" label="Company">
+                                <v-text-field color="accent" rounded readonly v-model="user.company" label="Company">
                                 </v-text-field>
                             </div>
                             <div :id="user.company" style="display:none">
-                                <v-autocomplete v-bind="{outlined: edit}" label="Company" color="black" cache-items hide-no-data
+                                <v-autocomplete v-bind="{outlined: edit}" label="Company" color="accent" cache-items hide-no-data
                                     :items="companyFinal"
                                     :search-input.sync="searchComp"
                                     v-model="user.company"
                                     :id="user.company + 'focus'"
+
                                 >
 							</v-autocomplete>
                             </div>
@@ -63,31 +64,32 @@
                     </v-row>
                     <v-row>
                         <v-col cols="4">
-                            <v-text-field v-bind="{rounded: !edit, readonly: !edit, outlined: edit}" label="Email" v-model="user.email">
+                            <v-text-field color="accent" v-bind="{rounded: !edit, readonly: !edit, outlined: edit}" label="Email" v-model="user.email">
                             </v-text-field>
                         </v-col>
                         <v-col cols="4">
                             <div :id="user.access + 'text'">
-                                <v-text-field rounded readonly v-model="user.access" label="Access">
+                                <v-text-field color="accent" rounded readonly v-model="user.access" label="Access">
                                 </v-text-field>
                             </div>
                             <div style="display: none" :id="user.access">
                                 <v-select outlined label="Access" :items="options" v-model="user.access" 
                                     v-on:focus="getOptions"
                                     :id="user.access + 'focus'"
+                                    color="accent"
                                 >
                                 </v-select>
                             </div>
                         </v-col>
                         <v-col cols="4">
-                            <v-text-field v-bind="{rounded: !edit, readonly: !edit, outlined: edit}" label="Phone" v-model="user.phone">
+                            <v-text-field color="accent" v-bind="{rounded: !edit, readonly: !edit, outlined: edit}" label="Phone" v-model="user.phone">
                             </v-text-field>
                         </v-col>
                     </v-row>
                     <v-row class="d-flex justify-space-around">
-                        <v-checkbox v-bind="{readonly: !edit}" v-model="user.maySchedule" label="May Schedule Others">
+                        <v-checkbox v-bind="{readonly: !edit}" color="accent" v-model="user.maySchedule" label="May Schedule Others">
                         </v-checkbox>
-                        <v-checkbox v-bind="{readonly: !edit}" v-model="user.mayRemote" label="May Request Remote Hands">
+                        <v-checkbox color="accent" v-bind="{readonly: !edit}" v-model="user.mayRemote" label="May Request Remote Hands">
                         </v-checkbox>
                     </v-row>
                 </v-card>
