@@ -91,6 +91,24 @@
                 </v-card>
             </v-form>
         </v-dialog>
+        <v-dialog width="400px" v-model="dialogDel">
+            <v-card>
+                <v-card-title>
+                    Confirm Delete 
+                </v-card-title>
+                <v-card-text>
+                    You will no longer be able to add visit records for this visitor.  All previous visits will still be avaliable on the Record History tab.
+                </v-card-text>
+                <div class="d-flex justify-center">
+                    <v-btn class="warning mr-6 mb-6" v-on:click="confirmDel()" v-bind="{loading: delLoading}">
+                        Delete
+                    </v-btn>
+                    <v-btn class="info mb-6">
+                        Cancel
+                    </v-btn>
+                </div>
+            </v-card>
+        </v-dialog>
     </v-container>
 </template>
 <script>
@@ -99,7 +117,9 @@ export default {
     props: ['person'],
     data () {
         return {
+            delLoading: false,
             dialog: false,
+            dialogDel: false,
             companyFinal: [],
 			searchComp: null,
             user: {
@@ -132,9 +152,9 @@ export default {
             this.user.company = comp.get('name');
             this.user.email = this.person.get('email');
             this.user.access = this.person.get('access');
-            // this.user.phone = this.person.get('phone');
-            // this.user.maySchedule = this.person.get('maySchedule');
-            // this.user.mayRemote = this.person.get('mayRemote');
+            this.user.phone = this.person.get('phone');
+            this.user.maySchedule = this.person.get('maySchedule');
+            this.user.mayRemote = this.person.get('mayRemote');
             this.edit = false;
         },
         getOptions: function () {
@@ -177,7 +197,6 @@ export default {
             
             
             await this.person.save();
-            console.log(this.person.get('company'));
             this.cancelBtn();
         },
         cancelBtn: function () {
@@ -206,8 +225,18 @@ export default {
             del.style.display = 'none';
             this.reset();
         },
+        confirmDel: async function () {
+            this.person.set('deleted', true);
+            this.delLoading = true;
+            this.person.save().then(() => {
+                this.delLoading = false;
+            });
+            this.dialogDel = false;
+            this.cancelBtn();
+            this.dialog = false;
+        },
         deleteBtn: function () {
-            //confirm user delete, records still avaliable but new ones are not
+            this.dialogDel = true;
         },
         editBtn: function () {
             this.edit = true;
