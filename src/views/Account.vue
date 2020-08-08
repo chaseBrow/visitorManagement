@@ -68,7 +68,7 @@
 				<v-card-title>
 					Enter Password
 				</v-card-title>
-				<v-text-field type="password" v-bind="{error: error}" :error-messages="errorMsg" class="mx-5" outlined label="password" v-model="user.password">
+				<v-text-field type="password" v-bind="{error: error}" :error-messages="errorMsg" class="mx-5" outlined label="password" v-model="user.tempPassword">
 				</v-text-field>
 				<div class="d-flex justify-space-around">
 					<v-btn class="success mb-5" v-on:click="submitBtn()">
@@ -95,6 +95,7 @@ import Parse from 'parse'
 					username: "testUser",
 					tempEmail: null,
 					email: null,
+					tempPassword: null,
 					password: null,
 				},
 				edit: false,
@@ -114,17 +115,32 @@ import Parse from 'parse'
 				this.accessOptions = user.get("options");
 			},
 			addAccessOption: async function () {
+				this.dialog = true;
 				
 			},
-			deleteAccessOption: async function () {
-				
+			deleteAccessOption: async function (optionName) {
+				if (!this.user.password){
+					this.dialog = true;
+					this.$once('password-correct', function () {
+						Parse.User.logIn(this.user.username, this.user.password).then((user) => {
+							this.accessOptions.splice(this.accessOptions.indexOf(optionName), 1);
+							user.set('options', this.accessOptions);
+							user.save();
+						});
+					});
+				}
+				else{
+					Parse.User.logIn(this.user.username, this.user.password).then((user) => {
+						this.accessOptions.splice(this.accessOptions.indexOf(optionName), 1)
+						user.set('options', this.accessOptions);
+						user.save();
+					});
+				}
 			},
 			submitBtn: async function () {
-				await Parse.User.logIn(this.user.username, this.user.password).then((user) => {
-					user.set('username', this.user.tempName);
-					user.set('email', this.user.tempEmail);
-					user.save();
-
+				await Parse.User.logIn(this.user.username, this.user.tempPassword).then(() => {
+					this.user.password = this.user.tempPassword;
+					this.$emit('password-correct');
 					this.dialog = false;
 				}, (error) => {
 					this.error = true;
@@ -149,11 +165,33 @@ import Parse from 'parse'
 				cancel = document.getElementById('cancel');
 				cancel.style.display = 'inline';
 			},
-			saveBtn: function () {
+			saveBtn: async function () {
 				this.error = false;
 				this.errorMsg = null;
-				this.user.password = null;
-				this.dialog = true;
+				this.user.tempPassword = null;
+
+				if (!this.user.password) {
+					this.dialog = true;
+					this.$once('password-correct', function () {
+						Parse.User.logIn(this.user.username, this.user.password).then((user) => {
+						
+							user.set('username', this.user.tempName);
+							user.set('email', this.user.tempEmail);
+							user.save();
+							this.getUser();
+						});
+					});
+				}
+				else {
+					Parse.User.logIn(this.user.username, this.user.password).then((user) => {
+						user.set('username', this.user.tempName);
+						user.set('email', this.user.tempEmail);
+						user.save();
+						this.getUser();
+					});
+				}
+				
+				
 
 				this.edit = false;
 
