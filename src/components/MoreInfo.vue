@@ -38,7 +38,6 @@
                         <v-col cols="4">
                             <v-text-field v-model="user.firstName" label="First Name" v-bind="{rounded: !edit, readonly: !edit, outlined: edit}">
                             </v-text-field>
-                            <!-- remove rounded and readonly add outlined -->
                         </v-col>
                         <v-col cols="4">
                             <v-text-field v-bind="{rounded: !edit, readonly: !edit, outlined: edit}" v-model="user.lastName" label="Last Name">
@@ -114,7 +113,6 @@ export default {
                 mayRemote: null,
             },
             options: [],
-            access: null,
             edit: false,
         }
     },
@@ -124,10 +122,10 @@ export default {
 		}
     },
     beforeMount () {
-        this.setUser();
+        this.reset();
     },
     methods: {
-        setUser: function () {
+        reset: function () {
             let comp = this.person.get('company');
             this.user.firstName = this.person.get('firstName');
             this.user.lastName = this.person.get('lastName');
@@ -137,6 +135,7 @@ export default {
             this.user.phone = this.person.get('phone');
             this.user.maySchedule = this.person.get('maySchedule');
             this.user.mayRemote = this.person.get('mayRemote');
+            this.edit = false;
         },
         getOptions: function () {
             const user = Parse.User.current();
@@ -164,13 +163,37 @@ export default {
         },
         saveBtn: function () {
 
+
+            this.reset();
         },
         cancelBtn: function () {
-            console.log(this.dialog);
-            this.dialog = false;
+            let comp1, comp2, acc1, acc2, edit, save, cancel, del;
+
+            comp1 = document.getElementById(this.user.company + 'text');
+            comp1.style.display = 'inline';
+            comp2 = document.getElementById(this.user.company);
+            comp2.style.display= 'none';
+
+            acc1 = document.getElementById(this.user.access + 'text');
+            acc1.style.display = 'inline';
+            acc2 = document.getElementById(this.user.access);
+            acc2.style.display= 'none';
+
+            edit = document.getElementById('edit');
+            edit.style.display = 'inline';
+
+            save = document.getElementById('save');
+            save.style.display = 'none';
+
+            cancel = document.getElementById('cancel');
+            cancel.style.display = 'none';
+
+            del = document.getElementById('delete');
+            del.style.display = 'none';
+            this.reset();
         },
         deleteBtn: function () {
-
+            //confirm user delete, records still avaliable but new ones are not
         },
         editBtn: function () {
             this.edit = true;
