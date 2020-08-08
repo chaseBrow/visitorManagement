@@ -15,9 +15,9 @@ export default new Vuetify({
                 secondary: colors.grey,
                 accent: colors.deepOrange.lighten2,
                 error: '#FF5252',
-                info: '#2196F3',
-                success: '#4CAF50',
-                warning: '#FFC107',
+                info: colors.grey,
+                success: colors.green,
+                warning: colors.red,
                 background: colors.grey.lighten2,
             },
             dark: {
