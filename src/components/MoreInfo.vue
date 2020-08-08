@@ -1,6 +1,6 @@
 <template>
     <v-container class="ma-0 pa-0">
-        <v-dialog v-model="dialog" width="80%" class="primary">
+        <v-dialog v-bind="{persistent: edit}" v-model="dialog" width="80%" class="primary">
             <template v-slot:activator="{ on, attrs }">
                 <v-btn v-bind="attrs" v-on="on" class="accent">
                     <v-icon dense class="pr-1">mdi-card-account-details-outline</v-icon>
@@ -36,12 +36,12 @@
                     
                     <v-row>
                         <v-col cols="4">
-                            <v-text-field v-model="user.firstName" label="First Name" v-bind="{rounded: edit, readonly: edit, outlined: !edit}">
+                            <v-text-field v-model="user.firstName" label="First Name" v-bind="{rounded: !edit, readonly: !edit, outlined: edit}">
                             </v-text-field>
                             <!-- remove rounded and readonly add outlined -->
                         </v-col>
                         <v-col cols="4">
-                            <v-text-field v-bind="{rounded: edit, readonly: edit, outlined: !edit}" v-model="user.lastName" label="Last Name">
+                            <v-text-field v-bind="{rounded: !edit, readonly: !edit, outlined: edit}" v-model="user.lastName" label="Last Name">
                             </v-text-field>
                         </v-col>
                         <v-col cols="4">
@@ -50,10 +50,11 @@
                                 </v-text-field>
                             </div>
                             <div :id="user.company" style="display:none">
-                                <v-autocomplete v-bind="{outlined: !edit}" label="Company" color="black" cache-items hide-no-data
+                                <v-autocomplete v-bind="{outlined: edit}" label="Company" color="black" cache-items hide-no-data
                                     :items="companyFinal"
                                     :search-input.sync="searchComp"
                                     v-model="user.company"
+                                    :id="user.company + 'focus'"
                                 >
 							</v-autocomplete>
                             </div>
@@ -61,7 +62,7 @@
                     </v-row>
                     <v-row>
                         <v-col cols="4">
-                            <v-text-field v-bind="{rounded: edit, readonly: edit, outlined: !edit}" label="Email" v-model="user.email">
+                            <v-text-field v-bind="{rounded: !edit, readonly: !edit, outlined: edit}" label="Email" v-model="user.email">
                             </v-text-field>
                         </v-col>
                         <v-col cols="4">
@@ -72,19 +73,20 @@
                             <div style="display: none" :id="user.access">
                                 <v-select outlined label="Access" :items="options" v-model="user.access" 
                                     v-on:focus="getOptions"
+                                    :id="user.access + 'focus'"
                                 >
                                 </v-select>
                             </div>
                         </v-col>
                         <v-col cols="4">
-                            <v-text-field v-bind="{rounded: edit, readonly: edit, outlined: !edit}" label="Phone" v-model="user.phone">
+                            <v-text-field v-bind="{rounded: !edit, readonly: !edit, outlined: edit}" label="Phone" v-model="user.phone">
                             </v-text-field>
                         </v-col>
                     </v-row>
                     <v-row class="d-flex justify-space-around">
-                        <v-checkbox v-bind="{readonly: edit}" v-model="user.maySchedule" label="May Schedule Others">
+                        <v-checkbox v-bind="{readonly: !edit}" v-model="user.maySchedule" label="May Schedule Others">
                         </v-checkbox>
-                        <v-checkbox v-bind="{readonly: edit}" v-model="user.mayRemote" label="May Request Remote Hands">
+                        <v-checkbox v-bind="{readonly: !edit}" v-model="user.mayRemote" label="May Request Remote Hands">
                         </v-checkbox>
                     </v-row>
                 </v-card>
@@ -113,7 +115,7 @@ export default {
             },
             options: [],
             access: null,
-            edit: true,
+            edit: false,
         }
     },
     watch: {
@@ -122,17 +124,20 @@ export default {
 		}
     },
     beforeMount () {
-        let comp = this.person.get('company');
-        this.user.firstName = this.person.get('firstName');
-        this.user.lastName = this.person.get('lastName');
-        this.user.company = comp.get('name');
-        this.user.email = this.person.get('email');
-        this.user.access = this.person.get('access');
-        this.user.phone = this.person.get('phone');
-        this.user.maySchedule = this.person.get('maySchedule');
-        this.user.mayRemote = this.person.get('mayRemote');
+        this.setUser();
     },
     methods: {
+        setUser: function () {
+            let comp = this.person.get('company');
+            this.user.firstName = this.person.get('firstName');
+            this.user.lastName = this.person.get('lastName');
+            this.user.company = comp.get('name');
+            this.user.email = this.person.get('email');
+            this.user.access = this.person.get('access');
+            this.user.phone = this.person.get('phone');
+            this.user.maySchedule = this.person.get('maySchedule');
+            this.user.mayRemote = this.person.get('mayRemote');
+        },
         getOptions: function () {
             const user = Parse.User.current();
             this.options = user.get("options");
@@ -168,16 +173,22 @@ export default {
 
         },
         editBtn: function () {
-            this.edit = false;
-            let comp1, comp2, acc1, acc2, edit, save, cancel, del;
+            this.edit = true;
+            let comp1, comp2, acc1, acc2, acc3, edit, save, cancel, del;
+
             comp1 = document.getElementById(this.user.company + 'text');
             comp1.style.display = 'none';
             comp2 = document.getElementById(this.user.company);
             comp2.style.display= 'inline';
+            this.searchComp = this.user.company;
+
             acc1 = document.getElementById(this.user.access + 'text');
             acc1.style.display = 'none';
             acc2 = document.getElementById(this.user.access);
             acc2.style.display= 'inline';
+            acc3 = document.getElementById(this.user.access + 'focus');
+            acc3.focus();
+            acc3.blur();
 
             edit = document.getElementById('edit');
             edit.style.display = 'none';
@@ -190,7 +201,6 @@ export default {
 
             del = document.getElementById('delete');
             del.style.display = 'inline';
-
         },
     }
     
