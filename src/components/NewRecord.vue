@@ -45,7 +45,7 @@
 
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn v-on:click="cancel()" text>Cancel</v-btn>
+                        <v-btn v-on:click="cancel()" outlined color="info">Cancel</v-btn>
                         <v-btn v-on:click="saveRecord()" color="accent">Save</v-btn>
                     </v-card-actions>
 

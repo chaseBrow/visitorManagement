@@ -20,12 +20,12 @@
                             </v-btn>
                         </div>
                         <div id="save" style="display: none">
-                            <v-btn class="success" v-on:click="saveBtn()"> 
+                            <v-btn class="success mr-3" v-on:click="saveBtn()"> 
                                 Save
                             </v-btn>
                         </div>
                         <div id="cancel" style="display: none">
-                            <v-btn class="info" v-on:click="cancelBtn()">
+                            <v-btn class="mr-3" elevation="0" color="info" outlined="true" v-on:click="cancelBtn()">
                                 Cancel
                             </v-btn>
                         </div>
