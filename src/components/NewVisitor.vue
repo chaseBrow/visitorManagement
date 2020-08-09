@@ -149,7 +149,7 @@ export default {
             await person.save()
             this.clear();
             this.menu = !this.menu;
-            this.$emit("reload");
+            location.reload();
         }
     }
 }
