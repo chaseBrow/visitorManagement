@@ -63,5 +63,7 @@ export default {
 }
 </script>
 <style scoped>
-
+.v-list-item:hover {
+	background-color: #9e1f63;
+}
 </style>

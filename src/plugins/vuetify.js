@@ -13,7 +13,7 @@ export default new Vuetify({
             light: {
                 primary: '#FFFFFF', //
                 secondary: '#000000', //
-                accent: '#82004A',
+                accent: '#9e1f63',
                 error: '#FF5252',
                 info: colors.grey,
                 success: colors.green,
@@ -21,14 +21,14 @@ export default new Vuetify({
                 background: '#000000',
             },
             dark: {
-                primary: colors.blue,
-                secondary: colors.deepOrange,
-                accent: colors.lightGreen,
+                primary: '#000000',
+                secondary: '#FFFFFF',
+                accent: '#9e1f63',
                 error: '#FF5252',
-                info: '#2196F3',
-                success: '#4CAF50',
-                warning: '#FFC107',
-                background: '#0A162C',
+                info: colors.grey,
+                success: colors.green,
+                warning: colors.red,
+                background: '#FFFFFF',
             }},
         iconfont: 'md',
         icons: {

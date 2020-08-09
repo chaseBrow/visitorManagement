@@ -5,21 +5,21 @@
 				<v-container>	
 					<v-row class="align-start">
 						<v-col cols="2" class="pb-0">
-							<v-text-field label="First Name" outlined color="black"
+							<v-text-field label="First Name" outlined color="accent"
 								v-model="filterTerms.firstName"
 								v-on:input="filterPeople()"
 							>
 							</v-text-field>
 						</v-col>
 						<v-col cols="2" class="pb-0" >
-							<v-text-field  label="Last Name" outlined color="black"
+							<v-text-field  label="Last Name" outlined color="accent"
 								v-model="filterTerms.lastName"
 								v-on:input="filterPeople()"
 							>
 							</v-text-field>
 						</v-col>
 						<v-col cols="3" class="pb-0">
-							<v-autocomplete outlined label="Company" color="black" cache-items hide-no-data
+							<v-autocomplete outlined label="Company" color="accent" cache-items hide-no-data
 								:items="companyFinal"
       							:search-input.sync="searchComp"
 								v-model="filterTerms.company"
@@ -28,14 +28,14 @@
 							</v-autocomplete>
 						</v-col>
 						<v-col cols="3" class="pb-0">
-							<v-text-field label="Email" outlined color="black"
+							<v-text-field label="Email" outlined color="accent"
 								v-model="filterTerms.email"
 								v-on:input="filterPeople()"
 							>
 							</v-text-field>
 						</v-col>
 						<v-col cols="2" class="pb-0">
-							 <v-select label="Access" outlined color="black" :items="options" v-model="filterTerms.access" 
+							 <v-select label="Access" outlined color="accent" :items="options" v-model="filterTerms.access" 
 							 v-on:focus="getOptions" v-on:change="filterPeople()"
 							>
 							</v-select>
