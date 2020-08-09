@@ -7,26 +7,60 @@
             </v-btn>
         </template>
         <v-form>
-            <v-card class="secondary pa-4"> 
-                <v-text-field  label="First Name" outlined color="black" v-model="firstName">
-                </v-text-field>
-                <v-text-field  label="Last Name" outlined color="black" v-model="lastName">
-                </v-text-field>
-                <v-autocomplete outlined label="Company" color="black" cache-items hide-no-data
+            <v-card class="pa-4">
+                <v-row>
+                    <v-col cols="6">
+                        <v-text-field  label="First Name" outlined color="accent" v-model="visitor.firstName">
+                        </v-text-field>
+                    </v-col>
+                    <v-col cols="6">
+                        <v-text-field  label="Last Name" outlined color="accent" v-model="visitor.lastName">
+                        </v-text-field>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col cols="6">
+                        <v-autocomplete outlined label="Company" color="accent" cache-items hide-no-data
 								:items="companyFinal"
       							:search-input.sync="searchComp"
-								v-model="company"
-				>
-				</v-autocomplete>    
-                <v-text-field  label="Email" outlined color="black" v-model="email">  
-                </v-text-field>
-                <v-select label="Access" outlined color="black" :items="options" v-model="access" v-on:focus="getOptions">
-                </v-select>
-
+								v-model="visitor.company"
+                        >
+                        </v-autocomplete>  
+                    </v-col>
+                    <v-col cols="6">
+                        <v-text-field  label="Email" outlined color="accent" v-model="visitor.email">  
+                        </v-text-field>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col cols="6">
+                        <v-select label="Access" outlined color="accent" :items="options" v-model="visitor.access" v-on:focus="getOptions">
+                         </v-select>
+                    </v-col>
+                    <v-col cols="6">
+                        <v-text-field  label="Phone" outlined color="accent" v-model="visitor.phone">
+                        </v-text-field>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col cols="6">
+                        <v-checkbox color="accent" v-model="visitor.maySchedule" label="May Schedule Others">
+                        </v-checkbox>
+                    </v-col>
+                    <v-col cols="6">
+                        <v-checkbox color="accent" v-model="visitor.mayRemote" label="May Request Remote Hands">
+                        </v-checkbox>
+                    </v-col>
+                </v-row>
+        
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn v-on:click="clear" text>Clear</v-btn>
-                    <v-btn v-on:click="saveVisitor" color="primary">Save</v-btn>
+                    <v-btn class="mr-3" elevation="0" color="info" outlined v-on:click="clear()">
+                        Clear
+                    </v-btn>
+                    <v-btn class="success mr-3" v-on:click="saveVisitor()"> 
+                        Save
+                    </v-btn>
                 </v-card-actions>
             </v-card>
         </v-form>
@@ -38,13 +72,18 @@ export default {
     data() {
         return {
             options: [],
-            firstName: null,
-            lastName: null,
+            visitor: {
+                firstName: null,
+                lastName: null,
+                company: null,
+                email: null,
+                access: null,
+                phone: null,
+                maySchedule: null,
+                mayRemote: false,
+            },
             companyFinal: [],
             searchComp: null,
-            company: '',
-            email: null,
-            access: null,
             menu: false,
 
         }
@@ -80,31 +119,37 @@ export default {
             this.options = user.get("options");
         },
         clear: function () {
-            this.firstName = null;
-            this.lastName = null;
-            this.company = '';
-            this.email = null;
-            this.access = null;
-            this.clientID = null;
+            this.visitor.firstName = null;
+            this.visitor.lastName = null;
+            this.visitor.company = null;
+            this.visitor.email = null;
+            this.visitor.access = null;
+            this.visitor.phone = null;
+            this.visitor.maySchedule = null;
+            this.visitor.mayRemote = false;
         },
         saveVisitor: async function () {
             const Visitor = Parse.Object.extend("Visitor");
             let person = new Visitor();
 
             const compQuery = new Parse.Query(Parse.User);
-            compQuery.equalTo("name", this.company);
+            compQuery.equalTo("name", this.visitor.company);
             let comp = await compQuery.first();
 
-            person.set("firstName", this.firstName);
-            person.set("lastName", this.lastName);
+            person.set("firstName", this.visitor.firstName);
+            person.set("lastName", this.visitor.lastName);
             person.set("company", comp);
-            person.set("email", this.email);
-            person.set("access", this.access);
+            person.set("email", this.visitor.email);
+            person.set("access", this.visitor.access);
+            person.set("phone", this.visitor.phone);
+            person.set('maySchedule', this.visitor.maySchedule);
+            person.set('mayRemote', this.visitor.mayRemote);
 
             
             await person.save()
             this.clear();
             this.menu = !this.menu;
+            this.$emit("reload");
         }
     }
 }
