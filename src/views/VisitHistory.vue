@@ -76,6 +76,8 @@
                                                 clearable
                                                 v-on:input="filterRecords()"
                                                 color="white"
+                                                class="theme--dark"
+                                                id="xyz"
                                             >
                                             </v-text-field>
                                         </template>
@@ -101,6 +103,8 @@
                                                 clearable
                                                 v-on:input="filterRecords()"
                                                 color="white"
+                                                class="theme--dark"
+                                                id="zyx"
                                             >
                                             </v-text-field>
                                         </template>
@@ -278,6 +282,9 @@ export default {
             this.displayRecords();
         },
         filterRecords: function () {
+            document.getElementById('xyz').previousElementSibling.classList.add('theme--dark')
+            document.getElementById('zyx').previousElementSibling.classList.add('theme--dark')
+
             let list = this.recordsSorted.filter((item) => {
                 let first = true, last = true, comp = true, email = true, date = true;
                 if (this.filterTerms.firstName) {
@@ -349,11 +356,11 @@ export default {
                     }
                     else if ((this.sort % 3) == 1) {
                         asc.style.color = "grey";
-                        des.style.color = '#82004A';
+                        des.style.color = '#9e1f63';
                         this.sortRecords(undefined, "firstName", "des");
                     }
                     else {
-                        asc.style.color = '#82004A';
+                        asc.style.color = '#9e1f63';
                         des.style.color = "grey";
                         this.sortRecords(undefined, "firstName", "asc");
                     }
@@ -370,11 +377,11 @@ export default {
                     }
                     else if ((this.sort % 3) == 1) {
                         asc.style.color = "grey";
-                        des.style.color = '#82004A';
+                        des.style.color = '#9e1f63';
                         this.sortRecords(undefined, "lastName", "des");
                     }
                     else {
-                        asc.style.color = '#82004A';
+                        asc.style.color = '#9e1f63';
                         des.style.color = "grey";
                         this.sortRecords(undefined, "lastName", "asc");
                     }
@@ -390,11 +397,11 @@ export default {
                     }
                     else if ((this.sort % 3) == 1) {
                         asc.style.color = "grey";
-                        des.style.color = '#82004A';
+                        des.style.color = '#9e1f63';
                         this.sortRecords(undefined, "company", "des");
                     }
                     else {
-                        asc.style.color = '#82004A';
+                        asc.style.color = '#9e1f63';
                         des.style.color = "grey";
                         this.sortRecords(undefined, "company", "asc");
                     }
@@ -410,11 +417,11 @@ export default {
                     }
                     else if ((this.sort % 3) == 1) {
                         asc.style.color = "grey";
-                        des.style.color = '#82004A';
+                        des.style.color = '#9e1f63';
                         this.sortRecords(undefined, "email", "des");
                     }
                     else {
-                        asc.style.color = '#82004A';
+                        asc.style.color = '#9e1f63';
                         des.style.color = "grey";
                         this.sortRecords(undefined, "email", "asc");
                     }
@@ -430,11 +437,11 @@ export default {
                     }
                     else if ((this.sort % 3) == 1) {
                         asc.style.color = "grey";
-                        des.style.color = '#82004A';
+                        des.style.color = '#9e1f63';
                         this.sortRecords(undefined, "arrive", "des");
                     }
                     else {
-                        asc.style.color = '#82004A';
+                        asc.style.color = '#9e1f63';
                         des.style.color = "grey";
                         this.sortRecords(undefined, "arrive", "asc");
                     }
@@ -450,11 +457,11 @@ export default {
                     }
                     else if ((this.sort % 3) == 1) {
                         asc.style.color = "grey";
-                        des.style.color = '#82004A';
+                        des.style.color = '#9e1f63';
                         this.sortRecords(undefined, 'depart', 'des');
                     }
                     else {
-                        asc.style.color = '#82004A';
+                        asc.style.color = '#9e1f63';
                         des.style.color = "grey";
                         this.sortRecords(undefined, 'depart', 'asc');
                     }
@@ -669,14 +676,13 @@ export default {
 			});
 			this.companyFinal = [];
 			test.forEach( e =>{
-				this.companyFinal.push(e.get("name"));
+                this.companyFinal.push(e.get("name"));
 			})
 		},
     }
 };
 </script>
 <style scoped>
-
 .v-form.form {
     border-radius: 10px 10px 0px 0px;
     width: 100%;
