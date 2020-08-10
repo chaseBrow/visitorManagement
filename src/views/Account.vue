@@ -1,7 +1,7 @@
 <template>
   	<v-container>
     	<v-row>
-			<v-col cols="6" class="secondary" >
+			<v-col cols="6" class="pink" >
 				<v-row>
 					<span style="padding: 0px 0px 0px 20px; font-size: 32px; font-weight: bold;">Account Information</span>
 					<v-spacer></v-spacer>
@@ -23,11 +23,11 @@
 				</v-row>
 				<div>
 					<v-text-field label="Username" v-bind="{readonly: !edit, rounded: !edit, outlined: edit}" 
-						background-color="secondary" v-model="user.tempName" style="font-size: 18px"
+						v-model="user.tempName" style="font-size: 18px"
 					> 
 					</v-text-field>
 					<v-text-field label="Email" v-bind="{readonly: !edit, rounded: !edit, outlined: edit}" 
-						background-color="secondary" v-model="user.tempEmail" style="font-size: 18px"
+						 v-model="user.tempEmail" style="font-size: 18px"
 					> 
 					</v-text-field>
 				</div>
@@ -38,10 +38,46 @@
 				</v-row>
 			</v-col>
 			<v-col cols="4" class="red">
+				<v-list>
+					<v-toolbar class="secondary" style="font-weight: bold">
+						<v-toolbar-title class="white--text"> 
+							Access Options
+						</v-toolbar-title>
+						<v-spacer></v-spacer>
+						<v-btn fab x-small class="accent" v-on:click="addAccessOption()">
+							<v-icon>mdi-plus</v-icon>
+						</v-btn>
+					</v-toolbar>
+					<v-list-item v-for="option in accessOptions" :key="option">
+						<span>{{ option }}</span>
+						<v-spacer> </v-spacer>
+						<v-btn fab x-small class="accent" v-on:click="deleteAccessOption(option)">
+							<v-icon>mdi-minus</v-icon>
+						</v-btn>
+					</v-list-item>
+				</v-list>
 			</v-col>
     	</v-row>
 		<v-row>
 			<v-col cols="12" class="green">
+				<v-list>
+					<v-toolbar>
+						<div style="width: 25%">
+							Client Name
+						</div>
+						<div style="width: 25%">
+							Email
+						</div>
+						<div style="width: 25%">
+							Parent Company
+						</div>
+						<div style="width: 25%">
+							Password
+						</div>
+					</v-toolbar>
+					<v-list-item>
+					</v-list-item>
+				</v-list>
 			</v-col>
 		</v-row>
 
@@ -50,13 +86,31 @@
 				<v-card-title>
 					Enter Password
 				</v-card-title>
-				<v-text-field type="password" v-bind="{error: error}" :error-messages="errorMsg" class="mx-5" outlined label="password" v-model="user.password">
+				<v-text-field type="password" v-bind="{error: error}" :error-messages="errorMsg" class="mx-5" outlined label="password" v-model="user.tempPassword">
 				</v-text-field>
 				<div class="d-flex justify-space-around">
 					<v-btn class="success mb-5" v-on:click="submitBtn()">
 						Submit
 					</v-btn>
-					<v-btn class="accent mb-5" v-on:click="submitCancel()">
+					<v-btn class="accent mb-5" v-bind="{loading: cancelLoading}" v-on:click="submitCancel()">
+						Cancel
+					</v-btn>
+				</div>
+			</v-card>
+		</v-dialog>
+
+		<v-dialog v-model="accessDialog" persistent width="400px">
+			<v-card>
+				<v-card-title>
+					Enter Access Name
+				</v-card-title>
+				<v-text-field class="mx-5" outlined label="Name" v-model="newAccessOption">
+				</v-text-field>
+				<div class="d-flex justify-space-around">
+					<v-btn class="success mb-5" v-on:click="submitAccessBtn()">
+						Submit
+					</v-btn>
+					<v-btn class="accent mb-5" v-on:click="cancelAccessBtn()">
 						Cancel
 					</v-btn>
 				</div>
@@ -77,24 +131,115 @@ import Parse from 'parse'
 					username: "testUser",
 					tempEmail: null,
 					email: null,
+					tempPassword: null,
 					password: null,
 				},
 				edit: false,
 				dialog: false,
+				accessDialog: false,
 				error: false,
 				errorMsg: null,
+				accessOptions: [],
+				newAccessOption: null,
+				cancelLoading: false,
 			}
 		},
 		beforeMount () {
 			this.getUser();
+			this.getAccessOptions();
+			this.getClients();
 		},
 		methods: {
+			getClients: async function () {
+				const Clients = new Parse.Query(Parse.User);
+				Clients.equalTo('parentCompany', Parse.User.current());
+				let client = await Clients.first();
+				console.log(client.get('email'));
+				let clients = await Clients.find();
+				console.log(clients[0]);
+				console.log(clients[0].get('email'));
+				
+			},
+			getUser: function () {
+				let User = Parse.User.current();
+				this.user.tempName = User.get('username');
+				this.user.username = User.get('username');
+				this.user.tempEmail = User.get('email');
+				this.user.email = User.get('email');
+			},
+			getAccessOptions: async function () {
+				let user = Parse.User.current();
+				this.accessOptions = user.get("options");
+			},
+			submitAccessBtn: function () {
+				this.$emit("access-name");
+			},
+			cancelAccessBtn: function () {
+				this.newAccessOption = null;
+				this.accessDialog = false;
+			},
+			addAccessOption: function () {
+				if (!this.user.password){
+					this.dialog = true;
+					this.$once('password-correct', function () {
+						Parse.User.logIn(this.user.username, this.user.password).then((user) => {
+							this.accessDialog = true;
+							this.$once('access-name', function () {
+								if (this.newAccessOption) {
+									this.accessOptions.push(this.newAccessOption);
+									user.set('options', this.accessOptions);
+									user.save();
+								}
+								this.cancelAccessBtn();
+							});
+							this.getAccessOptions();
+						});
+					});
+				}
+				else{
+					Parse.User.logIn(this.user.username, this.user.password).then((user) => {
+						this.accessDialog = true;
+						this.$once('access-name', function () {
+							if (this.newAccessOption) {
+								this.accessOptions.push(this.newAccessOption);
+								user.set('options', this.accessOptions);
+								user.save();
+							}								
+							this.cancelAccessBtn();
+						});
+						
+						this.getAccessOptions();
+					});
+				}
+			},
+			deleteAccessOption: async function (optionName) {
+				if (!this.user.password){
+					this.dialog = true;
+					this.$once('password-correct', function () {
+						Parse.User.logIn(this.user.username, this.user.password).then((user) => {
+							let val = this.accessOptions.indexOf(optionName);
+							if (val !== -1) {
+								this.accessOptions.splice(val, 1);
+								user.set('options', this.accessOptions);
+								user.save();
+							}
+							this.getAccessOptions();
+						});
+					});
+				}
+				else{
+					Parse.User.logIn(this.user.username, this.user.password).then((user) => {
+						this.accessOptions.splice(this.accessOptions.indexOf(optionName), 1)
+						user.set('options', this.accessOptions);
+						user.save();
+						this.getAccessOptions();
+					});
+				}
+			},
 			submitBtn: async function () {
-				await Parse.User.logIn(this.user.username, this.user.password).then((user) => {
-					user.set('username', this.user.tempName);
-					user.set('email', this.user.tempEmail);
-					user.save();
-
+				await Parse.User.logIn(this.user.username, this.user.tempPassword).then(() => {
+					this.user.password = this.user.tempPassword;
+					this.$emit('password-correct');
 					this.dialog = false;
 				}, (error) => {
 					this.error = true;
@@ -104,7 +249,12 @@ import Parse from 'parse'
 			submitCancel: function () {
 				this.user.tempName = this.user.username;
 				this.user.tempEmail = this.user.email;
+				this.user.tempPassword = null;
+				this.error = false;
+				this.errorMsg = null;
 				this.dialog = false;
+				this.cancelLoading = true;
+				location.reload();
 			},
 			editBtn: function () {
 				this.edit = true;
@@ -119,11 +269,33 @@ import Parse from 'parse'
 				cancel = document.getElementById('cancel');
 				cancel.style.display = 'inline';
 			},
-			saveBtn: function () {
+			saveBtn: async function () {
 				this.error = false;
 				this.errorMsg = null;
-				this.user.password = null;
-				this.dialog = true;
+				this.user.tempPassword = null;
+
+				if (!this.user.password) {
+					this.dialog = true;
+					this.$once('password-correct', function () {
+						Parse.User.logIn(this.user.username, this.user.password).then((user) => {
+						
+							user.set('username', this.user.tempName);
+							user.set('email', this.user.tempEmail);
+							user.save();
+							this.getUser();
+						});
+					});
+				}
+				else {
+					Parse.User.logIn(this.user.username, this.user.password).then((user) => {
+						user.set('username', this.user.tempName);
+						user.set('email', this.user.tempEmail);
+						user.save();
+						this.getUser();
+					});
+				}
+				
+				
 
 				this.edit = false;
 
@@ -154,15 +326,6 @@ import Parse from 'parse'
 
 				this.getUser();
 			},
-			getUser: function () {
-				let User = Parse.User.current();
-				this.user.tempName = User.get('username');
-				this.user.username = User.get('username');
-				this.user.tempEmail = User.get('email');
-				this.user.email = User.get('email');
-				
-			}
-
 		}
   	};
 </script>
