@@ -74,7 +74,7 @@
 					<v-btn class="success mb-5" v-on:click="submitBtn()">
 						Submit
 					</v-btn>
-					<v-btn class="accent mb-5" v-on:click="submitCancel()">
+					<v-btn class="accent mb-5" v-bind="{loading: cancelLoading}" v-on:click="submitCancel()">
 						Cancel
 					</v-btn>
 				</div>
@@ -123,6 +123,7 @@ import Parse from 'parse'
 				errorMsg: null,
 				accessOptions: [],
 				newAccessOption: null,
+				cancelLoading: false,
 			}
 		},
 		beforeMount () {
@@ -148,13 +149,11 @@ import Parse from 'parse'
 						Parse.User.logIn(this.user.username, this.user.password).then((user) => {
 							this.accessDialog = true;
 							this.$once('access-name', function () {
-								console.log("test 1");
-								this.accessOptions.push(this.newAccessOption);
-								user.set('options', this.accessOptions);
 								if (this.newAccessOption) {
+									this.accessOptions.push(this.newAccessOption);
+									user.set('options', this.accessOptions);
 									user.save();
 								}
-								else console.log('fake entry');
 								this.cancelAccessBtn();
 							});
 							this.getAccessOptions();
@@ -165,10 +164,11 @@ import Parse from 'parse'
 					Parse.User.logIn(this.user.username, this.user.password).then((user) => {
 						this.accessDialog = true;
 						this.$once('access-name', function () {
-							console.log('test 2');
-							this.accessOptions.push(this.newAccessOption);
-							user.set('options', this.accessOptions);
-							user.save();
+							if (this.newAccessOption) {
+								this.accessOptions.push(this.newAccessOption);
+								user.set('options', this.accessOptions);
+								user.save();
+							}								
 							this.cancelAccessBtn();
 						});
 						
@@ -181,9 +181,12 @@ import Parse from 'parse'
 					this.dialog = true;
 					this.$once('password-correct', function () {
 						Parse.User.logIn(this.user.username, this.user.password).then((user) => {
-							this.accessOptions.splice(this.accessOptions.indexOf(optionName), 1);
-							user.set('options', this.accessOptions);
-							user.save();
+							let val = this.accessOptions.indexOf(optionName);
+							if (val !== -1) {
+								this.accessOptions.splice(val, 1);
+								user.set('options', this.accessOptions);
+								user.save();
+							}
 							this.getAccessOptions();
 						});
 					});
@@ -214,6 +217,8 @@ import Parse from 'parse'
 				this.error = false;
 				this.errorMsg = null;
 				this.dialog = false;
+				this.cancelLoading = true;
+				location.reload();
 			},
 			editBtn: function () {
 				this.edit = true;
