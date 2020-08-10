@@ -44,7 +44,7 @@
 							Access Options
 						</v-toolbar-title>
 						<v-spacer></v-spacer>
-						<v-btn fab x-small class="accent">
+						<v-btn fab x-small class="accent" v-on:click="addAccessOption()">
 							<v-icon>mdi-plus</v-icon>
 						</v-btn>
 					</v-toolbar>
@@ -81,6 +81,24 @@
 			</v-card>
 		</v-dialog>
 
+		<v-dialog v-model="accessDialog" persistent width="400px">
+			<v-card>
+				<v-card-title>
+					Enter Access Name
+				</v-card-title>
+				<v-text-field class="mx-5" outlined label="Name" v-model="newAccessOption">
+				</v-text-field>
+				<div class="d-flex justify-space-around">
+					<v-btn class="success mb-5" v-on:click="submitAccessBtn()">
+						Submit
+					</v-btn>
+					<v-btn class="accent mb-5" v-on:click="cancelAccessBtn()">
+						Cancel
+					</v-btn>
+				</div>
+			</v-card>
+		</v-dialog>
+
 
   	</v-container>
 </template>
@@ -100,9 +118,11 @@ import Parse from 'parse'
 				},
 				edit: false,
 				dialog: false,
+				accessDialog: false,
 				error: false,
 				errorMsg: null,
 				accessOptions: [],
+				newAccessOption: null,
 			}
 		},
 		beforeMount () {
@@ -114,9 +134,47 @@ import Parse from 'parse'
 				let user = Parse.User.current();
 				this.accessOptions = user.get("options");
 			},
-			addAccessOption: async function () {
-				this.dialog = true;
-				
+			submitAccessBtn: function () {
+				this.$emit("access-name");
+			},
+			cancelAccessBtn: function () {
+				this.newAccessOption = null;
+				this.accessDialog = false;
+			},
+			addAccessOption: function () {
+				if (!this.user.password){
+					this.dialog = true;
+					this.$once('password-correct', function () {
+						Parse.User.logIn(this.user.username, this.user.password).then((user) => {
+							this.accessDialog = true;
+							this.$once('access-name', function () {
+								console.log("test 1");
+								this.accessOptions.push(this.newAccessOption);
+								user.set('options', this.accessOptions);
+								if (this.newAccessOption) {
+									user.save();
+								}
+								else console.log('fake entry');
+								this.cancelAccessBtn();
+							});
+							this.getAccessOptions();
+						});
+					});
+				}
+				else{
+					Parse.User.logIn(this.user.username, this.user.password).then((user) => {
+						this.accessDialog = true;
+						this.$once('access-name', function () {
+							console.log('test 2');
+							this.accessOptions.push(this.newAccessOption);
+							user.set('options', this.accessOptions);
+							user.save();
+							this.cancelAccessBtn();
+						});
+						
+						this.getAccessOptions();
+					});
+				}
 			},
 			deleteAccessOption: async function (optionName) {
 				if (!this.user.password){
@@ -152,6 +210,9 @@ import Parse from 'parse'
 			submitCancel: function () {
 				this.user.tempName = this.user.username;
 				this.user.tempEmail = this.user.email;
+				this.user.tempPassword = null;
+				this.error = false;
+				this.errorMsg = null;
 				this.dialog = false;
 			},
 			editBtn: function () {
