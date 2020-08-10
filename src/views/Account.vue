@@ -39,8 +39,8 @@
 			</v-col>
 			<v-col cols="4" class="red">
 				<v-list>
-					<v-toolbar>
-						<v-toolbar-title> 
+					<v-toolbar class="secondary" style="font-weight: bold">
+						<v-toolbar-title class="white--text"> 
 							Access Options
 						</v-toolbar-title>
 						<v-spacer></v-spacer>
