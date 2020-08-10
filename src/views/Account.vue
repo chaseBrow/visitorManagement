@@ -60,6 +60,24 @@
     	</v-row>
 		<v-row>
 			<v-col cols="12" class="green">
+				<v-list>
+					<v-toolbar>
+						<div style="width: 25%">
+							Client Name
+						</div>
+						<div style="width: 25%">
+							Email
+						</div>
+						<div style="width: 25%">
+							Parent Company
+						</div>
+						<div style="width: 25%">
+							Password
+						</div>
+					</v-toolbar>
+					<v-list-item>
+					</v-list-item>
+				</v-list>
 			</v-col>
 		</v-row>
 
@@ -129,8 +147,26 @@ import Parse from 'parse'
 		beforeMount () {
 			this.getUser();
 			this.getAccessOptions();
+			this.getClients();
 		},
 		methods: {
+			getClients: async function () {
+				const Clients = new Parse.Query(Parse.User);
+				Clients.equalTo('parentCompany', Parse.User.current());
+				let client = await Clients.first();
+				console.log(client.get('email'));
+				let clients = await Clients.find();
+				console.log(clients[0]);
+				console.log(clients[0].get('email'));
+				
+			},
+			getUser: function () {
+				let User = Parse.User.current();
+				this.user.tempName = User.get('username');
+				this.user.username = User.get('username');
+				this.user.tempEmail = User.get('email');
+				this.user.email = User.get('email');
+			},
 			getAccessOptions: async function () {
 				let user = Parse.User.current();
 				this.accessOptions = user.get("options");
@@ -290,14 +326,6 @@ import Parse from 'parse'
 
 				this.getUser();
 			},
-			getUser: function () {
-				let User = Parse.User.current();
-				this.user.tempName = User.get('username');
-				this.user.username = User.get('username');
-				this.user.tempEmail = User.get('email');
-				this.user.email = User.get('email');
-			}
-
 		}
   	};
 </script>
