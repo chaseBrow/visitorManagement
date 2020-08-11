@@ -1,7 +1,7 @@
 <template>
-  	<v-container>
-    	<v-row>
-			<v-col cols="6" class="pink" >
+  	<v-container background fill-height fluid>
+    	<v-row class="mx-4" style="height: 30%">
+			<v-col cols="6" class="pink">
 				<v-row>
 					<span style="padding: 0px 0px 0px 20px; font-size: 32px; font-weight: bold;">Account Information</span>
 					<v-spacer></v-spacer>
@@ -37,9 +37,9 @@
 					</v-btn>
 				</v-row>
 			</v-col>
-			<v-col cols="4" class="red" style="height: 250px">
+			<v-col cols="4" class="red">
 				<v-toolbar class="secondary" style="font-weight: bold">
-					<v-toolbar-title class="white--text"> 
+					<v-toolbar-title class="primary--text"> 
 						Access Options
 					</v-toolbar-title>
 					<v-spacer></v-spacer>
@@ -47,7 +47,7 @@
 						<v-icon>mdi-plus</v-icon>
 					</v-btn>
 				</v-toolbar>
-				<v-list class="access">
+				<v-list class="access" style="max-height: 58%">
 					<v-list-item v-for="option in accessOptions" :key="option">
 						<span>{{ option }}</span>
 						<v-spacer> </v-spacer>
@@ -58,8 +58,8 @@
 				</v-list>
 			</v-col>
     	</v-row>
-		<v-row>
-			<v-col cols="12" class="green" >
+		<v-row class="mx-4" style="height: 65%">
+			<v-col cols="12" class="primary">
 				<v-toolbar>
 					<div style="width: 25%">
 						Client Name
@@ -74,8 +74,12 @@
 						Password
 					</div>
 				</v-toolbar>
-				<v-list class="client">
-					<v-list-item v-for="client in this.clients" :key="client.username">
+				<v-list class="client secondary">
+					<v-list-item v-for="client in clients" :key="client.username">
+						<span class="primary--text" style="width: 25%"> {{ client.get('name') }}</span>
+						<span class="primary--text" style="width: 25%"> {{ client.get('username') }}</span>
+						<span class="primary--text" style="width: 25%"> {{"null"}} </span>
+						<v-btn> Test </v-btn>
 					</v-list-item>
 				</v-list>
 			</v-col>
@@ -161,10 +165,6 @@ import Parse from 'parse'
 				const Clients = new Parse.Query(Parse.User);
 				Clients.equalTo('parentCompany', Parse.User.current());
 				this.clients = await Clients.find();
-				this.clients.forEach((client) => {
-					this.client.name = client.get('name');
-					this.client.username = client.get("username");
-				});
 			},
 			getUser: function () {
 				let User = Parse.User.current();
@@ -337,7 +337,6 @@ import Parse from 'parse'
 </script>
 <style scoped>
 .v-list.access {
-	height: 160px;
 	overflow-y: scroll;
 }
 .v-list.client {

@@ -2,7 +2,7 @@
     <v-menu left v-model="menu" :close-on-content-click="false">
         <template v-slot:activator="{ on, attrs }">
             <v-btn class="mr-2 accent" v-bind="attrs" v-on="on">
-                <span class="mr-1 white--text">New Vistor</span>
+                <span class="mr-1 primary--text">New Vistor</span>
                 <v-icon color="white">mdi-account-plus</v-icon>
             </v-btn>
         </template>
