@@ -10,7 +10,7 @@
 			<NewVisitor v-if="['home'].indexOf($route.name) <= -1">
 			</NewVisitor>
 			<v-btn class="accent" v-if="['home'].indexOf($route.name) <= -1" v-on:click="logOut()">
-				<span class="mr-1 white--text">Sign Out</span>
+				<span class="mr-1 primary--text">Sign Out</span>
 				<v-icon color="white">mdi-exit-to-app</v-icon>
 			</v-btn>
 			<Login v-if="['home'].indexOf($route.name) == 0">
@@ -21,10 +21,10 @@
 			<v-list>
 				<v-list-item v-for="link in links" :key="link.text" :to="link.route" >
 					<v-list-item-action>
-						<v-icon class="white--text">{{ link.icon }}</v-icon>
+						<v-icon class="primary--text">{{ link.icon }}</v-icon>
 					</v-list-item-action>
 					<v-list-item-content>
-						<v-list-item-title class="white--text">
+						<v-list-item-title class="primary--text">
 							{{ link.text }}
 						</v-list-item-title>
 					</v-list-item-content>

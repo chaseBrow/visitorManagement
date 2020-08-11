@@ -189,12 +189,12 @@
                 <v-list style="padding: 16px" class="secondary"> 
                     <v-list-item v-for="record in recordsDisplay" :key="record.email + record.arrive" style="padding: 0px">
                         <v-row style="padding: 0px 16px 0px 16px">
-                            <span class="white--text" style="width: 10%">{{ record.firstName }}</span>
-                            <span class="white--text" style="width: 15%">{{ record.lastName }}</span>
-                            <span class="white--text" style="width: 20%">{{ record.company }}</span>
-                            <span class="white--text" style="width: 25%">{{ record.email }}</span>
-                            <span class="white--text" style="width: 15%">{{ record.arrive }}</span>
-                            <span class="white--text" style="width: 15%">{{ record.depart }}</span> 
+                            <span class="primary--text" style="width: 10%">{{ record.firstName }}</span>
+                            <span class="primary--text" style="width: 15%">{{ record.lastName }}</span>
+                            <span class="primary--text" style="width: 20%">{{ record.company }}</span>
+                            <span class="primary--text" style="width: 25%">{{ record.email }}</span>
+                            <span class="primary--text" style="width: 15%">{{ record.arrive }}</span>
+                            <span class="primary--text" style="width: 15%">{{ record.depart }}</span> 
                         </v-row>
                     </v-list-item>
                 </v-list>

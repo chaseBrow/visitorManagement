@@ -47,24 +47,24 @@
 
 			<v-col cols="12" class="primary" style="border-radius: 0px 0px 10px 10px; height: fit-content">
 				<v-toolbar class="secondary">
-					<span class="white--text" style="width: 10%;">First Name</span>
-					<span class="white--text" style="width: 10%">Last Name</span>
-					<span class="white--text" style="width: 10%">Company</span>
-					<span class="white--text" style="width: 25%">Email</span>
-					<span class="white--text" style="width: 10%">Access</span>
+					<span class="primary--text" style="width: 10%;">First Name</span>
+					<span class="primary--text" style="width: 10%">Last Name</span>
+					<span class="primary--text" style="width: 10%">Company</span>
+					<span class="primary--text" style="width: 25%">Email</span>
+					<span class="primary--text" style="width: 10%">Access</span>
 					<v-spacer></v-spacer>
-					<v-btn class="accent white--text" v-on:click="recentVisitors()"> 
+					<v-btn class="accent primary--text" v-on:click="recentVisitors()"> 
 						Recent Visitors
 					</v-btn>
 				</v-toolbar>
 
 				<v-list dense class="data secondary">
 					<v-list-item v-for="person in filteredPeople" :key="person.email">
-						<span class="white--text" style="width: 10%">{{ person.get('firstName') }}</span>
-                    	<span class="white--text" style="width: 10%">{{ person.get('lastName') }}</span>
-                        <span class="white--text" style="width: 10%; font-size: 0.95rem">{{ getCompanyName(person) }}</span>
-						<span class="white--text" style="width: 25%; font-size: 0.9rem">{{ person.get('email') }}</span>
-                        <span class="white--text" style="width: 10%; font-size: 0.9rem">{{ person.get('access') }}</span>
+						<span class="primary--text" style="width: 10%">{{ person.get('firstName') }}</span>
+                    	<span class="primary--text" style="width: 10%">{{ person.get('lastName') }}</span>
+                        <span class="primary--text" style="width: 10%; font-size: 0.95rem">{{ getCompanyName(person) }}</span>
+						<span class="primary--text" style="width: 25%; font-size: 0.9rem">{{ person.get('email') }}</span>
+                        <span class="primary--text" style="width: 10%; font-size: 0.9rem">{{ person.get('access') }}</span>
                         
 						<v-spacer></v-spacer>
 						<div :id="person.get('email') + 'visit'" :key="person.get('email') + 'visit'">
@@ -234,14 +234,6 @@ export default {
 </script>
 
 <style scoped>
-.text-field {
-	background-color: lightcoral;
-	color: greenyellow;
-	border-color: greenyellow;
-	outline-color: hotpink;
-	flood-color: indigo;
-}
-
 .v-list-item:hover {
 	background: #454545;
 } 

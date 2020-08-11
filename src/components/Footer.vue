@@ -18,7 +18,7 @@
                 {{ link }}
             </v-btn>
             <v-col
-                    class="secondary lighten-2 py-4 text-center white--text"
+                    class="secondary lighten-2 py-4 text-center primary--text"
                     cols="12"
             >
                 {{ new Date().getFullYear() }} — <strong>Chase Brown</strong>

@@ -1,10 +1,10 @@
 <template>
-  	<v-container>
-    	<v-row>
-			<v-col cols="6" class="pink" >
+  	<v-container background fill-height fluid>
+    	<v-row class="mx-4 d-flex justify-center primary" style="height: 35%">
+			<v-col cols="6" class="primary" style="height: 100%">
 				<v-row>
 					<span style="padding: 0px 0px 0px 20px; font-size: 32px; font-weight: bold;">Account Information</span>
-					<v-spacer></v-spacer>
+					<span style="width: 20%"></span>
 					<div id="edit">
 						<v-btn class="mr-6 mt-2 accent" v-on:click="editBtn()">
 							Edit
@@ -37,19 +37,19 @@
 					</v-btn>
 				</v-row>
 			</v-col>
-			<v-col cols="4" class="red">
-				<v-list>
-					<v-toolbar class="secondary" style="font-weight: bold">
-						<v-toolbar-title class="white--text"> 
-							Access Options
-						</v-toolbar-title>
-						<v-spacer></v-spacer>
-						<v-btn fab x-small class="accent" v-on:click="addAccessOption()">
-							<v-icon>mdi-plus</v-icon>
-						</v-btn>
-					</v-toolbar>
-					<v-list-item v-for="option in accessOptions" :key="option">
-						<span>{{ option }}</span>
+			<v-col cols="4" class="primary" style="height: 100%">
+				<v-toolbar class="secondary" style="font-weight: bold; height: 30%">
+					<v-toolbar-title class="primary--text"> 
+						Access Options
+					</v-toolbar-title>
+					<v-spacer></v-spacer>
+					<v-btn fab x-small class="accent" v-on:click="addAccessOption()">
+						<v-icon>mdi-plus</v-icon>
+					</v-btn>
+				</v-toolbar>
+				<v-list class="access secondary" style="height: 70%; border-radius: 0">
+					<v-list-item v-for="option in accessOptions" :key="option" style="border-radius: 0">
+						<span class="primary--text">{{ option }}</span>
 						<v-spacer> </v-spacer>
 						<v-btn fab x-small class="accent" v-on:click="deleteAccessOption(option)">
 							<v-icon>mdi-minus</v-icon>
@@ -58,24 +58,29 @@
 				</v-list>
 			</v-col>
     	</v-row>
-		<v-row>
-			<v-col cols="12" class="green">
-				<v-list>
-					<v-toolbar>
-						<div style="width: 25%">
-							Client Name
-						</div>
-						<div style="width: 25%">
-							Email
-						</div>
-						<div style="width: 25%">
-							Parent Company
-						</div>
-						<div style="width: 25%">
-							Password
-						</div>
-					</v-toolbar>
-					<v-list-item>
+		<v-row class="mx-4" style="height: 65%">
+			<v-col cols="12" class="primary" style="height: 100%">
+				<v-toolbar class="secondary primary--text" style="height: 13%">
+					<div style="width: 25%">
+						Client Name
+					</div>
+					<div style="width: 25%">
+						Client Username
+					</div>
+					<div style="width: 25%">
+						Email
+					</div>
+					<!-- <div style="width: 25%">
+						Password
+					</div> -->
+				</v-toolbar>
+				<v-list class="client secondary" style="border-radius: 0; height: 87%">
+					<v-list-item v-for="client in clients" :key="client.username">
+						<span class="primary--text" style="width: 25%"> {{ client.get('name') }}</span>
+						<span class="primary--text" style="width: 25%"> {{ client.get('username') }}</span>
+						<span class="primary--text" style="width: 25%"> {{"null"}} </span>
+						<v-spacer></v-spacer>
+						<v-btn class="accent">Reset Password</v-btn>
 					</v-list-item>
 				</v-list>
 			</v-col>
@@ -134,6 +139,13 @@ import Parse from 'parse'
 					tempPassword: null,
 					password: null,
 				},
+				client: {
+					name: null,
+					username: null,
+					email: "null",
+					resPassword: false,
+				},
+				clients: [],
 				edit: false,
 				dialog: false,
 				accessDialog: false,
@@ -153,12 +165,7 @@ import Parse from 'parse'
 			getClients: async function () {
 				const Clients = new Parse.Query(Parse.User);
 				Clients.equalTo('parentCompany', Parse.User.current());
-				let client = await Clients.first();
-				console.log(client.get('email'));
-				let clients = await Clients.find();
-				console.log(clients[0]);
-				console.log(clients[0].get('email'));
-				
+				this.clients = await Clients.find();
 			},
 			getUser: function () {
 				let User = Parse.User.current();
@@ -330,5 +337,13 @@ import Parse from 'parse'
   	};
 </script>
 <style scoped>
-
+.v-list.access {
+	overflow-y: scroll;
+}
+.v-list.client {
+	overflow-y: scroll;
+}
+.v-list-item:hover {
+	background: #454545;
+} 
 </style>
