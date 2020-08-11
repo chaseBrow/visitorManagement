@@ -1,7 +1,7 @@
 <template>
   	<v-container background fill-height fluid>
-    	<v-row class="mx-4" style="height: 30%">
-			<v-col cols="6" class="pink">
+    	<v-row class="mx-4 d-flex justify-center primary" style="height: 35%">
+			<v-col cols="6" class="primary" style="height: 100%">
 				<v-row>
 					<span style="padding: 0px 0px 0px 20px; font-size: 32px; font-weight: bold;">Account Information</span>
 					<v-spacer></v-spacer>
@@ -37,8 +37,8 @@
 					</v-btn>
 				</v-row>
 			</v-col>
-			<v-col cols="4" class="red">
-				<v-toolbar class="secondary" style="font-weight: bold">
+			<v-col cols="4" class="primary" style="height: 100%">
+				<v-toolbar class="secondary" style="font-weight: bold; height: 30%">
 					<v-toolbar-title class="primary--text"> 
 						Access Options
 					</v-toolbar-title>
@@ -47,9 +47,9 @@
 						<v-icon>mdi-plus</v-icon>
 					</v-btn>
 				</v-toolbar>
-				<v-list class="access" style="max-height: 58%">
-					<v-list-item v-for="option in accessOptions" :key="option">
-						<span>{{ option }}</span>
+				<v-list class="access secondary" style="height: 70%">
+					<v-list-item v-for="option in accessOptions" :key="option" style="border-radius: 0">
+						<span class="primary--text">{{ option }}</span>
 						<v-spacer> </v-spacer>
 						<v-btn fab x-small class="accent" v-on:click="deleteAccessOption(option)">
 							<v-icon>mdi-minus</v-icon>
@@ -60,7 +60,7 @@
     	</v-row>
 		<v-row class="mx-4" style="height: 65%">
 			<v-col cols="12" class="primary">
-				<v-toolbar>
+				<v-toolbar class="secondary primary--text">
 					<div style="width: 25%">
 						Client Name
 					</div>
@@ -74,7 +74,7 @@
 						Password
 					</div>
 				</v-toolbar>
-				<v-list class="client secondary">
+				<v-list class="client secondary" style="border-radius: 0">
 					<v-list-item v-for="client in clients" :key="client.username">
 						<span class="primary--text" style="width: 25%"> {{ client.get('name') }}</span>
 						<span class="primary--text" style="width: 25%"> {{ client.get('username') }}</span>
