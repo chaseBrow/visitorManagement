@@ -129,6 +129,32 @@
 				</div>
 			</v-card>
 		</v-dialog>
+
+		<v-dialog v-model="clientDialog" persistent width="400px">
+			<v-card>
+				<v-card-title>
+					Enter Client Information
+				</v-card-title>
+				<v-text-field class="mx-5" outlined label="Name" v-model="newClient.name">
+				</v-text-field>
+				<v-text-field class="mx-5" outlined label="Username" v-model="newClient.username">
+				</v-text-field>
+				<v-text-field class="mx-5" outlined label="Email" v-model="newClient.email">
+				</v-text-field>
+				<!-- backend job for sending email to client -->
+				<div class="d-flex justify-space-around">
+					<v-btn class="success mb-5" v-on:click="submitClientBtn()">
+						Submit
+					</v-btn>
+					<v-btn class="accent mb-5" v-on:click="cancelClientBtn()">
+						Cancel
+					</v-btn>
+				</div>
+			</v-card>
+		</v-dialog>
+
+
+
 		
 		<v-alert class="alert" dismissible type="error" prominent v-model="resPassErr">
 			An error occurred while resetting password.<br/> Please contact support.
@@ -136,9 +162,6 @@
 		<v-alert class="alert" dismissible type="success" prominent v-model="resPassSuc">
 			An email has been sent to the account's inbox.
 		</v-alert>
-
-
-
   	</v-container>
 </template>
 
@@ -155,10 +178,16 @@ import Parse from 'parse'
 					tempPassword: null,
 					password: null,
 				},
+				newClient: {
+					name: null,
+					username: null,
+					email: null,
+				},
 				clients: [],
 				edit: false,
 				dialog: false,
 				accessDialog: false,
+				clientDialog: false,
 				error: false,
 				errorMsg: null,
 				accessOptions: [],
@@ -177,7 +206,7 @@ import Parse from 'parse'
 			getClients: async function () {
 				const Clients = new Parse.Query(Parse.User);
 				Clients.equalTo('parentCompany', Parse.User.current());
-				Clients.notEqualTo('deleted', true);
+				// Clients.notEqualTo('deleted', true);
 				this.clients = await Clients.find();
 			},
 			getUser: function () {
@@ -198,26 +227,14 @@ import Parse from 'parse'
 					console.log(error);
 					this.resPassErr = true;
 				});
+				//this is also a backend job
 			},
 			deleteClient: async function (client) {
-				if (!this.user.password){
-					this.dialog = true;
-					this.$once('password-correct', function () {
-						console.log(client);
-						client.set('deleted', true);
-						console.log("client deleted");
-						client.save().then(() => {
-							this.getClients();
-						});
-					});
-				}
-				else{
-					console.log(client);
-					client.set('deleted', true);
-					await client.save();
-					console.log("client deleted");
-					this.getClients();
-				}
+				console.log(client);
+				//this is a backend job
+			},
+			addClient: async function () {
+				this.clientDialog = true;
 			},
 			submitAccessBtn: function () {
 				this.$emit("access-name");
@@ -386,6 +403,7 @@ import Parse from 'parse'
 }
 ::-webkit-scrollbar-thumb {
 	background: #9e1f63;
+	border-radius: 8px;
 }
 .v-list.access {
 	overflow-y: scroll;
