@@ -32,7 +32,7 @@
 					</v-text-field>
 				</div>
 				<v-row>
-					<v-btn class="ml-6 accent">
+					<v-btn class="ml-6 accent" v-on:click="resetPassword(user.email)">
 						Reset Password
 					</v-btn>
 				</v-row>
@@ -121,6 +121,14 @@
 				</div>
 			</v-card>
 		</v-dialog>
+		
+		<v-alert class="alert" dismissible type="error" prominent v-model="resPassErr">
+			An error occurred while resetting password.<br/> Please contact support.
+		</v-alert>
+		<v-alert class="alert" dismissible type="success" prominent v-model="resPassSuc">
+			An email has been sent to the account's inbox.
+		</v-alert>
+
 
 
   	</v-container>
@@ -139,12 +147,6 @@ import Parse from 'parse'
 					tempPassword: null,
 					password: null,
 				},
-				client: {
-					name: null,
-					username: null,
-					email: "null",
-					resPassword: false,
-				},
 				clients: [],
 				edit: false,
 				dialog: false,
@@ -154,6 +156,8 @@ import Parse from 'parse'
 				accessOptions: [],
 				newAccessOption: null,
 				cancelLoading: false,
+				resPassErr: false,
+				resPassSuc: false,
 			}
 		},
 		beforeMount () {
@@ -177,6 +181,16 @@ import Parse from 'parse'
 			getAccessOptions: async function () {
 				let user = Parse.User.current();
 				this.accessOptions = user.get("options");
+			},
+			resetPassword: function (email) {
+				console.log(email);
+				this.resPassSuc = true;
+				// Parse.User.requestPasswordReset(email).then(() => {
+				// 	this.resPassSuc = true;
+				// }, (error) => {
+				// 	console.log(error);
+				// 	this.resPassErr = true;
+				// });
 			},
 			submitAccessBtn: function () {
 				this.$emit("access-name");
@@ -346,4 +360,11 @@ import Parse from 'parse'
 .v-list-item:hover {
 	background: #454545;
 } 
+.alert {
+	position: fixed;
+	width: 500px;
+	top: 8%;
+	left: 50%;
+	margin-left: -250px;
+}
 </style>
