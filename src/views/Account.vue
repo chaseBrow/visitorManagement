@@ -43,7 +43,7 @@
 						Access Options
 					</v-toolbar-title>
 					<v-spacer></v-spacer>
-					<v-btn fab x-small class="accent" v-on:click="addAccessOption()">
+					<v-btn fab x-small class="accent mr-3" v-on:click="addAccessOption()">
 						<v-icon>mdi-plus</v-icon>
 					</v-btn>
 				</v-toolbar>
@@ -70,6 +70,11 @@
 					<div style="width: 25%">
 						Email
 					</div>
+					<v-spacer>
+					</v-spacer>
+					<v-btn fab x-small class="accent mr-3">
+						<v-icon>mdi-plus</v-icon>
+					</v-btn>
 					<!-- <div style="width: 25%">
 						Password
 					</div> -->
@@ -81,6 +86,9 @@
 						<span class="primary--text" style="width: 25%"> {{"null"}} </span>
 						<v-spacer></v-spacer>
 						<v-btn class="accent">Reset Password</v-btn>
+						<v-btn fab x-small class="accent ml-5" v-on:click="deleteClient(client)">
+							<v-icon>mdi-minus</v-icon>
+						</v-btn>
 					</v-list-item>
 				</v-list>
 			</v-col>
@@ -183,14 +191,23 @@ import Parse from 'parse'
 				this.accessOptions = user.get("options");
 			},
 			resetPassword: function (email) {
-				console.log(email);
-				this.resPassSuc = true;
-				// Parse.User.requestPasswordReset(email).then(() => {
-				// 	this.resPassSuc = true;
-				// }, (error) => {
-				// 	console.log(error);
-				// 	this.resPassErr = true;
-				// });
+				Parse.User.requestPasswordReset(email).then(() => {
+					this.resPassSuc = true;
+				}, (error) => {
+					console.log(error);
+					this.resPassErr = true;
+				});
+			},
+			deleteClient: async function (client) {
+				if (!this.user.password){
+					this.dialog = true;
+					this.$once('password-correct', function () {
+						client.set('deleted', true);
+					});
+				}
+				else{
+					client.set('deleted', true);
+				}
 			},
 			submitAccessBtn: function () {
 				this.$emit("access-name");
@@ -351,6 +368,15 @@ import Parse from 'parse'
   	};
 </script>
 <style scoped>
+::-webkit-scrollbar {
+  width: 12px;
+}
+::-webkit-scrollbar-track {
+	background: black;
+}
+::-webkit-scrollbar-thumb {
+	background: #9e1f63;
+}
 .v-list.access {
 	overflow-y: scroll;
 }
