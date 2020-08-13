@@ -177,6 +177,7 @@ import Parse from 'parse'
 			getClients: async function () {
 				const Clients = new Parse.Query(Parse.User);
 				Clients.equalTo('parentCompany', Parse.User.current());
+				Clients.notEqualTo('deleted', true);
 				this.clients = await Clients.find();
 			},
 			getUser: function () {
@@ -202,11 +203,20 @@ import Parse from 'parse'
 				if (!this.user.password){
 					this.dialog = true;
 					this.$once('password-correct', function () {
+						console.log(client);
 						client.set('deleted', true);
+						console.log("client deleted");
+						client.save().then(() => {
+							this.getClients();
+						});
 					});
 				}
 				else{
+					console.log(client);
 					client.set('deleted', true);
+					await client.save();
+					console.log("client deleted");
+					this.getClients();
 				}
 			},
 			submitAccessBtn: function () {
