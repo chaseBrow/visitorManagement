@@ -237,14 +237,31 @@ import Parse from 'parse'
 			addClient: async function () {
 				if (!this.user.password){
 					this.dialog = true;
-					this.$once('password-correct', function () {
+					this.$once('password-correct', async function () {
 						this.clientDialog = true;
+						this.$once('new-client', async function () {
+							let client = new Parse.User();
+							client.set("username", this.newClient.username);
+							client.set("name", this.newClient.name);
+							client.set("email", this.newClient.email);
+							client.set("password", "password");
+							client.set("parent", Parse.User.current());
+							await client.signUp();
+						});
+						
+						this.getClients();
 					});
 				}
 				else{
 					this.clientDialog = true;
-					this.$once('access-name', function () {
-						new Parse.Object("client");
+					this.$once('new-client', async function () {
+						let client = new Parse.User();
+						client.set("username", this.newClient.username);
+						client.set("name", this.newClient.name);
+						client.set("email", this.newClient.email);
+						client.set("password", "password");
+						client.set("parent", Parse.User.current());
+						await client.signUp();
 					});
 					
 					this.getClients();
@@ -253,10 +270,16 @@ import Parse from 'parse'
 			submitClientBtn: function () {
 				this.$emit("new-client");
 				this.clientDialog = false;
+				this.newClient.email = null;
+				this.newClient.username = null;
+				this.newClient.name = null;
 				console.log("submit");
 			},
 			cancelClientBtn: function () {
 				this.clientDialog = false;
+				this.newClient.email = null;
+				this.newClient.username = null;
+				this.newClient.name = null;
 				console.log("cancel");
 			},
 			submitAccessBtn: function () {
