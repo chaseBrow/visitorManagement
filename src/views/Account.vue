@@ -273,11 +273,9 @@ import Parse from 'parse'
 						Parse.User.logIn(this.user.username, this.user.password).then((user) => {
 							this.accessDialog = true;
 							this.$once('access-name', function () {
-								if (this.newAccessOption) {
-									this.accessOptions.push(this.newAccessOption);
-									user.set('options', this.accessOptions);
-									user.save();
-								}
+								this.accessOptions.push(this.newAccessOption);
+								user.set('options', this.accessOptions);
+								user.save();
 								this.cancelAccessBtn();
 							});
 							this.getAccessOptions();
@@ -288,11 +286,9 @@ import Parse from 'parse'
 					Parse.User.logIn(this.user.username, this.user.password).then((user) => {
 						this.accessDialog = true;
 						this.$once('access-name', function () {
-							if (this.newAccessOption) {
 								this.accessOptions.push(this.newAccessOption);
 								user.set('options', this.accessOptions);
-								user.save();
-							}								
+								user.save();							
 							this.cancelAccessBtn();
 						});
 						
