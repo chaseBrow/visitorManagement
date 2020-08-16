@@ -72,7 +72,7 @@
 					</div>
 					<v-spacer>
 					</v-spacer>
-					<v-btn fab x-small class="accent mr-3">
+					<v-btn fab x-small class="accent mr-3" v-on:click="addClient()">
 						<v-icon>mdi-plus</v-icon>
 					</v-btn>
 					<!-- <div style="width: 25%">
@@ -208,6 +208,7 @@ import Parse from 'parse'
 				Clients.equalTo('parentCompany', Parse.User.current());
 				// Clients.notEqualTo('deleted', true);
 				this.clients = await Clients.find();
+				console.log(this.clients);
 			},
 			getUser: function () {
 				let User = Parse.User.current();
@@ -234,7 +235,29 @@ import Parse from 'parse'
 				//this is a backend job
 			},
 			addClient: async function () {
-				this.clientDialog = true;
+				if (!this.user.password){
+					this.dialog = true;
+					this.$once('password-correct', function () {
+						this.clientDialog = true;
+					});
+				}
+				else{
+					this.clientDialog = true;
+					this.$once('access-name', function () {
+						new Parse.Object("client");
+					});
+					
+					this.getClients();
+				}
+			},
+			submitClientBtn: function () {
+				this.$emit("new-client");
+				this.clientDialog = false;
+				console.log("submit");
+			},
+			cancelClientBtn: function () {
+				this.clientDialog = false;
+				console.log("cancel");
 			},
 			submitAccessBtn: function () {
 				this.$emit("access-name");
