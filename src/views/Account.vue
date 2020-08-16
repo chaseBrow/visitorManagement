@@ -172,7 +172,7 @@ import Parse from 'parse'
 			return {
 				user: {
 					tempName: null,
-					username: "testUser",
+					username: null,
 					tempEmail: null,
 					email: null,
 					tempPassword: null,
@@ -238,6 +238,8 @@ import Parse from 'parse'
 				if (!this.user.password){
 					this.dialog = true;
 					this.$once('password-correct', async function () {
+						let temporaryLoginUsername = this.user.username;
+						let temporaryLoginPassword = this.user.password;
 						this.clientDialog = true;
 						this.$once('new-client', async function () {
 							let client = new Parse.User();
@@ -246,13 +248,18 @@ import Parse from 'parse'
 							client.set("email", this.newClient.email);
 							client.set("password", "password");
 							client.set("parent", Parse.User.current());
-							await client.signUp();
+							client.signUp().then(async function() {
+								await Parse.User.logIn(temporaryLoginUsername, temporaryLoginPassword)
+								console.log(Parse.User.current());
+							});
 						});
 						
 						this.getClients();
 					});
 				}
 				else{
+					let temporaryLoginUsername = this.user.username;
+					let temporaryLoginPassword = this.user.password;
 					this.clientDialog = true;
 					this.$once('new-client', async function () {
 						let client = new Parse.User();
@@ -260,8 +267,11 @@ import Parse from 'parse'
 						client.set("name", this.newClient.name);
 						client.set("email", this.newClient.email);
 						client.set("password", "password");
-						client.set("parent", Parse.User.current());
-						await client.signUp();
+						client.set("parentCompany", Parse.User.current());
+						client.signUp().then(async function() {
+							await Parse.User.logIn(temporaryLoginUsername, temporaryLoginPassword)
+							console.log(Parse.User.current());
+						});
 					});
 					
 					this.getClients();
