@@ -1,4 +1,11 @@
 <template>
+	<!-- 
+	Author: Chad Brown & Chase Brown
+	Created On: 08/02/2020
+	Updated By: Chad Brown & Chase Brown
+	Updated On: 08/17/2020
+	Description: This where the user can edit child clients and manage access options aswell as change personal info.
+	-->
   	<v-container background fill-height fluid>
     	<v-row class="mx-4 d-flex justify-center primary" style="height: 35%">
 			<v-col cols="6" class="primary" style="height: 100%">

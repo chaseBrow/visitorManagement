@@ -1,4 +1,10 @@
 <template>
+<!-- Author: Chad Brown & Chase Brown
+Created On: 05/23/1618
+Updated By: Chad Brown & Chase Brown
+Updated On: 08/03/2020
+Description: Visit History Page
+-->
     <v-container background fluid fill-height>
         <v-row class="mx-4" style="height: 100%">
             <v-form class="form primary">
