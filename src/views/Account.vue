@@ -249,7 +249,7 @@ import Parse from 'parse'
 							client.set("password", "password");
 							client.set("parentCompany", Parse.User.current());
 							console.log(this + " outside");
-							client.signUp().then(() =>  {
+							client.signUp().then(() => { 
 								Parse.User.logIn(temporaryLoginUsername, temporaryLoginPassword).then(() => {
 									console.log(Parse.User.current());
 									console.log(this + " first");
@@ -270,11 +270,12 @@ import Parse from 'parse'
 						client.set("email", this.newClient.email);
 						client.set("password", "password");
 						client.set("parentCompany", Parse.User.current());
-						client.signUp().then(async function() {
-							await Parse.User.logIn(temporaryLoginUsername, temporaryLoginPassword);
-							console.log(Parse.User.current());
-							console.log(this + " second");
-							this.getClients();
+						client.signUp().then(() => { 
+							Parse.User.logIn(temporaryLoginUsername, temporaryLoginPassword).then(() => {
+								console.log(Parse.User.current());
+								console.log(this + " first");
+								this.getClients();
+							})
 						});
 					});
 				}
