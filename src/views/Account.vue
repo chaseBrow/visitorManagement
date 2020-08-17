@@ -32,7 +32,7 @@
 					</v-text-field>
 				</div>
 				<v-row>
-					<v-btn class="ml-6 accent">
+					<v-btn class="ml-6 accent" v-on:click="resetPassword(user.email)">
 						Reset Password
 					</v-btn>
 				</v-row>
@@ -43,7 +43,7 @@
 						Access Options
 					</v-toolbar-title>
 					<v-spacer></v-spacer>
-					<v-btn fab x-small class="accent" v-on:click="addAccessOption()">
+					<v-btn fab x-small class="accent mr-3" v-on:click="addAccessOption()">
 						<v-icon>mdi-plus</v-icon>
 					</v-btn>
 				</v-toolbar>
@@ -70,6 +70,11 @@
 					<div style="width: 25%">
 						Email
 					</div>
+					<v-spacer>
+					</v-spacer>
+					<v-btn fab x-small class="accent mr-3" v-on:click="addClient()">
+						<v-icon>mdi-plus</v-icon>
+					</v-btn>
 					<!-- <div style="width: 25%">
 						Password
 					</div> -->
@@ -81,6 +86,9 @@
 						<span class="primary--text" style="width: 25%"> {{"null"}} </span>
 						<v-spacer></v-spacer>
 						<v-btn class="accent">Reset Password</v-btn>
+						<v-btn fab x-small class="accent ml-5" v-on:click="deleteClient(client)">
+							<v-icon>mdi-minus</v-icon>
+						</v-btn>
 					</v-list-item>
 				</v-list>
 			</v-col>
@@ -122,7 +130,38 @@
 			</v-card>
 		</v-dialog>
 
+		<v-dialog v-model="clientDialog" persistent width="400px">
+			<v-card>
+				<v-card-title>
+					Enter Client Information
+				</v-card-title>
+				<v-text-field class="mx-5" outlined label="Name" v-model="newClient.name">
+				</v-text-field>
+				<v-text-field class="mx-5" outlined label="Username" v-model="newClient.username">
+				</v-text-field>
+				<v-text-field class="mx-5" outlined label="Email" v-model="newClient.email">
+				</v-text-field>
+				<!-- backend job for sending email to client -->
+				<div class="d-flex justify-space-around">
+					<v-btn class="success mb-5" v-on:click="submitClientBtn()">
+						Submit
+					</v-btn>
+					<v-btn class="accent mb-5" v-on:click="cancelClientBtn()">
+						Cancel
+					</v-btn>
+				</div>
+			</v-card>
+		</v-dialog>
 
+
+
+		
+		<v-alert class="alert" dismissible type="error" prominent v-model="resPassErr">
+			An error occurred while resetting password.<br/> Please contact support.
+		</v-alert>
+		<v-alert class="alert" dismissible type="success" prominent v-model="resPassSuc">
+			An email has been sent to the account's inbox.
+		</v-alert>
   	</v-container>
 </template>
 
@@ -133,27 +172,29 @@ import Parse from 'parse'
 			return {
 				user: {
 					tempName: null,
-					username: "testUser",
+					username: null,
 					tempEmail: null,
 					email: null,
 					tempPassword: null,
 					password: null,
 				},
-				client: {
+				newClient: {
 					name: null,
 					username: null,
-					email: "null",
-					resPassword: false,
+					email: null,
 				},
 				clients: [],
 				edit: false,
 				dialog: false,
 				accessDialog: false,
+				clientDialog: false,
 				error: false,
 				errorMsg: null,
 				accessOptions: [],
 				newAccessOption: null,
 				cancelLoading: false,
+				resPassErr: false,
+				resPassSuc: false,
 			}
 		},
 		beforeMount () {
@@ -165,7 +206,9 @@ import Parse from 'parse'
 			getClients: async function () {
 				const Clients = new Parse.Query(Parse.User);
 				Clients.equalTo('parentCompany', Parse.User.current());
+				// Clients.notEqualTo('deleted', true);
 				this.clients = await Clients.find();
+				console.log(this.clients);
 			},
 			getUser: function () {
 				let User = Parse.User.current();
@@ -177,6 +220,79 @@ import Parse from 'parse'
 			getAccessOptions: async function () {
 				let user = Parse.User.current();
 				this.accessOptions = user.get("options");
+			},
+			resetPassword: function (email) {
+				Parse.User.requestPasswordReset(email).then(() => {
+					this.resPassSuc = true;
+				}, (error) => {
+					console.log(error);
+					this.resPassErr = true;
+				});
+				//this is also a backend job
+			},
+			deleteClient: async function (client) {
+				console.log(client);
+				//this is a backend job
+			},
+			addClient: async function () {
+				if (!this.user.password){
+					this.dialog = true;
+					this.$once('password-correct', async function () {
+						let temporaryLoginUsername = this.user.username;
+						let temporaryLoginPassword = this.user.password;
+						this.clientDialog = true;
+						this.$once('new-client', async function () {
+							let client = new Parse.User();
+							client.set("username", this.newClient.username);
+							client.set("name", this.newClient.name);
+							client.set("email", this.newClient.email);
+							client.set("password", "password");
+							client.set("parentCompany", Parse.User.current());
+							console.log(this + " outside");
+							client.signUp().then(() =>  {
+								Parse.User.logIn(temporaryLoginUsername, temporaryLoginPassword).then(() => {
+									console.log(Parse.User.current());
+									console.log(this + " first");
+									this.getClients();
+								})
+							});
+						});
+					});
+				}
+				else{
+					let temporaryLoginUsername = this.user.username;
+					let temporaryLoginPassword = this.user.password;
+					this.clientDialog = true;
+					this.$once('new-client', async function () {
+						let client = new Parse.User();
+						client.set("username", this.newClient.username);
+						client.set("name", this.newClient.name);
+						client.set("email", this.newClient.email);
+						client.set("password", "password");
+						client.set("parentCompany", Parse.User.current());
+						client.signUp().then(async function() {
+							await Parse.User.logIn(temporaryLoginUsername, temporaryLoginPassword);
+							console.log(Parse.User.current());
+							console.log(this + " second");
+							this.getClients();
+						});
+					});
+				}
+			},
+			submitClientBtn: function () {
+				this.$emit("new-client");
+				this.clientDialog = false;
+				this.newClient.email = null;
+				this.newClient.username = null;
+				this.newClient.name = null;
+				console.log("submit");
+			},
+			cancelClientBtn: function () {
+				this.clientDialog = false;
+				this.newClient.email = null;
+				this.newClient.username = null;
+				this.newClient.name = null;
+				console.log("cancel");
 			},
 			submitAccessBtn: function () {
 				this.$emit("access-name");
@@ -192,11 +308,9 @@ import Parse from 'parse'
 						Parse.User.logIn(this.user.username, this.user.password).then((user) => {
 							this.accessDialog = true;
 							this.$once('access-name', function () {
-								if (this.newAccessOption) {
-									this.accessOptions.push(this.newAccessOption);
-									user.set('options', this.accessOptions);
-									user.save();
-								}
+								this.accessOptions.push(this.newAccessOption);
+								user.set('options', this.accessOptions);
+								user.save();
 								this.cancelAccessBtn();
 							});
 							this.getAccessOptions();
@@ -207,11 +321,9 @@ import Parse from 'parse'
 					Parse.User.logIn(this.user.username, this.user.password).then((user) => {
 						this.accessDialog = true;
 						this.$once('access-name', function () {
-							if (this.newAccessOption) {
 								this.accessOptions.push(this.newAccessOption);
 								user.set('options', this.accessOptions);
-								user.save();
-							}								
+								user.save();							
 							this.cancelAccessBtn();
 						});
 						
@@ -337,6 +449,16 @@ import Parse from 'parse'
   	};
 </script>
 <style scoped>
+::-webkit-scrollbar {
+  width: 12px;
+}
+::-webkit-scrollbar-track {
+	background: black;
+}
+::-webkit-scrollbar-thumb {
+	background: #9e1f63;
+	border-radius: 8px;
+}
 .v-list.access {
 	overflow-y: scroll;
 }
@@ -346,4 +468,11 @@ import Parse from 'parse'
 .v-list-item:hover {
 	background: #454545;
 } 
+.alert {
+	position: fixed;
+	width: 500px;
+	top: 8%;
+	left: 50%;
+	margin-left: -250px;
+}
 </style>
