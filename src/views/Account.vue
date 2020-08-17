@@ -247,14 +247,16 @@ import Parse from 'parse'
 							client.set("name", this.newClient.name);
 							client.set("email", this.newClient.email);
 							client.set("password", "password");
-							client.set("parent", Parse.User.current());
-							client.signUp().then(async function() {
-								await Parse.User.logIn(temporaryLoginUsername, temporaryLoginPassword)
-								console.log(Parse.User.current());
+							client.set("parentCompany", Parse.User.current());
+							console.log(this + " outside");
+							client.signUp().then(() =>  {
+								Parse.User.logIn(temporaryLoginUsername, temporaryLoginPassword).then(() => {
+									console.log(Parse.User.current());
+									console.log(this + " first");
+									this.getClients();
+								})
 							});
 						});
-						
-						this.getClients();
 					});
 				}
 				else{
@@ -269,12 +271,12 @@ import Parse from 'parse'
 						client.set("password", "password");
 						client.set("parentCompany", Parse.User.current());
 						client.signUp().then(async function() {
-							await Parse.User.logIn(temporaryLoginUsername, temporaryLoginPassword)
+							await Parse.User.logIn(temporaryLoginUsername, temporaryLoginPassword);
 							console.log(Parse.User.current());
+							console.log(this + " second");
+							this.getClients();
 						});
 					});
-					
-					this.getClients();
 				}
 			},
 			submitClientBtn: function () {
