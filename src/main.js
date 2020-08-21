@@ -4,13 +4,13 @@ import router from "./router";
 import store from "./store";
 import vuetify from './plugins/vuetify';
 import Parse from 'parse';
-import AsyncComputed from 'vue-async-computed'
 
-Parse.initialize("visitorManagement");
-Parse.serverURL = "https://visitor-management-parse.herokuapp.com/parse";
+Parse.initialize("fda647fd8cc2b83ce84a557d3c95086c");
+Parse.serverURL = "https://visitormanagement-5676.nodechef.com/parse";
+console.log(Parse);
+console.log(Parse.User.current());
 
 Vue.config.productionTip = false;
-Vue.use(AsyncComputed);
 
 new Vue({
   router,
