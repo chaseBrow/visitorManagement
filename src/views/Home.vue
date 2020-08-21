@@ -1,6 +1,12 @@
 <template>
-    <v-container>
-        <v-card class="elevation-12">
+    <v-container fluid fill-height class="pa-0">
+		<v-row class="top">
+		</v-row>
+		<v-row>
+		</v-row>
+
+
+        <!-- <v-card class="elevation-12">
 			<v-toolbar color="primary" dark flat>
 				<v-toolbar-title>
 					Login form
@@ -27,7 +33,7 @@
 				<v-spacer></v-spacer>
 				<v-btn color="primary" v-on:click="login()">Login</v-btn>
 			</v-card-actions>
-		</v-card>
+		</v-card> -->
     </v-container>
 </template>
 <script>
@@ -50,5 +56,9 @@ export default {
 </script>
 
 <style scoped>
-
+.top {
+	height: 100%;
+	width: 100%;
+	background: linear-gradient(225deg, rgba(93,18,58,1) 0%, rgba(158,31,99,0.59) 100%);
+}
 </style>
