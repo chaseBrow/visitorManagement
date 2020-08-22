@@ -27,3 +27,11 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+nodechef
+
+npm install -g nodechef-cli
+
+nc login
+
+nc deploy --ccode -i visitormanagement
