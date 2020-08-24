@@ -81,17 +81,25 @@ export default {
     methods: {
         setArrived: async function () {
             this.status = 'Arrived';
-            this.statIcon = 'Arrived';
             this.arrivelTime = this.toTime(this.getDate());
 
+            // An alternative to all of the following code is just this.saveRecord(); but
+            // that method runs slower because this.saveRecords(); performs many unecessary tasks
+            this.statIcon = 'Arrived';
             this.record.set("status", this.status);
             this.record.set("arrive", this.getDate());
             await this.record.save();
         },
-        setDeparted: function () {
+        setDeparted: async function () {
             this.status = 'Departed';
             this.departureTime = this.toTime(this.getDate());
-            this.saveRecord();
+
+            // An alternative to all of the following code is just this.saveRecord(); but
+            // that method runs slower because this.saveRecords(); performs many unecessary tasks
+            this.statIcon = 'Departed';
+            this.record.set("status", this.status);
+            this.record.set("depart", this.getDate());
+            await this.record.save();
         },
         visitStatus: function () {
             this.status = this.select;
