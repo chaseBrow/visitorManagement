@@ -1,9 +1,9 @@
 <template>
     <v-container class="ma-0 pa-0">
-        <v-btn v-if="statIcon == 'Expected'" fab x-small class="expected">
+        <v-btn v-if="statIcon == 'Expected'" fab x-small class="expected" v-on:click="setArrived()">
             <v-icon>mdi-clock-time-eight-outline</v-icon>
         </v-btn>
-        <v-btn v-else-if="statIcon == 'Arrived'" fab x-small class="arrived">
+        <v-btn v-else-if="statIcon == 'Arrived'" fab x-small class="arrived" v-on:click="setDeparted()">
             <v-icon>mdi-login</v-icon>
         </v-btn>
         <v-btn v-else-if="statIcon == 'Departed'" fab x-small class="departed">
@@ -79,6 +79,16 @@ export default {
         this.newRecord();
     },
     methods: {
+        setArrived: function () {
+            this.status = 'Arrived';
+            this.arrivalTime = this.toTime(this.getDate());
+            this.saveRecord();
+        },
+        setDeparted: function () {
+            this.status = 'Departed';
+            this.departureTime = this.toTime(this.getDate());
+            this.saveRecord();
+        },
         visitStatus: function () {
             this.status = this.select;
             if (this.status == 'Arrived') {
