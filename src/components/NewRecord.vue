@@ -79,10 +79,14 @@ export default {
         this.newRecord();
     },
     methods: {
-        setArrived: function () {
+        setArrived: async function () {
             this.status = 'Arrived';
-            this.arrivalTime = this.toTime(this.getDate());
-            this.saveRecord();
+            this.statIcon = 'Arrived';
+            this.arrivelTime = this.toTime(this.getDate());
+
+            this.record.set("status", this.status);
+            this.record.set("arrive", this.getDate());
+            await this.record.save();
         },
         setDeparted: function () {
             this.status = 'Departed';
