@@ -86,6 +86,7 @@ export default {
             // An alternative to all of the following code is just this.saveRecord(); but
             // that method runs slower because this.saveRecords(); performs many unecessary tasks
             this.statIcon = 'Arrived';
+            this.options = ["Departed","Delete"];
             this.record.set("status", this.status);
             this.record.set("arrive", this.getDate());
             await this.record.save();
@@ -97,6 +98,7 @@ export default {
             // An alternative to all of the following code is just this.saveRecord(); but
             // that method runs slower because this.saveRecords(); performs many unecessary tasks
             this.statIcon = 'Departed';
+            this.options = ["Arrived","Expected"];
             this.record.set("status", this.status);
             this.record.set("depart", this.getDate());
             await this.record.save();
