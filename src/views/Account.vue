@@ -101,7 +101,7 @@
 			</v-col>
 		</v-row>
 
-		<v-dialog v-model="dialog" persistent width="400px" @keydown.enter="submitBtn()">
+		<v-dialog v-model="dialog" persistent width="400px" @keydown.enter="submitBtn()" @keydown.esc="submitCancel()">
 			<v-card>
 				<v-card-title>
 					Enter Password
@@ -119,7 +119,7 @@
 			</v-card>
 		</v-dialog>
 
-		<v-dialog v-model="accessDialog" persistent width="400px">
+		<v-dialog v-model="accessDialog" persistent width="400px" @keydown.enter="submitAccessBtn()" @keydown.esc="cancelAccessBtn()">
 			<v-card>
 				<v-card-title>
 					Enter Access Name
