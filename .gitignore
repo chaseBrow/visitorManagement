@@ -12,6 +12,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 __nc_ccode__visitormanagement.json
+__nc_statics__visitormanagement.json
 
 # Editor directories and files
 .idea
