@@ -2,6 +2,7 @@
     <v-container>
         <v-card class="elevation-12">
 			<v-toolbar color="primary" dark flat>
+				<v-btn class="red" v-on:click="TEST()">TEST</v-btn>
 				<v-toolbar-title>
 					Login form
 				</v-toolbar-title>
@@ -41,6 +42,10 @@ export default {
 	},
 	
     methods: {
+		TEST: async function () {
+			fetch("https://visitormanagement-5676.nodechef.com/parse/", {credentials: 'include'});
+		},
+
         login: async function () {
 			await Parse.User.logIn(this.username, this.password);
 			this.$router.push("dashboard");
