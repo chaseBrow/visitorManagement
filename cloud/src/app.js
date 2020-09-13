@@ -1,5 +1,3 @@
-
-const express = require("express");
-const app = express();
-
-console.log("hello my name is chase");
+app.get("/", (req, res) => {
+    res.status(200).send("Hello my name is bobby");
+}); 

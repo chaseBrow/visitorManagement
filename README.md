@@ -32,6 +32,6 @@ nodechef
 
 npm install -g nodechef-cli
 
-nc login
+nc login -em rappybrown@gmail.com -pw 123@rroW
 
 nc deploy --ccode -i visitormanagement
