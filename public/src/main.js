@@ -7,8 +7,6 @@ import Parse from 'parse';
 
 Parse.initialize("fda647fd8cc2b83ce84a557d3c95086c");
 Parse.serverURL = "https://visitormanagement-5676.nodechef.com/parse";
-console.log(Parse);
-console.log(Parse.User.current());
 
 Vue.config.productionTip = false;
 

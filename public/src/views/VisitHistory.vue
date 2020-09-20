@@ -297,11 +297,9 @@ export default {
                     first =  item.firstName.toLowerCase().includes(this.filterTerms.firstName.toLowerCase());
                 }
                 if (this.filterTerms.lastName) {
-                    console.log(this.filterTerms.lastName);
                     last = item.lastName.toLowerCase().includes(this.filterTerms.lastName.toLowerCase());
                 }
                 if (this.filterTerms.company) {
-                    console.log(this.filterTerms.company);
                     comp = item.company.toLowerCase().includes(this.filterTerms.company.toLowerCase());
                 }
                 if (this.filterTerms.email) {
