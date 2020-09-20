@@ -5,8 +5,6 @@
 	Updated On: 08/17/2020
 	Description: This where the user can edit child clients and manage access options aswell as change personal info.
 -->
-
-
 <template>
   	<v-container background fill-height fluid>
     	<v-row class="mx-4 d-flex justify-center primary" style="height: 35%">
@@ -32,13 +30,13 @@
 				</v-row>
 				<v-row style="height: 60px">
 					<v-text-field label="Username" v-bind="{readonly: !edit, rounded: !edit, outlined: edit}" 
-						v-model="user.tempName" style="font-size: 16px, padding: 0, margin: 0"
+						v-model="user.tempName" color="accent" style="font-size: 16px"
 					> 
 					</v-text-field>
 				</v-row>
 				<v-row style="height: 60px">
 					<v-text-field label="Email" v-bind="{readonly: !edit, rounded: !edit, outlined: edit}" 
-						 v-model="user.tempEmail" style="font-size: 16px"
+						 v-model="user.tempEmail" color="accent" style="font-size: 16px"
 					> 
 					</v-text-field>
 				</v-row>
@@ -163,10 +161,6 @@
 				</div>
 			</v-card>
 		</v-dialog>
-
-
-
-		
 		<v-alert class="alert" dismissible type="error" prominent v-model="resPassErr">
 			An error occurred while resetting password.<br/> Please contact support.
 		</v-alert>
