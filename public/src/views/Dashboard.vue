@@ -1,8 +1,10 @@
-Author: Chase Brown
-Created On:
-Updated By:
-Updated On:
-Description: 
+<!-- 
+	Author: Chase Brown
+	Created On: 07/26/2020
+	Updated By: Chad Brown & Chase Brown
+	Updated On: 08/17/2020
+	Description: This where the user can edit child clients and manage access options aswell as change personal info.
+-->
 <template>
 	<v-container fluid fill-height background>
 		<v-row class="mx-4" style="height: fit-content">

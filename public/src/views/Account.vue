@@ -1,17 +1,17 @@
-<template>
-	<!-- 
+<!-- 
 	Author: Chad Brown & Chase Brown
 	Created On: 08/02/2020
 	Updated By: Chad Brown & Chase Brown
 	Updated On: 08/17/2020
 	Description: This where the user can edit child clients and manage access options aswell as change personal info.
-	-->
+-->
+<template>
   	<v-container background fill-height fluid>
     	<v-row class="mx-4 d-flex justify-center primary" style="height: 35%">
 			<v-col cols="6" class="primary" style="height: 100%">
 				<v-row>
 					<span style="padding: 0px 0px 0px 20px; font-size: 32px; font-weight: bold;">Account Information</span>
-					<span style="width: 20%"></span>
+					<v-spacer> </v-spacer>
 					<div id="edit">
 						<v-btn class="mr-6 mt-2 accent" v-on:click="editBtn()">
 							Edit
@@ -28,16 +28,18 @@
 						</v-btn>
 					</div>
 				</v-row>
-				<div>
+				<v-row style="height: 60px">
 					<v-text-field label="Username" v-bind="{readonly: !edit, rounded: !edit, outlined: edit}" 
-						v-model="user.tempName" style="font-size: 18px"
+						v-model="user.tempName" color="accent" style="font-size: 16px"
 					> 
 					</v-text-field>
+				</v-row>
+				<v-row style="height: 60px">
 					<v-text-field label="Email" v-bind="{readonly: !edit, rounded: !edit, outlined: edit}" 
-						 v-model="user.tempEmail" style="font-size: 18px"
+						 v-model="user.tempEmail" color="accent" style="font-size: 16px"
 					> 
 					</v-text-field>
-				</div>
+				</v-row>
 				<v-row>
 					<v-btn class="ml-6 accent" v-on:click="resetPassword(user.email)">
 						Reset Password
@@ -65,7 +67,7 @@
 				</v-list>
 			</v-col>
     	</v-row>
-		<v-row class="mx-4" style="height: 65%">
+		<v-row class="mx-4" style="height: 100%">
 			<v-col cols="12" class="primary" style="height: 100%">
 				<v-toolbar class="secondary primary--text" style="height: 13%">
 					<div style="width: 25%">
@@ -159,10 +161,6 @@
 				</div>
 			</v-card>
 		</v-dialog>
-
-
-
-		
 		<v-alert class="alert" dismissible type="error" prominent v-model="resPassErr">
 			An error occurred while resetting password.<br/> Please contact support.
 		</v-alert>
@@ -215,7 +213,6 @@ import Parse from 'parse'
 				Clients.equalTo('parentCompany', Parse.User.current());
 				// Clients.notEqualTo('deleted', true);
 				this.clients = await Clients.find();
-				console.log(this.clients);
 			},
 			getUser: function () {
 				let User = Parse.User.current();
