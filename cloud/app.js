@@ -1,4 +1,4 @@
-app.get("/test", (req, res) => {
+app.get("/", (req, res) => {
     if (req == "test") {
         console.log("heard you loud and clear");
     }

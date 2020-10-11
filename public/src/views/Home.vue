@@ -43,7 +43,12 @@ export default {
 	
     methods: {
 		TEST: async function () {
-			fetch("https://visitormanagement-5676.nodechef.com/parse/", {credentials: 'include'});
+			// let data = encodeURI("chase");
+			fetch("http://localhost:3080/", { method: 'POST', mode: 'no-cors', body: ":::Chase Brown::Aunalytics::Data Suite One"}).then(response => {
+				console.log(response);
+			});
+
+			
 		},
 
         login: async function () {
