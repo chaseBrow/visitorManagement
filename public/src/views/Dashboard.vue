@@ -26,15 +26,8 @@
 							</v-text-field>
 						</v-col>
 						<v-col cols="3" class="pb-0">
-							<CompanySelect @selected="filterTerms.company = $event">
+							<CompanySelect @selected="filterTerms.company = $event, filterPeople()">
 							</CompanySelect>
-							<!-- <v-autocomplete outlined label="Company" color="accent" cache-items hide-no-data
-								:items="companyFinal"
-      							:search-input.sync="searchComp"
-								v-model="filterTerms.company"
-								v-on:input="filterPeople()"
-							>
-							</v-autocomplete> -->
 						</v-col>
 						<v-col cols="3" class="pb-0">
 							<v-text-field label="Email" outlined color="accent"
@@ -44,8 +37,8 @@
 							</v-text-field>
 						</v-col>
 						<v-col cols="2" class="pb-0">
-							 <v-select label="Access" outlined color="accent" :items="options" v-model="filterTerms.access" 
-							 v-on:focus="getOptions" v-on:change="filterPeople()"
+							<v-select label="Access" outlined color="accent" :items="accessOptions" v-model="filterTerms.access" 
+								v-on:focus="getOptions()" v-on:change="filterPeople()"
 							>
 							</v-select>
 						</v-col>
@@ -82,7 +75,6 @@
 						</div>
 						<div :id="person.get('email') + 'info'" :key="person.get('email') + 'info'" class="pa-0">
 							<MoreInfo v-bind:person="person"> 
-								<!--  v-on:reload="getVisitors()" -->
 							</MoreInfo>
 						</div>
 					</v-list-item>
@@ -101,12 +93,7 @@ export default {
 	data() {
 		return {
 			recVisitors: null,
-
-
 			filteredPeople: [],
-			companyFinal: [],
-			searchComp: null,
-			activeCompanies: [],
 			visitors: [],
 			filterTerms: {
 				firstName: '',
@@ -115,13 +102,7 @@ export default {
 				access: '',
 				company: '',
 			},
-			options: [],
-		}
-	},
-	watch: {
-		searchComp (val) {
-			console.log("searching company")
-			this.searchCompanies(val);
+			accessOptions: [],
 		}
 	},
 	async created(){
@@ -152,29 +133,6 @@ export default {
 			let comp = person.get("company");
 			let name = comp.get("name");
 			return name;
-		},
-		getCompanies: async function () {
-			const user = Parse.User.current();
-			const Users = new Parse.Query(Parse.User);
-			Users.equalTo("parentCompany", user);
-
-			let companyList = await Users.find();
-			
-			companyList.push(user);
-			this.activeCompanies = companyList;
-		},
-		searchCompanies: async function (val) {
-			let test = this.activeCompanies.filter(company => {
-				if (val) {
-                    let name = company.get("name").toLowerCase().includes(val.toLowerCase());
-				    return name;
-                }
-                else return false;
-			});
-			this.companyFinal = [];
-			test.forEach( e =>{
-				this.companyFinal.push(e.get("name"));
-			})
 		},
 		recentVisitors: async function () {
 			this.filterTerms.firstName = '';
@@ -215,17 +173,28 @@ export default {
 			let yesterday = date.setTime(date.getTime() - 86400000);
 			return new Date(yesterday);
 		},
-		getOptions: function () {
-            const user = Parse.User.current();
-            this.options = user.get("options");
+		getOptions: async function () {
+			let user = Parse.User.current();
+			console.log(user)
+			console.log(user.options);
+			this.accessOptions = user.get("options");
 		},
 		updateMade: async function () {
+			let children = []
+
+			const user = Parse.User.current();
+            const Users = new Parse.Query(Parse.User);
+			Users.equalTo("parentCompany", user);
+
+			children = await Users.find();
+			children.push(user);
+
 			const Visitors = Parse.Object.extend("Visitor");
 			const queryVisitor = new Parse.Query(Visitors);
 
 			queryVisitor.notEqualTo("deleted", true);
 			queryVisitor.include(["company.name"]);
-			queryVisitor.containedIn('company', this.activeCompanies);
+			queryVisitor.containedIn('company', children);
 			this.visitors = await queryVisitor.find();
 			console.log(this.visitors)
 

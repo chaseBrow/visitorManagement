@@ -27,7 +27,6 @@ export default {
 		let liveUsers = await Users.subscribe();
 
 		liveUsers.on('open', () => {
-			console.log('open companies made')
 			this.getCompanies();
 		});
 
@@ -42,7 +41,7 @@ export default {
 		liveUsers.on('update', () => {
 			this.getCompanies();
         });
-        this.getCompanies();  
+        this.getCompanies();
     },
     methods: {
 		getCompanies: async function () {
@@ -53,24 +52,22 @@ export default {
 			this.companies = await Users.find();
 			
             this.companies.push(user);
+            this.searchCompanies();
 		},
 		searchCompanies: async function () {
-            console.log("filtering1: " + this.filter);
-			let test = this.companies.filter(company => {
-				if (this.filter) {
-                    console.log("filtering2: ");
-                    console.log(company.get("name"));
-                    let name = company.get("name").toLowerCase().includes(this.filter.toLowerCase());
-				    return name;
+            let temp = [];
+			temp = this.companies.filter(company => {
+                if(this.filter && company.get("name").toLowerCase().includes(this.filter.toLowerCase())) {
+                    return true;
                 }
-                else return false;
+                else {
+                    return true;
+                }
 			});
-			this.filteredCompanies = [];
-			test.forEach( e =>{
-                console.log(e);
+            this.filteredCompanies = []
+			temp.forEach( e =>{
 				this.filteredCompanies.push(e.get("name"));
             })
-            // console.log(this.filteredCompanies)
 		},
     }
 }
