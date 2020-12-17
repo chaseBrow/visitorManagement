@@ -1,5 +1,5 @@
 <!-- 
-	Author: Chase Brown
+	Author: Chase Brown & Chad Brown
 	Created On: 07/26/2020
 	Updated By: Chad Brown & Chase Brown
 	Updated On: 08/17/2020
@@ -26,13 +26,15 @@
 							</v-text-field>
 						</v-col>
 						<v-col cols="3" class="pb-0">
-							<v-autocomplete outlined label="Company" color="accent" cache-items hide-no-data
+							<CompanySelect @selected="filterTerms.company = $event">
+							</CompanySelect>
+							<!-- <v-autocomplete outlined label="Company" color="accent" cache-items hide-no-data
 								:items="companyFinal"
       							:search-input.sync="searchComp"
 								v-model="filterTerms.company"
 								v-on:input="filterPeople()"
 							>
-							</v-autocomplete>
+							</v-autocomplete> -->
 						</v-col>
 						<v-col cols="3" class="pb-0">
 							<v-text-field label="Email" outlined color="accent"
@@ -79,7 +81,8 @@
 							</NewRecord> 
 						</div>
 						<div :id="person.get('email') + 'info'" :key="person.get('email') + 'info'" class="pa-0">
-							<MoreInfo v-bind:person="person" v-on:reload="getVisitors()">
+							<MoreInfo v-bind:person="person"> 
+								<!--  v-on:reload="getVisitors()" -->
 							</MoreInfo>
 						</div>
 					</v-list-item>
@@ -93,6 +96,7 @@
 import Parse from "parse"
 import NewRecord from "../components/NewRecord"
 import MoreInfo from "../components/MoreInfo"
+import CompanySelect from "../components/CompanySelect"
 export default {
 	data() {
 		return {
@@ -116,12 +120,32 @@ export default {
 	},
 	watch: {
 		searchComp (val) {
+			console.log("searching company")
 			this.searchCompanies(val);
 		}
 	},
-	async beforeMount(){
-		await this.getCompanies();
-		this.getVisitors();
+	async created(){
+		const Visitors = Parse.Object.extend("Visitor");
+		const queryVisitor = new Parse.Query(Visitors);
+
+		let liveVisitor = await queryVisitor.subscribe();
+
+		liveVisitor.on('open', () => {
+			console.log('open made')
+			this.updateMade();
+		});
+
+		liveVisitor.on('delete', () => {
+			this.updateMade();
+		});
+
+		liveVisitor.on('create', () => {
+			this.updateMade();
+		});
+
+		liveVisitor.on('update', () => {
+			this.updateMade();
+		});
     },
 	methods: {
 		getCompanyName: function (person) {
@@ -195,18 +219,20 @@ export default {
             const user = Parse.User.current();
             this.options = user.get("options");
 		},
-		getVisitors: async function () {
+		updateMade: async function () {
 			const Visitors = Parse.Object.extend("Visitor");
 			const queryVisitor = new Parse.Query(Visitors);
-			
+
 			queryVisitor.notEqualTo("deleted", true);
 			queryVisitor.include(["company.name"]);
 			queryVisitor.containedIn('company', this.activeCompanies);
 			this.visitors = await queryVisitor.find();
+			console.log(this.visitors)
+
 			this.filterPeople();
 		},
-		filterPeople: function (visitors=this.visitors) {
-			this.filteredPeople = visitors.filter((visitor) => {
+		filterPeople: function () {
+			this.filteredPeople = this.visitors.filter((visitor) => {
 				let first = true, last = true,comp = true, email = true, access = true;
 				if (visitor.get("firstName") && this.filterTerms.firstName) {
 					first = visitor.get("firstName").toLowerCase().includes(this.filterTerms.firstName.toLowerCase());
@@ -235,7 +261,8 @@ export default {
 	},
 	components: {
 		NewRecord,
-		MoreInfo
+		MoreInfo,
+		CompanySelect
 	}
 }
 </script>
