@@ -14,6 +14,10 @@
 <script>
 import Parse from 'parse'
 export default {
+    props: 
+        [
+            "selectedtest"
+        ],
     data() {
         return {
             filter: "",
@@ -27,6 +31,7 @@ export default {
 		let liveUsers = await Users.subscribe();
 
 		liveUsers.on('open', () => {
+            console.log("open companies made");
 			this.getCompanies();
 		});
 
@@ -42,6 +47,13 @@ export default {
 			this.getCompanies();
         });
         this.getCompanies();
+    },
+    computed: {
+        selectedCompany: function () {
+            console.log("test");
+            console.log(this.selectedtest);
+            return this.selectedtest;
+        } 
     },
     methods: {
 		getCompanies: async function () {

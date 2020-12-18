@@ -26,7 +26,10 @@
 							</v-text-field>
 						</v-col>
 						<v-col cols="3" class="pb-0">
-							<CompanySelect @selected="filterTerms.company = $event, filterPeople()">
+							<CompanySelect 
+								@selected="filterTerms.company = $event, filterPeople(), emit()"
+								v-bind:selectedtest="filterTerms.company"
+							>
 							</CompanySelect>
 						</v-col>
 						<v-col cols="3" class="pb-0">
@@ -112,7 +115,7 @@ export default {
 		let liveVisitor = await queryVisitor.subscribe();
 
 		liveVisitor.on('open', () => {
-			console.log('open made')
+			console.log('open visitors made');
 			this.updateMade();
 		});
 
@@ -127,8 +130,13 @@ export default {
 		liveVisitor.on('update', () => {
 			this.updateMade();
 		});
+
+		
     },
 	methods: {
+		emit: function () {
+			console.log("emitting");
+		},
 		getCompanyName: function (person) {
 			let comp = person.get("company");
 			let name = comp.get("name");
@@ -140,7 +148,6 @@ export default {
 			this.filterTerms.email = '';
 			this.filterTerms.access = '';
 			this.filterTerms.company = '';
-
 
 			const Record = Parse.Object.extend("Record");
 			const recQuery = new Parse.Query(Record);
@@ -174,9 +181,8 @@ export default {
 			return new Date(yesterday);
 		},
 		getOptions: async function () {
+			this.accessOptions = [];
 			let user = Parse.User.current();
-			console.log(user)
-			console.log(user.options);
 			this.accessOptions = user.get("options");
 		},
 		updateMade: async function () {
@@ -196,8 +202,6 @@ export default {
 			queryVisitor.include(["company.name"]);
 			queryVisitor.containedIn('company', children);
 			this.visitors = await queryVisitor.find();
-			console.log(this.visitors)
-
 			this.filterPeople();
 		},
 		filterPeople: function () {
