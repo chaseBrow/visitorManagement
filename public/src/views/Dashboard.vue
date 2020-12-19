@@ -27,8 +27,8 @@
 						</v-col>
 						<v-col cols="3" class="pb-0">
 							<CompanySelect 
-								@selected="filterTerms.company = $event, filterPeople(), emit()"
-								v-bind:selectedtest="filterTerms.company"
+								@update:company="filterTerms.company = $event, filterPeople()"
+								v-bind:company.sync="filterTerms.company"
 							>
 							</CompanySelect>
 						</v-col>
@@ -134,9 +134,6 @@ export default {
 		
     },
 	methods: {
-		emit: function () {
-			console.log("emitting");
-		},
 		getCompanyName: function (person) {
 			let comp = person.get("company");
 			let name = comp.get("name");
@@ -151,7 +148,6 @@ export default {
 
 			const Record = Parse.Object.extend("Record");
 			const recQuery = new Parse.Query(Record);
-
 
 			recQuery.greaterThan("updatedAt", this.getDate());
 			recQuery.descending("createdAt");

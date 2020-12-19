@@ -1,29 +1,32 @@
 <template>
     <v-container class="ma-0 pa-0">
-        <v-autocomplete outlined label="Company" color="accent" cache-items hide-no-data
+        <v-autocomplete clearable outlined label="Company" color="accent" cache-items hide-no-data
             :items="filteredCompanies"
             v-model="selected"
             :search-input.sync="filter"
             v-on:keyup="searchCompanies()"
-            v-on:input="$emit('selected', selected)"
+            v-on:input="$emit('update:company', selected)"
         >
-        <!-- v-on input needs to emit data -->
         </v-autocomplete>
     </v-container>
 </template>
 <script>
 import Parse from 'parse'
 export default {
-    props: 
-        [
-            "selectedtest"
-        ],
+    props: [
+        'company'
+    ],
     data() {
         return {
             filter: "",
             selected: "",
             companies: [],
             filteredCompanies: []
+        }
+    },
+    watch: {
+        company: function (val) {
+            this.selected = val;
         }
     },
     async created() {
@@ -47,13 +50,6 @@ export default {
 			this.getCompanies();
         });
         this.getCompanies();
-    },
-    computed: {
-        selectedCompany: function () {
-            console.log("test");
-            console.log(this.selectedtest);
-            return this.selectedtest;
-        } 
     },
     methods: {
 		getCompanies: async function () {
