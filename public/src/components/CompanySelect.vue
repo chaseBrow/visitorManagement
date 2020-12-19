@@ -1,6 +1,6 @@
 <template>
     <v-container class="ma-0 pa-0">
-        <v-autocomplete clearable outlined label="Company" color="accent" cache-items hide-no-data
+        <v-autocomplete :id="parent" clearable outlined label="Company" color="accent" cache-items hide-no-data
             :items="filteredCompanies"
             v-model="selected"
             :search-input.sync="filter"
@@ -14,7 +14,8 @@
 import Parse from 'parse'
 export default {
     props: [
-        'company'
+        'company',
+        'parent'
     ],
     data() {
         return {
