@@ -46,7 +46,14 @@
                             </v-text-field>
                         </v-col>
                         <v-col cols="4">
-                            <div  :id="user.company + 'text'">
+                            <CompanySelect 
+								@update:company="filterTerms.company = $event, filterPeople()"
+								v-bind:company.sync="filterTerms.company"
+								v-bind:parent="'moreInfo'"
+							>
+                            </CompanySelect>
+
+                            <!-- <div  :id="user.company + 'text'">
                                 <v-text-field color="accent" rounded readonly v-model="user.company" label="Company">
                                 </v-text-field>
                             </div>
@@ -58,8 +65,8 @@
                                     :id="user.company + 'focus'"
 
                                 >
-							</v-autocomplete>
-                            </div>
+							    </v-autocomplete>
+                            </div> -->
                         </v-col>
                     </v-row>
                     <v-row>
@@ -117,6 +124,7 @@
 </template>
 <script>
 import Parse from 'parse';
+import CompanySelect from '../components/CompanySelect';
 export default {
     props: ['person'],
     data () {
@@ -273,6 +281,9 @@ export default {
             del = document.getElementById('delete');
             del.style.display = 'inline';
         },
+    },
+    components: {
+        CompanySelect,
     }
     
 }

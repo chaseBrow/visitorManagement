@@ -6,6 +6,7 @@
             :search-input.sync="filter"
             v-on:keyup="searchCompanies()"
             v-on:input="$emit('update:company', selected)"
+            readonly
         >
         </v-autocomplete>
     </v-container>
