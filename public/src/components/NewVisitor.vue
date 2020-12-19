@@ -20,12 +20,8 @@
                 </v-row>
                 <v-row>
                     <v-col cols="6">
-                        <v-autocomplete outlined label="Company" color="accent" cache-items hide-no-data
-								:items="companyFinal"
-      							:search-input.sync="searchComp"
-								v-model="visitor.company"
-                        >
-                        </v-autocomplete>  
+                        <CompanySelect @selected="visitor.company = $event">
+                        </CompanySelect>
                     </v-col>
                     <v-col cols="6">
                         <v-text-field  label="Email" outlined color="accent" v-model="visitor.email">  
@@ -34,7 +30,7 @@
                 </v-row>
                 <v-row>
                     <v-col cols="6">
-                        <v-select label="Access" outlined color="accent" :items="options" v-model="visitor.access" v-on:focus="getOptions">
+                        <v-select label="Access" outlined color="accent" :items="accessOptions" v-model="visitor.access" v-on:focus="getOptions()">
                          </v-select>
                     </v-col>
                     <v-col cols="6">
@@ -68,10 +64,11 @@
 </template>
 <script>
 import Parse from 'parse'
+import CompanySelect from '../components/CompanySelect'
 export default {
     data() {
         return {
-            options: [],
+            accessOptions: [],
             visitor: {
                 firstName: null,
                 lastName: null,
@@ -82,41 +79,16 @@ export default {
                 maySchedule: null,
                 mayRemote: false,
             },
-            companyFinal: [],
-            searchComp: null,
             menu: false,
 
         }
     },
-    watch: {
-		searchComp (val) {
-			this.searchCompanies(val);
-		}
-	},
     methods: {
-        searchCompanies: async function (val) {
-			const user = Parse.User.current();
-			const Users = new Parse.Query(Parse.User);
-			Users.equalTo("parentCompany", user);
-
-            let companyList = await Users.find();
-            companyList.push(user);
-			
-			let test = companyList.filter(company => {
-                if (val) {
-                    let name = company.get("name").toLowerCase().includes(val.toLowerCase());
-				    return name;
-                }
-                else return false;
-			});
-			this.companyFinal = [];
-			test.forEach( e =>{
-				this.companyFinal.push(e.get("name"));
-			})
-		},
         getOptions: function () {
+            this.accessOptions = [];
             const user = Parse.User.current();
-            this.options = user.get("options");
+            this.accessOptions = user.get("options");
+            console.log(user);
         },
         clear: function () {
             this.visitor.firstName = null;
@@ -149,8 +121,11 @@ export default {
             await person.save()
             this.clear();
             this.menu = !this.menu;
-            location.reload();
+            // location.reload();
         }
+    },
+    components: {
+        CompanySelect
     }
 }
 </script>
