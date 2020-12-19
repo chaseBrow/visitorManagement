@@ -47,9 +47,9 @@
                         </v-col>
                         <v-col cols="4">
                             <CompanySelect 
-								@update:company="filterTerms.company = $event, filterPeople()"
-								v-bind:company.sync="filterTerms.company"
-								v-bind:parent="'moreInfo'"
+								@update:company="user.company = $event, filterPeople()"
+								v-bind:company.sync="user.company"
+								v-bind:parent="companySelectParent"
 							>
                             </CompanySelect>
 
@@ -129,6 +129,7 @@ export default {
     props: ['person'],
     data () {
         return {
+            companySelectParent = "more"
             delLoading: false,
             dialog: false,
             dialogDel: false,
