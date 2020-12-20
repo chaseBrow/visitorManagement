@@ -14,22 +14,22 @@
                     <v-card-title>
                         Visitor Information
                         <v-spacer></v-spacer>
-                        <div id="edit">
+                        <div :id="person.id + 'btnEdit'">
                             <v-btn class="accent" v-on:click="editBtn()">
                                 Edit
                             </v-btn>
                         </div>
-                        <div id="save" style="display: none">
+                        <div :id="person.id + 'btnSave'" style="display: none">
                             <v-btn class="success mr-3" v-on:click="saveBtn()"> 
                                 Save
                             </v-btn>
                         </div>
-                        <div id="cancel" style="display: none">
+                        <div :id="person.id + 'btnCancel'" style="display: none">
                             <v-btn class="mr-3" elevation="0" color="info" outlined v-on:click="cancelBtn()">
                                 Cancel
                             </v-btn>
                         </div>
-                        <div id="delete" style="display: none">
+                        <div :id="person.id + 'btnDelete'" style="display: none">
                             <v-btn class="warning" v-on:click="deleteBtn()">
                                 Delete
                             </v-btn>
@@ -51,10 +51,10 @@
 								v-bind:company.sync="visitor.company"
 								v-bind:parent="'moreInfo'"
                                 style="display: none"
-                                :id="visitor.company"
+                                :id="person.id + 'comp'"
 							>
                             </CompanySelect>
-                            <div  :id="visitor.company + 'text'">
+                            <div  :id="person.id + 'compText'">
                                 <v-text-field color="accent" rounded readonly v-model="visitor.company" label="Company">
                                 </v-text-field>
                             </div>
@@ -66,14 +66,14 @@
                             </v-text-field>
                         </v-col>
                         <v-col cols="4">
-                            <div :id="visitor.access + 'text'">
+                            <div :id="person.id + 'accText'">
                                 <v-text-field color="accent" rounded readonly v-model="visitor.access" label="Access">
                                 </v-text-field>
                             </div>
-                            <div style="display: none" :id="visitor.access">
-                                <v-select outlined label="Access" :items="options" v-model="visitor.access" 
-                                    v-on:focus="getOptions"
-                                    :id="visitor.access + 'focus'"
+                            <div style="display: none" :id="person.id + 'acc'">
+                                <v-select outlined label="Access" :items="accessOptions" v-model="visitor.access" 
+                                    v-on:focus="getOptions()"
+                                    :id="person.id + 'accFocus'"
                                     color="accent"
                                 >
                                 </v-select>
@@ -123,8 +123,6 @@ export default {
             delLoading: false,
             dialog: false,
             dialogDel: false,
-            companyFinal: [],
-			searchComp: null,
             visitor: {
                 firstName: this.person.get('firstName'),
                 lastName: this.person.get('lastName'),
@@ -135,7 +133,7 @@ export default {
                 maySchedule: this.person.get('maySchedule'),
                 mayRemote: this.person.get('mayRemote'),
             },
-            options: [],
+            accessOptions: [],
             edit: false,
         }
     },
@@ -166,28 +164,28 @@ export default {
         cancelBtn: function () {
             let comp1, comp2, acc1, acc2, edit, save, cancel, del;
 
-            comp1 = document.getElementById(this.visitor.company + 'text');
+            comp1 = document.getElementById(this.person.id + 'compText');
             comp1.style.display = 'inline';
-            comp2 = document.getElementById(this.visitor.company);
+            comp2 = document.getElementById(this.person.id + "comp");
             comp2.style.display= 'none';
 
-            acc1 = document.getElementById(this.visitor.access + 'text');
+            acc1 = document.getElementById(this.person.id + 'accText');
             acc1.style.display = 'inline';
-            acc2 = document.getElementById(this.visitor.access);
+            acc2 = document.getElementById(this.person.id + "acc");
             acc2.style.display= 'none';
 
-            edit = document.getElementById('edit');
+            edit = document.getElementById(this.person.id + 'btnEdit');
             edit.style.display = 'inline';
 
-            save = document.getElementById('save');
+            save = document.getElementById(this.person.id + 'btnSave');
             save.style.display = 'none';
 
-            cancel = document.getElementById('cancel');
+            cancel = document.getElementById(this.person.id + 'btnCancel');
             cancel.style.display = 'none';
 
-            del = document.getElementById('delete');
+            del = document.getElementById(this.person.id + 'btnDelete');
             del.style.display = 'none';
-            this.reset();
+            this.edit = false;
         },
         confirmDel: async function () {
             this.person.set('deleted', true);
@@ -207,30 +205,29 @@ export default {
             this.edit = true;
             let comp1, comp2, acc1, acc2, acc3, edit, save, cancel, del;
 
-            comp1 = document.getElementById(this.visitor.company + 'text');
+            comp1 = document.getElementById(this.person.id + 'compText');
             comp1.style.display = 'none';
-            comp2 = document.getElementById(this.visitor.company);
+            comp2 = document.getElementById(this.person.id + "comp");
             comp2.style.display= 'inline';
-            this.searchComp = this.visitor.company;
 
-            acc1 = document.getElementById(this.visitor.access + 'text');
+            acc1 = document.getElementById(this.person.id + 'accText');
             acc1.style.display = 'none';
-            acc2 = document.getElementById(this.visitor.access);
+            acc2 = document.getElementById(this.person.id + "acc");
             acc2.style.display= 'inline';
-            acc3 = document.getElementById(this.visitor.access + 'focus');
+            acc3 = document.getElementById(this.person.id + 'accFocus');
             acc3.focus();
             acc3.blur();
 
-            edit = document.getElementById('edit');
+            edit = document.getElementById(this.person.id + 'btnEdit');
             edit.style.display = 'none';
 
-            save = document.getElementById('save');
+            save = document.getElementById(this.person.id + 'btnSave');
             save.style.display = 'inline';
 
-            cancel = document.getElementById('cancel');
+            cancel = document.getElementById(this.person.id + 'btnCancel');
             cancel.style.display = 'inline';
 
-            del = document.getElementById('delete');
+            del = document.getElementById(this.person.id + 'btnDelete');
             del.style.display = 'inline';
         },
     },
