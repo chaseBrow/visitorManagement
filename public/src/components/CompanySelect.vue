@@ -1,11 +1,12 @@
 <template>
     <v-container class="ma-0 pa-0">
-        <v-autocomplete :id="parent" clearable outlined label="Company" color="accent" cache-items hide-no-data
+        <v-autocomplete :id="parent" outlined label="Company" color="accent" cache-items hide-no-data
             :items="filteredCompanies"
             v-model="selected"
             :search-input.sync="filter"
             v-on:keyup="searchCompanies()"
             v-on:input="$emit('update:company', selected)"
+            v-bind="{clearable: (parent == 'dashboard')}"
         >
         </v-autocomplete>
     </v-container>

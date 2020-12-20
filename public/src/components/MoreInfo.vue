@@ -9,7 +9,7 @@
                     <span>Info</span>
                 </v-btn>
             </template>
-            <v-form>
+            <v-form ref="form">
                 <v-card class="pa-4">
                     <v-card-title>
                         Visitor Information
@@ -38,11 +38,15 @@
                     
                     <v-row>
                         <v-col cols="4">
-                            <v-text-field color="accent" v-model="visitor.firstName" label="First Name" v-bind="{rounded: !edit, readonly: !edit, outlined: edit}">
+                            <v-text-field color="accent" v-model="visitor.firstName" label="First Name" 
+                                v-bind="{rounded: !edit, readonly: !edit, outlined: edit}" :rules="visitor.firstNameRules"
+                                >
                             </v-text-field>
                         </v-col>
                         <v-col cols="4">
-                            <v-text-field color="accent" v-bind="{rounded: !edit, readonly: !edit, outlined: edit}" v-model="visitor.lastName" label="Last Name">
+                            <v-text-field color="accent" v-model="visitor.lastName" label="Last Name"
+                                v-bind="{rounded: !edit, readonly: !edit, outlined: edit}" :rules="visitor.lastNameRules"
+                            >
                             </v-text-field>
                         </v-col>
                         <v-col cols="4">
@@ -80,7 +84,8 @@
                             </div>
                         </v-col>
                         <v-col cols="4">
-                            <v-text-field color="accent" v-bind="{rounded: !edit, readonly: !edit, outlined: edit}" label="Phone" v-model="visitor.phone">
+                            <v-text-field color="accent" v-bind="{rounded: !edit, readonly: !edit, outlined: edit}" 
+                                label="Phone" :rules="visitor.phoneRules" v-model="visitor.phone">
                             </v-text-field>
                         </v-col>
                     </v-row>
@@ -125,11 +130,25 @@ export default {
             dialogDel: false,
             visitor: {
                 firstName: this.person.get('firstName'),
+                firstNameRules: [
+                    v => !!v || "First Name is a required field.",
+                    v => (/^[a-zA-Z]+$/.test(v)) || "Invalid First Name"
+                ],
                 lastName: this.person.get('lastName'),
+                lastNameRules: [
+                    v => !!v || "Last Name is a required field.",
+                    v => (/^[a-zA-Z]+$/.test(v)) || "Invalid Last Name."
+                ],
                 company: this.person.get('company').get('name'),
                 email: this.person.get('email'),
+                // emailRules: [
+                //     v => (.test(v)) || "Please enter a valid email",
+                // ],
                 access: this.person.get('access'),
                 phone: this.person.get('phone'),
+                phoneRules: [ 
+                    v => (/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/.test(v)) || !v || "Invalid Phone Number."
+                ],
                 maySchedule: this.person.get('maySchedule'),
                 mayRemote: this.person.get('mayRemote'),
             },
@@ -144,24 +163,34 @@ export default {
 			this.accessOptions = user.get("options");
         },
         saveBtn: async function () {
-            this.person.set('firstName', this.visitor.firstName);
-            this.person.set('lastName', this.visitor.lastName);
-            this.person.set('email', this.visitor.email);
-            this.person.set('access', this.visitor.access);
-            this.person.set('phone', this.visitor.phone);
-            this.person.set('maySchedule', this.visitor.maySchedule);
-            this.person.set('mayRemote', this.visitor.mayRemote);
+            if (this.$refs.form.validate()) {
+                this.person.set('firstName', this.visitor.firstName);
+                this.person.set('lastName', this.visitor.lastName);
+                this.person.set('email', this.visitor.email);
+                this.person.set('access', this.visitor.access);
+                this.person.set('phone', this.visitor.phone);
+                this.person.set('maySchedule', this.visitor.maySchedule);
+                this.person.set('mayRemote', this.visitor.mayRemote);
 
-            let Companies = new Parse.Query(Parse.User);
-            Companies.equalTo('name', this.visitor.company);
-            let comp = await Companies.first()
-            this.person.set('company', comp);
-            
-            
-            await this.person.save();
-            this.cancelBtn();
+                let Companies = new Parse.Query(Parse.User);
+                Companies.equalTo('name', this.visitor.company);
+                let comp = await Companies.first()
+                this.person.set('company', comp);
+                
+                await this.person.save();
+                this.cancelBtn();
+            }
         },
         cancelBtn: function () {
+            this.visitor.firstName = this.person.get('firstName');
+            this.visitor.lastName = this.person.get('lastName');
+            this.visitor.company = this.person.get('company').get('name');
+            this.visitor.email = this.person.get('email');
+            this.visitor.access = this.person.get('access');
+            this.visitor.phone = this.person.get('phone');
+            this.visitor.maySchedule = this.person.get('maySchedule');
+            this.visitor.mayRemote = this.person.get('mayRemote');
+
             let comp1, comp2, acc1, acc2, edit, save, cancel, del;
 
             comp1 = document.getElementById(this.person.id + 'compText');

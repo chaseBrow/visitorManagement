@@ -101,9 +101,6 @@ export default {
         }
     },
     methods: {
-        validate () {
-            this.$ref.form.validate();
-        },
         getOptions: function () {
             this.accessOptions = [];
             const user = Parse.User.current();
