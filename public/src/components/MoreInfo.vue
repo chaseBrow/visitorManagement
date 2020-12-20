@@ -38,65 +38,56 @@
                     
                     <v-row>
                         <v-col cols="4">
-                            <v-text-field color="accent" v-model="user.firstName" label="First Name" v-bind="{rounded: !edit, readonly: !edit, outlined: edit}">
+                            <v-text-field color="accent" v-model="visitor.firstName" label="First Name" v-bind="{rounded: !edit, readonly: !edit, outlined: edit}">
                             </v-text-field>
                         </v-col>
                         <v-col cols="4">
-                            <v-text-field color="accent" v-bind="{rounded: !edit, readonly: !edit, outlined: edit}" v-model="user.lastName" label="Last Name">
+                            <v-text-field color="accent" v-bind="{rounded: !edit, readonly: !edit, outlined: edit}" v-model="visitor.lastName" label="Last Name">
                             </v-text-field>
                         </v-col>
                         <v-col cols="4">
                             <CompanySelect 
-								@update:company="user.company = $event, filterPeople()"
-								v-bind:company.sync="user.company"
-								v-bind:parent="companySelectParent"
+								@update:company="visitor.company = $event"
+								v-bind:company.sync="visitor.company"
+								v-bind:parent="'moreInfo'"
+                                style="display: none"
+                                :id="visitor.company"
 							>
                             </CompanySelect>
-
-                            <!-- <div  :id="user.company + 'text'">
-                                <v-text-field color="accent" rounded readonly v-model="user.company" label="Company">
+                            <div  :id="visitor.company + 'text'">
+                                <v-text-field color="accent" rounded readonly v-model="visitor.company" label="Company">
                                 </v-text-field>
                             </div>
-                            <div :id="user.company" style="display:none">
-                                <v-autocomplete v-bind="{outlined: edit}" label="Company" color="accent" cache-items hide-no-data
-                                    :items="companyFinal"
-                                    :search-input.sync="searchComp"
-                                    v-model="user.company"
-                                    :id="user.company + 'focus'"
-
-                                >
-							    </v-autocomplete>
-                            </div> -->
                         </v-col>
                     </v-row>
                     <v-row>
                         <v-col cols="4">
-                            <v-text-field color="accent" v-bind="{rounded: !edit, readonly: !edit, outlined: edit}" label="Email" v-model="user.email">
+                            <v-text-field color="accent" v-bind="{rounded: !edit, readonly: !edit, outlined: edit}" label="Email" v-model="visitor.email">
                             </v-text-field>
                         </v-col>
                         <v-col cols="4">
-                            <div :id="user.access + 'text'">
-                                <v-text-field color="accent" rounded readonly v-model="user.access" label="Access">
+                            <div :id="visitor.access + 'text'">
+                                <v-text-field color="accent" rounded readonly v-model="visitor.access" label="Access">
                                 </v-text-field>
                             </div>
-                            <div style="display: none" :id="user.access">
-                                <v-select outlined label="Access" :items="options" v-model="user.access" 
+                            <div style="display: none" :id="visitor.access">
+                                <v-select outlined label="Access" :items="options" v-model="visitor.access" 
                                     v-on:focus="getOptions"
-                                    :id="user.access + 'focus'"
+                                    :id="visitor.access + 'focus'"
                                     color="accent"
                                 >
                                 </v-select>
                             </div>
                         </v-col>
                         <v-col cols="4">
-                            <v-text-field color="accent" v-bind="{rounded: !edit, readonly: !edit, outlined: edit}" label="Phone" v-model="user.phone">
+                            <v-text-field color="accent" v-bind="{rounded: !edit, readonly: !edit, outlined: edit}" label="Phone" v-model="visitor.phone">
                             </v-text-field>
                         </v-col>
                     </v-row>
                     <v-row class="d-flex justify-space-around">
-                        <v-checkbox v-bind="{readonly: !edit}" color="accent" v-model="user.maySchedule" label="May Schedule Others">
+                        <v-checkbox v-bind="{readonly: !edit}" color="accent" v-model="visitor.maySchedule" label="May Schedule Others">
                         </v-checkbox>
-                        <v-checkbox color="accent" v-bind="{readonly: !edit}" v-model="user.mayRemote" label="May Request Remote Hands">
+                        <v-checkbox color="accent" v-bind="{readonly: !edit}" v-model="visitor.mayRemote" label="May Request Remote Hands">
                         </v-checkbox>
                     </v-row>
                 </v-card>
@@ -129,82 +120,42 @@ export default {
     props: ['person'],
     data () {
         return {
-            companySelectParent = "more"
             delLoading: false,
             dialog: false,
             dialogDel: false,
             companyFinal: [],
 			searchComp: null,
-            user: {
-                firstName: null,
-                lastName: null,
-                company: null,
-                email: null,
-                access: null,
-                phone: null,
-                maySchedule: null,
-                mayRemote: null,
+            visitor: {
+                firstName: this.person.get('firstName'),
+                lastName: this.person.get('lastName'),
+                company: this.person.get('company').get('name'),
+                email: this.person.get('email'),
+                access: this.person.get('access'),
+                phone: this.person.get('phone'),
+                maySchedule: this.person.get('maySchedule'),
+                mayRemote: this.person.get('mayRemote'),
             },
             options: [],
             edit: false,
         }
     },
-    watch: {
-		searchComp (val) {
-			this.searchCompanies(val);
-		}
-    },
-    beforeMount () {
-        this.reset();
-    },
     methods: {
-        reset: function () {
-            let comp = this.person.get('company');
-            this.user.firstName = this.person.get('firstName');
-            this.user.lastName = this.person.get('lastName');
-            this.user.company = comp.get('name');
-            this.user.email = this.person.get('email');
-            this.user.access = this.person.get('access');
-            this.user.phone = this.person.get('phone');
-            this.user.maySchedule = this.person.get('maySchedule');
-            this.user.mayRemote = this.person.get('mayRemote');
-            this.edit = false;
-        },
         getOptions: function () {
-            const user = Parse.User.current();
-            this.options = user.get("options");
-        },
-        searchCompanies: async function (val) {
-			const user = Parse.User.current();
-			const Users = new Parse.Query(Parse.User);
-			Users.equalTo("parentCompany", user);
-
-			let companyList = await Users.find();
-			companyList.push(user);
-			
-			let test = companyList.filter(company => {
-				if (val) {
-                    let name = company.get("name").toLowerCase().includes(val.toLowerCase());
-				    return name;
-                }
-                else return false;
-			});
-			this.companyFinal = [];
-			test.forEach( e =>{
-				this.companyFinal.push(e.get("name"));
-			})
+            this.accessOptions = [];
+			let user = Parse.User.current();
+			this.accessOptions = user.get("options");
         },
         saveBtn: async function () {
-            this.person.set('firstName', this.user.firstName);
-            this.person.set('lastName', this.user.lastName);
-            this.person.set('email', this.user.email);
-            this.person.set('access', this.user.access);
-            this.person.set('phone', this.user.phone);
-            this.person.set('maySchedule', this.user.maySchedule);
-            this.person.set('mayRemote', this.user.mayRemote);
+            this.person.set('firstName', this.visitor.firstName);
+            this.person.set('lastName', this.visitor.lastName);
+            this.person.set('email', this.visitor.email);
+            this.person.set('access', this.visitor.access);
+            this.person.set('phone', this.visitor.phone);
+            this.person.set('maySchedule', this.visitor.maySchedule);
+            this.person.set('mayRemote', this.visitor.mayRemote);
 
             let Companies = new Parse.Query(Parse.User);
-            Companies.equalTo('name', this.user.company);
+            Companies.equalTo('name', this.visitor.company);
             let comp = await Companies.first()
             this.person.set('company', comp);
             
@@ -215,14 +166,14 @@ export default {
         cancelBtn: function () {
             let comp1, comp2, acc1, acc2, edit, save, cancel, del;
 
-            comp1 = document.getElementById(this.user.company + 'text');
+            comp1 = document.getElementById(this.visitor.company + 'text');
             comp1.style.display = 'inline';
-            comp2 = document.getElementById(this.user.company);
+            comp2 = document.getElementById(this.visitor.company);
             comp2.style.display= 'none';
 
-            acc1 = document.getElementById(this.user.access + 'text');
+            acc1 = document.getElementById(this.visitor.access + 'text');
             acc1.style.display = 'inline';
-            acc2 = document.getElementById(this.user.access);
+            acc2 = document.getElementById(this.visitor.access);
             acc2.style.display= 'none';
 
             edit = document.getElementById('edit');
@@ -256,17 +207,17 @@ export default {
             this.edit = true;
             let comp1, comp2, acc1, acc2, acc3, edit, save, cancel, del;
 
-            comp1 = document.getElementById(this.user.company + 'text');
+            comp1 = document.getElementById(this.visitor.company + 'text');
             comp1.style.display = 'none';
-            comp2 = document.getElementById(this.user.company);
+            comp2 = document.getElementById(this.visitor.company);
             comp2.style.display= 'inline';
-            this.searchComp = this.user.company;
+            this.searchComp = this.visitor.company;
 
-            acc1 = document.getElementById(this.user.access + 'text');
+            acc1 = document.getElementById(this.visitor.access + 'text');
             acc1.style.display = 'none';
-            acc2 = document.getElementById(this.user.access);
+            acc2 = document.getElementById(this.visitor.access);
             acc2.style.display= 'inline';
-            acc3 = document.getElementById(this.user.access + 'focus');
+            acc3 = document.getElementById(this.visitor.access + 'focus');
             acc3.focus();
             acc3.blur();
 

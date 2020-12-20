@@ -6,7 +6,6 @@
             :search-input.sync="filter"
             v-on:keyup="searchCompanies()"
             v-on:input="$emit('update:company', selected)"
-            
         >
         </v-autocomplete>
     </v-container>
@@ -16,13 +15,12 @@ import Parse from 'parse'
 export default {
     props: [
         'company',
-        'parent'
+        'parent',
     ],
     data() {
         return {
-            read: false,
             filter: "",
-            selected: "",
+            selected: this.company,
             companies: [],
             filteredCompanies: []
         }
