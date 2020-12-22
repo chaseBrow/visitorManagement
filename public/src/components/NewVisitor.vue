@@ -38,11 +38,13 @@
                 </v-row>
                 <v-row>
                     <v-col cols="6">
-                        <v-select label="Access" outlined color="accent" :items="accessOptions" v-model="visitor.access" v-on:focus="getOptions()">
+                        <v-select label="Access" outlined color="accent" :items="accessOptions" v-model="visitor.access" 
+                            v-on:focus="getOptions()" :rules="visitor.accessRules"
+                            >
                          </v-select>
                     </v-col>
                     <v-col cols="6">
-                        <v-text-field error label="Phone" outlined color="accent" v-model="visitor.phone">
+                        <v-text-field :rules="visitor.phoneRules" label="Phone" outlined color="accent" v-model="visitor.phone">
                         </v-text-field>
                     </v-col>
                 </v-row>
@@ -80,19 +82,27 @@ export default {
             visitor: {
                 firstName: null,
                 firstNameRules: [
-                    val => !!val || 'First Name is Required'
+                    v => !!v || "First Name is a required field.",
+                    v => (/^[a-zA-Z]+$/.test(v)) || "Invalid First Name"
                 ],
                 lastName: null,
                 lastNameRules: [
-                    val => !!val || 'Last Name is Required'
+                    v => !!v || "Last Name is a required field.",
+                    v => (/^[a-zA-Z]+$/.test(v)) || "Invalid Last Name."
                 ],
                 company: null,
                 companyRules: [
-                    val => !!val || 'Company is Required'
+                    val => !!val || "Company is a required field"
                 ],
                 email: null,
                 access: null,
+                accessRules: [
+                    v => !!v || "Access is a required field."
+                ],
                 phone: null,
+                phoneRules: [ 
+                    v => (/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/.test(v)) || !v || "Invalid Phone Number."
+                ],
                 maySchedule: null,
                 mayRemote: false,
             },
@@ -108,14 +118,7 @@ export default {
             console.log(user);
         },
         clear: function () {
-            this.visitor.firstName = null;
-            this.visitor.lastName = null;
-            this.visitor.company = null;
-            this.visitor.email = null;
-            this.visitor.access = null;
-            this.visitor.phone = null;
-            this.visitor.maySchedule = null;
-            this.visitor.mayRemote = false;
+            this.$refs.form.reset();
         },
         saveVisitor: async function () {
             let c = document.getElementById('newVisitor');

@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-card class="elevation-12">
+        <v-card class="elevation-12" >
 			<v-toolbar color="primary" dark flat>
 				<v-btn class="red" v-on:click="TEST()">TEST</v-btn>
 				<v-toolbar-title>
@@ -21,6 +21,7 @@
 						label="Password"
 						prepend-icon="mdi-lock"
 						type="password"
+						@keydown.enter="login()"
 					></v-text-field>
 				</v-form>
 			</v-card-text>

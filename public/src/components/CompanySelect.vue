@@ -6,6 +6,7 @@
             :search-input.sync="filter"
             v-on:keyup="searchCompanies()"
             v-on:input="$emit('update:company', selected)"
+            :rules="companyRules"
             v-bind="{clearable: (parent == 'dashboard')}"
         >
         </v-autocomplete>
@@ -23,6 +24,9 @@ export default {
             filter: "",
             selected: this.company,
             companies: [],
+            companyRules: [
+                v => (!!v || this.parent != 'newVisitor') || "Company is a required field."
+            ],
             filteredCompanies: []
         }
     },

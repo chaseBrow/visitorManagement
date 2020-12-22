@@ -107,7 +107,7 @@
                     You will no longer be able to add visit records for this visitor.  All previous visits will still be avaliable on the Visit History tab.
                 </v-card-text>
                 <div class="d-flex justify-center">
-                    <v-btn class="mr-6 mb-6" color="info" outlined>
+                    <v-btn class="mr-6 mb-6" color="info" outlined v-on:click="cancelDel()">
                         Cancel
                     </v-btn>
                     <v-btn class="warning mb-6" v-on:click="confirmDel()" v-bind="{loading: delLoading}">
@@ -226,6 +226,9 @@ export default {
             this.cancelBtn();
             this.dialog = false;
             this.$emit('reload');
+        },
+        cancelDel: function () {
+            this.dialogDel = false;
         },
         deleteBtn: function () {
             this.dialogDel = true;
