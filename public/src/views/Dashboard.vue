@@ -29,7 +29,6 @@
 							<CompanySelect 
 								@update:company="filterTerms.company = $event, filterPeople()"
 								v-bind:company.sync="filterTerms.company"
-								v-bind:parent="'dashboard'"
 							>
 							</CompanySelect>
 						</v-col>

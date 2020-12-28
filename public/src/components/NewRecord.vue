@@ -1,15 +1,15 @@
 <template>
     <v-container class="ma-0 pa-0">
-        <v-btn v-if="statIcon == 'Expected'" fab x-small class="expected" v-on:click="dialog = true, newRecord()">
+        <v-btn v-if="statIcon == 'Expected'" fab x-small class="expected">
             <v-icon>mdi-clock-time-eight-outline</v-icon>
         </v-btn>
-        <v-btn v-else-if="statIcon == 'Arrived'" fab x-small class="arrived" v-on:click="dialog = true, newRecord()">
+        <v-btn v-else-if="statIcon == 'Arrived'" fab x-small class="arrived">
             <v-icon>mdi-login</v-icon>
         </v-btn>
-        <v-btn v-else-if="statIcon == 'Departed'" fab x-small class="departed" v-on:click="dialog = true, newRecord()">
+        <v-btn v-else-if="statIcon == 'Departed'" fab x-small class="departed">
             <v-icon>mdi-logout</v-icon>
         </v-btn>
-        <v-dialog v-model="dialog" persistent width="300px" class="primary" @keydown.esc="cancel()">
+        <v-dialog v-model="dialog" persistent width="300px" class="primary">
             <template v-slot:activator="{ on, attrs }">
                 <v-btn v-bind="attrs" v-on="on" class="mr-2 accent" v-on:click="newRecord()" style="padding: 0 16px 0 6px">
                     <v-icon dense class="pr-1">mdi-plus</v-icon>
@@ -79,10 +79,6 @@ export default {
         this.newRecord();
     },
     methods: {
-        // fab: function() {
-        //     this.dialog = true;
-        //     this.newRecord();
-        // },
         visitStatus: function () {
             this.status = this.select;
             if (this.status == 'Arrived') {
