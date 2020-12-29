@@ -20,7 +20,7 @@
                 </v-row>
                 <v-row>
                     <v-col cols="6">
-                        <CompanySelect @selected="visitor.company = $event">
+                        <CompanySelect @update:company="visitor.company = $event, console.log($event)">
                         </CompanySelect>
                     </v-col>
                     <v-col cols="6">
@@ -105,8 +105,10 @@ export default {
             let person = new Visitor();
 
             const compQuery = new Parse.Query(Parse.User);
+            console.log("the company we are looking for is " + this.visitor.company);
             compQuery.equalTo("name", this.visitor.company);
             let comp = await compQuery.first();
+            console.log("setting company to " + comp);
 
             person.set("firstName", this.visitor.firstName);
             person.set("lastName", this.visitor.lastName);
