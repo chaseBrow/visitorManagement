@@ -203,7 +203,7 @@ export default {
         getDeparted: async function (person) {
             const Record = Parse.Object.extend("Record");
             const recQuery = new Parse.Query(Record);
-            recQuery.greaterThan("depart", this.getYesterday());
+            recQuery.greaterThan("createdAt", this.getYesterday());
             recQuery.descending("updatedAt");
             recQuery.equalTo("visitor", person);
             let item = await recQuery.first();
