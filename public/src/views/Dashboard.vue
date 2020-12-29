@@ -191,6 +191,7 @@ export default {
 
 			children = await Users.find();
 			children.push(user);
+			//children.push("contractor")
 
 			const Visitors = Parse.Object.extend("Visitor");
 			const queryVisitor = new Parse.Query(Visitors);

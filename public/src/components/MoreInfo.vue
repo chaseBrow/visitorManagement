@@ -160,6 +160,14 @@ export default {
             this.user.maySchedule = this.person.get('maySchedule');
             this.user.mayRemote = this.person.get('mayRemote');
             this.edit = false;
+            
+            const curUser = Parse.User.current();
+            if(this.user.company == "Contractor" && curUser != comp.get("parent")){
+                let edit = document.getElementById('edit');
+                edit.style.display = 'none';
+            }
+
+
         },
         getOptions: function () {
             const user = Parse.User.current();
