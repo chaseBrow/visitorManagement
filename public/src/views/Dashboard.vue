@@ -130,8 +130,6 @@ export default {
 		liveVisitor.on('update', () => {
 			this.updateMade();
 		});
-
-		
     },
 	methods: {
 		getCompanyName: function (person) {
@@ -147,13 +145,16 @@ export default {
 			this.filterTerms.company = '';
 
 			const Record = Parse.Object.extend("Record");
-			const recQuery = new Parse.Query(Record);
-
-			recQuery.greaterThan("updatedAt", this.getDate());
-			recQuery.descending("createdAt");
-			recQuery.include("visitor");
+			const recentQuery = new Parse.Query(Record).greaterThan("depart", this.getYesterday());
 			
-			let vis = await recQuery.find();
+			const statusQuery = new Parse.Query(Record).notEqualTo("status", "Departed");
+
+			const mainQuery = Parse.Query.or(recentQuery, statusQuery);
+
+			mainQuery.descending("createdAt");
+			mainQuery.include("visitor");
+			
+			let vis = await mainQuery.find();
 			let test = vis.map(item => {
 				return item.get("visitor");
 			});
@@ -171,7 +172,7 @@ export default {
 				else return false;
 			});
 		},
-		getDate: function () {
+		getYesterday: function () {
 			let date = new Date();
 			let yesterday = date.setTime(date.getTime() - 86400000);
 			return new Date(yesterday);
@@ -185,10 +186,16 @@ export default {
 			let children = []
 
 			const user = Parse.User.current();
-            const Users = new Parse.Query(Parse.User);
+
+			const contractor = new Parse.Query(Parse.User);
+			contractor.equalTo('name', 'Contractor');
+
+			const Users = new Parse.Query(Parse.User);
 			Users.equalTo("parentCompany", user);
 
-			children = await Users.find();
+			const mainQuery = Parse.Query.or(Users, contractor);
+
+			children = await mainQuery.find();
 			children.push(user);
 
 			const Visitors = Parse.Object.extend("Visitor");
