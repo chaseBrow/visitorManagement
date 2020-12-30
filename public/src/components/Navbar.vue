@@ -7,6 +7,8 @@
 				<span class="font-weight-bold" style="font-size: x-large; color: white">Mgmt</span>
 			</v-toolbar-title>
 			<v-spacer></v-spacer>
+			<NewGuest>
+			</NewGuest>
 			<NewVisitor v-if="['home'].indexOf($route.name) <= -1">
 			</NewVisitor>
 			<v-btn class="accent" v-if="['home'].indexOf($route.name) <= -1" v-on:click="logOut()">
@@ -38,11 +40,12 @@
 import Login from "./Login"
 import NewVisitor from "./NewVisitor"
 import Parse from "parse"
-
+import NewGuest from "./NewGuest"
 export default {
 	components: {
 		NewVisitor,
-		Login
+		Login,
+		NewGuest
 	},
 	data() {
 		return {
