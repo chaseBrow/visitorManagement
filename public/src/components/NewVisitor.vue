@@ -121,9 +121,6 @@ export default {
             this.$refs.form.reset();
         },
         saveVisitor: async function () {
-            let c = document.getElementById('newVisitor');
-            console.log(c);
-            c.setAttribute('required', true);
             if(this.$refs.form.validate() == true) {
                 const Visitor = Parse.Object.extend("Visitor");
                 let person = new Visitor();
