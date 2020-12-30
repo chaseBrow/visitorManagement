@@ -186,12 +186,17 @@ export default {
 			let children = []
 
 			const user = Parse.User.current();
-            const Users = new Parse.Query(Parse.User);
+
+			const contractor = new Parse.Query(Parse.User);
+			contractor.equalTo('name', 'Contractor');
+
+			const Users = new Parse.Query(Parse.User);
 			Users.equalTo("parentCompany", user);
 
-			children = await Users.find();
+			const mainQuery = Parse.Query.or(Users, contractor);
+
+			children = await mainQuery.find();
 			children.push(user);
-			//children.push("contractor")
 
 			const Visitors = Parse.Object.extend("Visitor");
 			const queryVisitor = new Parse.Query(Visitors);

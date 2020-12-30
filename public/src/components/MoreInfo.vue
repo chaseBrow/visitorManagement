@@ -16,7 +16,7 @@
                         <v-spacer></v-spacer>
                         <div :id="person.id + 'btnEdit'">
                             <v-btn class="accent" v-on:click="editBtn()" 
-                                v-bind="{disabled: (visitor.company == 'Contractor' && ctr == this.comp.get('parent'))}"
+                                :disabled="ctr"
                             >
                                 Edit
                             </v-btn>
@@ -156,8 +156,13 @@ export default {
             },
             accessOptions: [],
             edit: false, 
-            comp: this.person.get("company"),
-            ctr: Parse.User.current()
+        }
+    },
+    computed: {
+        ctr: function () {
+            const curUser = Parse.User.current();
+            const comp = this.person.get("company");
+            return this.person.get('company').get("name") == "Contractor" && curUser.id != comp.get('parentCompany').id;
         }
     },
     // watch: {
@@ -250,7 +255,6 @@ export default {
             this.dialogDel = true;
         },
         editBtn: function () {
-            console.log(this.person.get("company").get("parent"));
             this.edit = true;
             let comp1, comp2, acc1, acc2, acc3, edit, save, cancel, del;
 
