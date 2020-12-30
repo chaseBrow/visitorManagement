@@ -20,7 +20,7 @@
                 </v-row>
                 <v-row>
                     <v-col cols="6">
-                        <CompanySelect @update:company="visitor.company = $event, console.log($event)">
+                        <CompanySelect @update:company="visitor.company = $event">
                         </CompanySelect>
                     </v-col>
                     <v-col cols="6">

@@ -15,7 +15,9 @@
                         Visitor Information
                         <v-spacer></v-spacer>
                         <div :id="person.id + 'btnEdit'">
-                            <v-btn class="accent" v-on:click="editBtn()">
+                            <v-btn class="accent" v-on:click="editBtn()" 
+                                v-bind="{disabled: (visitor.company == 'Contractor' && ctr == this.comp.get('parent'))}"
+                            >
                                 Edit
                             </v-btn>
                         </div>
@@ -153,9 +155,23 @@ export default {
                 mayRemote: this.person.get('mayRemote'),
             },
             accessOptions: [],
-            edit: false,
+            edit: false, 
+            comp: this.person.get("company"),
+            ctr: Parse.User.current()
         }
     },
+    // watch: {
+    //     company: function(val) {
+    //         if(val) {
+    //             const curUser = Parse.User.current();
+    //             const comp = this.person.get("company");
+    //             if(this.visitor.company == "Contractor" && curUser != comp.get("parent")){
+    //                 let edit = document.getElementById(this.person.id + 'btnEdit');
+    //                 edit.style.display = 'none';
+    //             }
+    //         }
+    //     }
+    // },
     methods: {
         getOptions: function () {
             this.accessOptions = [];
@@ -234,6 +250,7 @@ export default {
             this.dialogDel = true;
         },
         editBtn: function () {
+            console.log(this.person.get("company").get("parent"));
             this.edit = true;
             let comp1, comp2, acc1, acc2, acc3, edit, save, cancel, del;
 
