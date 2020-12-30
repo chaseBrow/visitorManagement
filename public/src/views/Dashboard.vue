@@ -40,7 +40,7 @@
 							</v-text-field>
 						</v-col>
 						<v-col cols="2" class="pb-0">
-							<v-select label="Access" outlined color="accent" :items="accessOptions" v-model="filterTerms.access" 
+							<v-select clearable label="Access" outlined color="accent" :items="accessOptions" v-model="filterTerms.access" 
 								v-on:focus="getOptions()" v-on:change="filterPeople()"
 							>
 							</v-select>

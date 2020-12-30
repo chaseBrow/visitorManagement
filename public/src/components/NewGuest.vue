@@ -24,8 +24,9 @@
                 </v-row>
                 <v-row>
                     <v-col>
-                        <v-select outlined color="accent" label="Status" 
-                            :items="['Arrived', 'Expected']" v-model="status">
+                        <v-select outlined color="accent" label="Status" :rules="statusRules"
+                            :items="['Arrived', 'Expected']" v-model="status"
+                        >
                         </v-select>
                     </v-col>
                 </v-row>
@@ -60,6 +61,9 @@ export default {
                 ],
             },
             status: null,
+            statusRules: [
+                v => !!v || "Status is a required field"
+            ],
             menu: false,
             record: null
 
@@ -82,19 +86,19 @@ export default {
                 person.set("company", comp);
                 person.set("access", "Guest");
                 await person.save();
-                this.clear();
-                this.menu = !this.menu;
-
 
                 const Record = new Parse.Object.extend('Record');
                 this.record = new Record();
                 this.record.set("visitor", person);
+                console.log("setting status: " + this.status);
                 this.record.set("status", this.status);
                 if(this.status == "Arrived") {
                     this.record.set("arrive", this.getDate());
                 }
-                
                 await this.record.save();
+
+                this.clear();
+                this.menu = !this.menu;
             }
         },
         getDate: function () {
