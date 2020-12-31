@@ -64,7 +64,26 @@
 				</v-toolbar>
 
 				<v-list dense class="data secondary">
-					<v-list-item v-for="person in filteredPeople" :key="person.email">
+					<v-list-item class="guest" v-for="person in guests" :key="person.id" color="accent">
+						<span class="primary--text" style="width: 10%">{{ person.get('firstName') }}</span>
+                    	<span class="primary--text" style="width: 10%">{{ person.get('lastName') }}</span>
+                        <span class="primary--text" style="width: 10%; font-size: 0.95rem">{{ getCompanyName(person) }}</span>
+						<span class="primary--text" style="width: 25%; font-size: 0.9rem">{{ person.get('email') }}</span>
+                        <span class="primary--text" style="width: 10%; font-size: 0.9rem">{{ person.get('access') }}</span>
+                        
+						<v-spacer></v-spacer>
+						<div :id="person.id + 'visit'" :key="person.id + 'visit'">
+							<NewRecord v-bind:person="person">
+							</NewRecord> 
+						</div>
+						<div :id="person.get('email') + 'info'" :key="person.get('email') + 'info'" class="pa-0">
+							<v-btn :disabled="true" :dark="true" class="accent">
+								<v-icon dense class="pr-1">mdi-card-account-details-outline</v-icon>
+								<span>Info</span>
+							</v-btn>
+						</div>
+					</v-list-item>
+					<v-list-item v-for="person in filteredPeople" :key="person.id">
 						<span class="primary--text" style="width: 10%">{{ person.get('firstName') }}</span>
                     	<span class="primary--text" style="width: 10%">{{ person.get('lastName') }}</span>
                         <span class="primary--text" style="width: 10%; font-size: 0.95rem">{{ getCompanyName(person) }}</span>
@@ -98,6 +117,7 @@ export default {
 			recVisitors: null,
 			filteredPeople: [],
 			visitors: [],
+			guests: [],
 			filterTerms: {
 				firstName: '',
 				lastName: '',
@@ -159,7 +179,10 @@ export default {
 				return item.get("visitor");
 			});
 			let ids = test.map(item => {
-				return item.id;
+				if (item.get("access") != "Guest") {
+					return item.id;
+				}
+				return null;
 			});
 			ids = new Set(ids);
 			ids = [...ids];
@@ -204,7 +227,15 @@ export default {
 			queryVisitor.notEqualTo("deleted", true);
 			queryVisitor.include(["company.name"]);
 			queryVisitor.containedIn('company', children);
+			queryVisitor.notEqualTo("access", "Guest");
+
 			this.visitors = await queryVisitor.find();
+
+			const queryGuest = new Parse.Query(Visitors);
+			queryGuest.equalTo('access', "Guest");
+			this.guests = await queryGuest.find();
+			console.log(this.guests);
+
 			this.filterPeople();
 		},
 		filterPeople: function () {
@@ -247,6 +278,13 @@ export default {
 .v-list-item:hover {
 	background: #454545;
 } 
+
+.v-list-item.guest {
+	background: #9e1f6370;
+}
+.v-list-item.guest:hover{
+	background: #454545;
+}
 .v-list.data {
   border-radius: 0px;
   overflow-y: auto;
