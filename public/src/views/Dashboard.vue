@@ -29,6 +29,7 @@
 							<CompanySelect 
 								@update:company="filterTerms.company = $event, filterPeople()"
 								v-bind:company.sync="filterTerms.company"
+								v-bind:parent="'dashboard'"
 							>
 							</CompanySelect>
 						</v-col>
@@ -64,7 +65,7 @@
 				</v-toolbar>
 
 				<v-list dense class="data secondary">
-					<v-list-item class="guest" v-for="person in guests" :key="person.id" color="accent">
+					<v-list-item class="guest" v-for="person in guests" :key="person.id" color="accent" :hidden="hideGuests">
 						<span class="primary--text" style="width: 10%">{{ person.get('firstName') }}</span>
                     	<span class="primary--text" style="width: 10%">{{ person.get('lastName') }}</span>
                         <span class="primary--text" style="width: 10%; font-size: 0.95rem">{{ getCompanyName(person) }}</span>
@@ -118,6 +119,7 @@ export default {
 			filteredPeople: [],
 			visitors: [],
 			guests: [],
+			hideGuests: false,
 			filterTerms: {
 				firstName: '',
 				lastName: '',
@@ -233,8 +235,8 @@ export default {
 
 			const queryGuest = new Parse.Query(Visitors);
 			queryGuest.equalTo('access', "Guest");
+			queryGuest.notEqualTo("deleted", true);
 			this.guests = await queryGuest.find();
-			console.log(this.guests);
 
 			this.filterPeople();
 		},
@@ -254,6 +256,9 @@ export default {
 				if (visitor.get("email") && this.filterTerms.email) {
 					email = visitor.get("email").toLowerCase().includes(this.filterTerms.email.toLowerCase());
 				}
+				else if(this.filterTerms.email) {
+					email = false;
+				}
 				if (visitor.get("access") && this.filterTerms.access) {
 					access = visitor.get("access").toLowerCase().includes(this.filterTerms.access.toLowerCase());
 				}
@@ -264,6 +269,12 @@ export default {
 					return false;
 				}
 			});
+			if(this.filteredPeople.length != this.visitors.length) {
+				this.hideGuests = true;				
+			}
+			else {
+				this.hideGuests = false;
+			}
 		},
 	},
 	components: {

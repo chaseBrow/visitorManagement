@@ -164,6 +164,11 @@ export default {
                 this.status = "Absent";
                 this.arrivalTime = null;
                 this.departureTime = null;
+                
+                if (this.person.get("access") == "Guest"){
+                    this.person.set("deleted", true);
+                    await this.person.save();
+                }
             }
             else if (this.status == 'Expected') {
 
@@ -176,6 +181,11 @@ export default {
             else if (this.status == 'Delete') {
                 this.options = ["Arrived","Expected"];
                 await this.record.destroy();
+
+                if (this.person.get("access") == "Guest"){
+                    this.person.set("deleted", true);
+                    await this.person.save();
+                }
             }
             this.dialog = false;
             this.getStatus();
