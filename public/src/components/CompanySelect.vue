@@ -25,7 +25,7 @@ export default {
             selected: this.company,
             companies: [],
             companyRules: [
-                v => (!!v || this.parent != 'newVisitor') || "Company is a required field."
+                v => (!!v || this.parent != 'newVisitor') || "Company is a required field.",
             ],
             filteredCompanies: []
         }

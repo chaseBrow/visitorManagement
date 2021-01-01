@@ -8,6 +8,9 @@
         </template>
         <v-form ref="form">
             <v-card class="pa-4">
+                <v-alert dense type="error" :value="duplicate" dismissible>
+                    This is a duplicate user based on email and company.
+                </v-alert>
                 <v-row>
                     <v-col cols="6">
                         <v-text-field  label="First Name" outlined color="accent" v-model="visitor.firstName"
@@ -32,7 +35,7 @@
                         </CompanySelect>
                     </v-col>
                     <v-col cols="6">
-                        <v-text-field  label="Email" outlined color="accent" v-model="visitor.email">  
+                        <v-text-field  :rules="visitor.emailRules" label="Email" outlined color="accent" v-model="visitor.email">  
                         </v-text-field>
                     </v-col>
                 </v-row>
@@ -64,7 +67,7 @@
                     <v-btn class="mr-3" elevation="0" color="info" outlined v-on:click="clear()">
                         Clear
                     </v-btn>
-                    <v-btn class="success mr-3" v-on:click="saveVisitor()"> 
+                    <v-btn class="mr-3" color="success" v-on:click="saveVisitor()"> 
                         Save
                     </v-btn>
                 </v-card-actions>
@@ -91,10 +94,11 @@ export default {
                     v => (/^[a-zA-Z]+$/.test(v)) || "Invalid Last Name."
                 ],
                 company: null,
-                companyRules: [
-                    val => !!val || "Company is a required field"
-                ],
                 email: null,
+                emailRules: [
+                    v => !!v || "Email is a required field.",
+                    () => this.duplicate == false || "This is a duplicate key."
+                ],
                 access: null,
                 accessRules: [
                     v => !!v || "Access is a required field."
@@ -107,6 +111,7 @@ export default {
                 mayRemote: false,
             },
             menu: false,
+            duplicate: false
 
         }
     },
@@ -115,14 +120,26 @@ export default {
             this.accessOptions = [];
             const user = Parse.User.current();
             this.accessOptions = user.get("options");
-            console.log(user);
         },
         clear: function () {
             this.$refs.form.reset();
+            this.duplicate = false;
         },
         saveVisitor: async function () {
-            if(this.$refs.form.validate() == true) {
-                const Visitor = Parse.Object.extend("Visitor");
+
+            const Visitor = Parse.Object.extend("Visitor");
+            const queryVisitor = new Parse.Query(Visitor);
+            queryVisitor.notEqualTo("deleted", true);
+            let visitors = await queryVisitor.find();
+
+            let matchingVisitor = false;
+
+            visitors.forEach(item => {
+                if (item.get("email") == this.visitor.email && item.get("company").get("name") == this.visitor.company){
+                    matchingVisitor = true;
+                }
+            });
+            if(this.$refs.form.validate() == true && !matchingVisitor) {
                 let person = new Visitor();
 
                 const compQuery = new Parse.Query(Parse.User);
@@ -142,6 +159,10 @@ export default {
                 await person.save()
                 this.clear();
                 this.menu = !this.menu;
+            }
+            else if(this.$refs.form.validate()){
+                this.duplicate = true;
+                this.$refs.form.validate();
             }
         }
     },
