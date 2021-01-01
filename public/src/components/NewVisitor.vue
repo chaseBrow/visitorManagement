@@ -2,7 +2,7 @@
     <v-menu left v-model="menu" :close-on-content-click="false">
         <template v-slot:activator="{ on, attrs }">
             <v-btn class="mr-2 accent" v-bind="attrs" v-on="on">
-                <span class="mr-1 primary--text">New Vistor</span>
+                <span class="mr-1 primary--text">New Member</span>
                 <v-icon color="white">mdi-account-plus</v-icon>
             </v-btn>
         </template>
@@ -42,7 +42,7 @@
                 <v-row>
                     <v-col cols="6">
                         <v-select label="Access" outlined color="accent" :items="accessOptions" v-model="visitor.access" 
-                            v-on:focus="getOptions()" :rules="visitor.accessRules"
+                            v-on:focus="getOptions()" :rules="visitor.accessRules" :disabled="visitor.company == 'Contractor'"
                             >
                          </v-select>
                     </v-col>
@@ -101,7 +101,7 @@ export default {
                 ],
                 access: null,
                 accessRules: [
-                    v => !!v || "Access is a required field."
+                    v => !!v || this.visitor.company == "Contractor" || "Access is a required field."
                 ],
                 phone: null,
                 phoneRules: [ 
@@ -150,7 +150,12 @@ export default {
                 person.set("lastName", this.visitor.lastName);
                 person.set("company", comp);
                 person.set("email", this.visitor.email);
-                person.set("access", this.visitor.access);
+                if (this.visitor.company == "Contractor"){
+                    person.set("access", "Contractor");
+                }
+                else {
+                    person.set("access", this.visitor.access);
+                }
                 person.set("phone", this.visitor.phone);
                 person.set('maySchedule', this.visitor.maySchedule);
                 person.set('mayRemote', this.visitor.mayRemote);
