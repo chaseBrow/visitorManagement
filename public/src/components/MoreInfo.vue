@@ -68,7 +68,8 @@
                     </v-row>
                     <v-row>
                         <v-col cols="4">
-                            <v-text-field color="accent" v-bind="{rounded: !edit, readonly: !edit, outlined: edit}" label="Email" v-model="visitor.email">
+                            <v-text-field color="accent" v-bind="{rounded: !edit, readonly: !edit, outlined: edit}" 
+                            label="Email" v-model="visitor.email" :rules="visitor.emailRules">
                             </v-text-field>
                         </v-col>
                         <v-col cols="4">
@@ -143,9 +144,9 @@ export default {
                 ],
                 company: this.person.get('company').get('name'),
                 email: this.person.get('email'),
-                // emailRules: [
-                //     v => (.test(v)) || "Please enter a valid email",
-                // ],
+                emailRules: [
+                    v => !!v || "Email is a required field."
+                ],
                 access: this.person.get('access'),
                 phone: this.person.get('phone'),
                 phoneRules: [ 
