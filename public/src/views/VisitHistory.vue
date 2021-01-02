@@ -36,7 +36,7 @@ Description: Visit History Page
                         </v-text-field>
                     </v-col>
                     <v-col cols="4">
-                        <v-card color="grey lighten-1" elevation="6" style="border-radius: 8px;">
+                        <v-card color="grey lighten-1" elevation="6" style="border-radius: 8px;" >
                             <v-row class="date2">
                                 <v-col cols="6" class="date">
                                     <v-btn class="accent" v-on:click="daysAgo(30)">
@@ -153,7 +153,7 @@ Description: Visit History Page
                     </div>
                 </v-toolbar>
                 <v-list style="padding: 16px" class="secondary"> 
-                    <v-list-item v-for="record in recordsDisplay" :key="record.email + record.arrive" style="padding: 0px">
+                    <v-list-item v-for="record in recordsDisplay" :key="record.id" style="padding: 0px">
                         <v-row style="padding: 0px 16px 0px 16px">
                             <span class="primary--text" style="width: 10%">{{ record.firstName }}</span>
                             <span class="primary--text" style="width: 15%">{{ record.lastName }}</span>
@@ -648,18 +648,15 @@ export default {
 <style scoped>
 .date {
     display: flex;
+    align-items: center;
     flex-direction: column;
-    align-items: center; 
-}
-.date>*:first-child {
-    justify-self: start;
-}
-.date>*:first-child {
-    justify-self: end;
+    
 }
 .date2 {
     display: flex;
-    align-items: space;
+    align-items: space-around;
+    /* flex-direction: column;
+    align-items: center; */
 }
 .v-form.form {
     border-radius: 10px 10px 0px 0px;
