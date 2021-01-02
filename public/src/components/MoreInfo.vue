@@ -68,7 +68,8 @@
                     </v-row>
                     <v-row>
                         <v-col cols="4">
-                            <v-text-field color="accent" v-bind="{rounded: !edit, readonly: !edit, outlined: edit}" label="Email" v-model="visitor.email">
+                            <v-text-field color="accent" v-bind="{rounded: !edit, readonly: !edit, outlined: edit}" 
+                            label="Email" v-model="visitor.email" :rules="visitor.emailRules">
                             </v-text-field>
                         </v-col>
                         <v-col cols="4">
@@ -92,10 +93,18 @@
                         </v-col>
                     </v-row>
                     <v-row class="d-flex justify-space-around">
-                        <v-checkbox v-bind="{readonly: !edit}" color="accent" v-model="visitor.maySchedule" label="May Schedule Others">
-                        </v-checkbox>
-                        <v-checkbox color="accent" v-bind="{readonly: !edit}" v-model="visitor.mayRemote" label="May Request Remote Hands">
-                        </v-checkbox>
+                        <v-col cols="6">
+                            <v-textarea outlined color="accent" label="Notes" :readonly="!edit" v-model="visitor.notes">
+                            </v-textarea>
+                        </v-col>
+                        <v-col cols="3">
+                            <v-checkbox v-bind="{readonly: !edit}" color="accent" v-model="visitor.maySchedule" label="May Schedule Others">
+                            </v-checkbox>
+                        </v-col>
+                        <v-col cols="3">
+                            <v-checkbox color="accent" v-bind="{readonly: !edit}" v-model="visitor.mayRemote" label="May Request Remote Hands">
+                            </v-checkbox>
+                        </v-col>
                     </v-row>
                 </v-card>
             </v-form>
@@ -143,9 +152,9 @@ export default {
                 ],
                 company: this.person.get('company').get('name'),
                 email: this.person.get('email'),
-                // emailRules: [
-                //     v => (.test(v)) || "Please enter a valid email",
-                // ],
+                emailRules: [
+                    v => !!v || "Email is a required field."
+                ],
                 access: this.person.get('access'),
                 phone: this.person.get('phone'),
                 phoneRules: [ 
@@ -153,6 +162,7 @@ export default {
                 ],
                 maySchedule: this.person.get('maySchedule'),
                 mayRemote: this.person.get('mayRemote'),
+                notes: this.person.get("notes"),
             },
             accessOptions: [],
             edit: false, 
@@ -192,6 +202,7 @@ export default {
                 this.person.set('phone', this.visitor.phone);
                 this.person.set('maySchedule', this.visitor.maySchedule);
                 this.person.set('mayRemote', this.visitor.mayRemote);
+                this.person.set('notes', this.visitor.notes);
 
                 let Companies = new Parse.Query(Parse.User);
                 Companies.equalTo('name', this.visitor.company);
@@ -211,6 +222,7 @@ export default {
             this.visitor.phone = this.person.get('phone');
             this.visitor.maySchedule = this.person.get('maySchedule');
             this.visitor.mayRemote = this.person.get('mayRemote');
+            this.visitor.notes = this.person.get('notes')
 
             let comp1, comp2, acc1, acc2, edit, save, cancel, del;
 

@@ -29,6 +29,7 @@
 							<CompanySelect 
 								@update:company="filterTerms.company = $event, filterPeople()"
 								v-bind:company.sync="filterTerms.company"
+								v-bind:parent="'dashboard'"
 							>
 							</CompanySelect>
 						</v-col>
@@ -40,7 +41,7 @@
 							</v-text-field>
 						</v-col>
 						<v-col cols="2" class="pb-0">
-							<v-select label="Access" outlined color="accent" :items="accessOptions" v-model="filterTerms.access" 
+							<v-select clearable label="Access" outlined color="accent" :items="accessOptions" v-model="filterTerms.access" 
 								v-on:focus="getOptions()" v-on:change="filterPeople()"
 							>
 							</v-select>
@@ -64,7 +65,26 @@
 				</v-toolbar>
 
 				<v-list dense class="data secondary">
-					<v-list-item v-for="person in filteredPeople" :key="person.email">
+					<v-list-item class="guest" v-for="person in guests" :key="person.id" color="accent" :hidden="hideGuests">
+						<span class="primary--text" style="width: 10%">{{ person.get('firstName') }}</span>
+                    	<span class="primary--text" style="width: 10%">{{ person.get('lastName') }}</span>
+                        <span class="primary--text" style="width: 10%; font-size: 0.95rem">{{ getCompanyName(person) }}</span>
+						<span class="primary--text" style="width: 25%; font-size: 0.9rem">{{ person.get('email') }}</span>
+                        <span class="primary--text" style="width: 10%; font-size: 0.9rem">{{ person.get('access') }}</span>
+                        
+						<v-spacer></v-spacer>
+						<div :id="person.id + 'visit'" :key="person.id + 'visit'">
+							<NewRecord v-bind:person="person">
+							</NewRecord> 
+						</div>
+						<div :id="person.get('email') + 'info'" :key="person.get('email') + 'info'" class="pa-0">
+							<v-btn :disabled="true" :dark="true" class="accent">
+								<v-icon dense class="pr-1">mdi-card-account-details-outline</v-icon>
+								<span>Info</span>
+							</v-btn>
+						</div>
+					</v-list-item>
+					<v-list-item v-for="person in filteredPeople" :key="person.id">
 						<span class="primary--text" style="width: 10%">{{ person.get('firstName') }}</span>
                     	<span class="primary--text" style="width: 10%">{{ person.get('lastName') }}</span>
                         <span class="primary--text" style="width: 10%; font-size: 0.95rem">{{ getCompanyName(person) }}</span>
@@ -98,6 +118,8 @@ export default {
 			recVisitors: null,
 			filteredPeople: [],
 			visitors: [],
+			guests: [],
+			hideGuests: false,
 			filterTerms: {
 				firstName: '',
 				lastName: '',
@@ -159,7 +181,10 @@ export default {
 				return item.get("visitor");
 			});
 			let ids = test.map(item => {
-				return item.id;
+				if (item.get("access") != "Guest") {
+					return item.id;
+				}
+				return null;
 			});
 			ids = new Set(ids);
 			ids = [...ids];
@@ -204,7 +229,16 @@ export default {
 			queryVisitor.notEqualTo("deleted", true);
 			queryVisitor.include(["company.name"]);
 			queryVisitor.containedIn('company', children);
+			queryVisitor.notEqualTo("access", "Guest");
+
 			this.visitors = await queryVisitor.find();
+			this.visitors = this.visitors.slice(0,20);
+
+			const queryGuest = new Parse.Query(Visitors);
+			queryGuest.equalTo('access', "Guest");
+			queryGuest.notEqualTo("deleted", true);
+			this.guests = await queryGuest.find();
+
 			this.filterPeople();
 		},
 		filterPeople: function () {
@@ -223,6 +257,9 @@ export default {
 				if (visitor.get("email") && this.filterTerms.email) {
 					email = visitor.get("email").toLowerCase().includes(this.filterTerms.email.toLowerCase());
 				}
+				else if(this.filterTerms.email) {
+					email = false;
+				}
 				if (visitor.get("access") && this.filterTerms.access) {
 					access = visitor.get("access").toLowerCase().includes(this.filterTerms.access.toLowerCase());
 				}
@@ -233,6 +270,12 @@ export default {
 					return false;
 				}
 			});
+			if(this.filteredPeople.length != this.visitors.length) {
+				this.hideGuests = true;				
+			}
+			else {
+				this.hideGuests = false;
+			}
 		},
 	},
 	components: {
@@ -247,6 +290,13 @@ export default {
 .v-list-item:hover {
 	background: #454545;
 } 
+
+.v-list-item.guest {
+	background: #9e1f6370;
+}
+.v-list-item.guest:hover{
+	background: #454545;
+}
 .v-list.data {
   border-radius: 0px;
   overflow-y: auto;
