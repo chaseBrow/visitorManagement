@@ -232,6 +232,7 @@ export default {
 			queryVisitor.notEqualTo("access", "Guest");
 
 			this.visitors = await queryVisitor.find();
+			this.visitors = this.visitors.slice(0,20);
 
 			const queryGuest = new Parse.Query(Visitors);
 			queryGuest.equalTo('access', "Guest");
