@@ -1,122 +1,82 @@
-<template>
 <!-- Author: Chad Brown & Chase Brown
 Created On: 05/23/1618
 Updated By: Chad Brown & Chase Brown
 Updated On: 08/03/2020
 Description: Visit History Page
 -->
+<template>
     <v-container background fluid fill-height>
         <v-row class="mx-4" style="height: 100%">
             <v-form class="form primary">
                 <v-row>
-                    <v-col cols="8">
-                        <v-container>
-                            <v-row class="align-start">
-                                <v-col cols="6" class="py-0">
-                                    <v-text-field label="First Name" outlined color="black" 
-                                        v-model="filterTerms.firstName"
-                                        v-on:input="filterRecords()"
-                                    >
-                                    </v-text-field>
-                                </v-col>
-                                <v-col cols="6" class="py-0">
-                                    <v-text-field label="Last Name" outlined color="black" 
-                                        v-model="filterTerms.lastName"
-                                        v-on:input="filterRecords()"
-                                    >
-                                    </v-text-field>
-                                </v-col>
-                            </v-row>
-                            <v-row class="align-start">
-                                <v-col cols="6" class="py-0">
-                                    <v-autocomplete outlined label="Company" color="black" cache-items hide-no-data
-                                        :items="companyFinal"
-                                        :search-input.sync="searchComp"
-                                        v-model="filterTerms.company"
-                                        v-on:change="filterRecords()"
-                                    >
-                                    </v-autocomplete>
-                                </v-col>
-                                <v-col cols="6" class="py-0">
-                                    <v-text-field label="Email" outlined color="black" 
-                                        v-model="filterTerms.email"
-                                        v-on:input="filterRecords()"
-                                    >
-                                    </v-text-field>
-                                </v-col>
-                                
-                            </v-row>
-                        </v-container>
+                    <v-col cols="4">
+                        <v-text-field label="First Name" outlined color="black" 
+                            v-model="filterTerms.firstName"
+                            v-on:input="filterRecords()"
+                        >
+                        </v-text-field>
+                        <v-text-field label="Last Name" outlined color="black" 
+                            v-model="filterTerms.lastName"
+                            v-on:input="filterRecords()"
+                        >
+                        </v-text-field>
                     </v-col>
-                    <v-col cols="4" class="mt-n2 mb-2 pt-0 pa-2 d-flex align-center">
-                        <v-card class="secondary pb-0 pa-4" style="border-radius: 8px">
-                            <v-row>
-                                <v-col cols="12" class="d-flex justify-space-between pb-1">
+                    <v-col cols="4">
+                        <v-autocomplete outlined label="Company" color="black" cache-items hide-no-data
+                            :items="companyFinal"
+                            :search-input.sync="searchComp"
+                            v-model="filterTerms.company"
+                            v-on:change="filterRecords()"
+                        >
+                        </v-autocomplete>
+                        <v-text-field label="Email" outlined color="black" 
+                            v-model="filterTerms.email"
+                            v-on:input="filterRecords()"
+                        >
+                        </v-text-field>
+                    </v-col>
+                    <v-col cols="4">
+                        <v-card color="grey lighten-1" elevation="6" style="border-radius: 8px;">
+                            <v-row class="date2">
+                                <v-col cols="6" class="date">
                                     <v-btn class="accent" v-on:click="daysAgo(30)">
                                         30 days
-                                    </v-btn>
-                                    <v-btn class="accent" v-on:click="daysAgo(90)">
-                                        90 days
-                                    </v-btn>
-                                    <v-btn class="accent" v-on:click="daysAgo(0)">
-                                        Year to Date
-                                    </v-btn>
-                                </v-col>
-                            </v-row>
-                            <v-row>
-                                <v-col cols="6" class="pb-0 pa-3">
+                                    </v-btn>    
                                     <v-menu
-                                        v-model="stMenu"
-                                        transition="scale-transition"
+                                        v-model="startMenu"
+                                        transition="scale-transition"                           
                                         offset-y
-                                        min-width="290px"
                                     >
                                         <template v-slot:activator="{ on, attrs }">
                                             <v-text-field
-                                                v-model="filterTerms.arrive"
-                                                label="Start Date"
-                                                readonly
-                                                v-bind="attrs"
-                                                v-on="on"
-                                                outlined
-                                                clearable
-                                                v-on:input="filterRecords()"
-                                                color="white"
-                                                class="theme--dark"
-                                                id="xyz"
+                                                v-model="filterTerms.arrive" label="Start Date" v-bind="attrs" readonly v-on="on"
+                                                outlined clearable v-on:input="filterRecords()" color="accent"
                                             >
                                             </v-text-field>
                                         </template>
                                         <v-date-picker v-model="filterTerms.arrive" no-title scrollable v-on:input="filterRecords()">
                                         </v-date-picker>
-                                    </v-menu>
+                                    </v-menu>    
                                 </v-col>
-                                <v-col cols="6" class="pb-0 pa-3">
+                                <v-col cols="6">
+                                    <v-btn class="accent" v-on:click="daysAgo(0)">
+                                        Year to Date
+                                    </v-btn>
                                     <v-menu
                                         v-model="endMenu"
-                                        transition="scale-transition"
+                                        transition="scale-transition"                           
                                         offset-y
-                                        min-width="290px"
                                     >
                                         <template v-slot:activator="{ on, attrs }">
                                             <v-text-field
-                                                v-model="filterTerms.depart"
-                                                label="End Date"
-                                                readonly
-                                                v-bind="attrs"
-                                                v-on="on"
-                                                outlined
-                                                clearable
-                                                v-on:input="filterRecords()"
-                                                color="white"
-                                                class="theme--dark"
-                                                id="zyx"
+                                                v-model="filterTerms.depart" label="End Date" v-bind="attrs" readonly v-on="on"
+                                                outlined clearable v-on:input="filterRecords()" color="accent"
                                             >
                                             </v-text-field>
                                         </template>
                                         <v-date-picker v-model="filterTerms.depart" no-title scrollable v-on:input="filterRecords()">
                                         </v-date-picker>
-                                    </v-menu>
+                                    </v-menu>      
                                 </v-col>
                             </v-row>
                         </v-card>
@@ -235,8 +195,7 @@ export default {
             searchComp: null,
             currentPage: 1,
             pages: null,
-
-            stMenu: false,
+            startMenu: false,
             endMenu: false,
 
         }
@@ -258,15 +217,15 @@ export default {
         this.getRecords();
     },
     methods: {
-        daysAgo: function (daysAgo) {
+        daysAgo: function (days) {
             let date = new Date()
-            date.setTime(date.getTime() - 86400000 * daysAgo);
+            date.setTime(date.getTime() - (86400000 * days));
             
             let year = date.getFullYear();
             let month = "0" + (date.getMonth() + 1);
             let day = "0" + date.getDate();
 
-            if (daysAgo == 0) {
+            if (days == 0) {
                 month = "01";
                 day = "01";
             }
@@ -288,8 +247,8 @@ export default {
             this.displayRecords();
         },
         filterRecords: function () {
-            document.getElementById('xyz').previousElementSibling.classList.add('theme--dark')
-            document.getElementById('zyx').previousElementSibling.classList.add('theme--dark')
+            // document.getElementById('xyz').previousElementSibling.classList.add('theme--dark')
+            // document.getElementById('zyx').previousElementSibling.classList.add('theme--dark')
 
             let list = this.recordsSorted.filter((item) => {
                 let first = true, last = true, comp = true, email = true, date = true;
@@ -687,11 +646,26 @@ export default {
 };
 </script>
 <style scoped>
+.date {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+}
+.date>*:first-child {
+    justify-self: start;
+}
+.date>*:first-child {
+    justify-self: end;
+}
+.date2 {
+    display: flex;
+    align-items: space;
+}
 .v-form.form {
     border-radius: 10px 10px 0px 0px;
     width: 100%;
     height: fit-content;
-    padding: 0px 20px 0px 20px;
+    /* padding: 0px 20px 0px 20px; */
 }
 .v-btn.sort {
     margin: 0px;
