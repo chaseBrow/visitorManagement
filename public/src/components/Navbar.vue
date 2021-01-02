@@ -18,8 +18,7 @@
 			<Login v-if="['home'].indexOf($route.name) == 0">
 			</Login>
 		</v-app-bar>
-		<v-navigation-drawer  v-model="drawer" class="secondary" app absolute temporary>
-			
+		<v-navigation-drawer v-model="drawer" class="secondary" app fixed temporary>
 			<v-list>
 				<v-list-item v-for="link in links" :key="link.text" :to="link.route" >
 					<v-list-item-action>
