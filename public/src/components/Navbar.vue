@@ -5,6 +5,8 @@
 			<v-toolbar-title class="text-uppercase">
 				<span class="font-weight-light" style="font-size: x-large; color: white"> Visitor</span>
 				<span class="font-weight-bold" style="font-size: x-large; color: white">Mgmt</span>
+				<span class="text-lowercase" style="font-size: x-large; color: white">x</span>
+				<span class="font-weight-bold" style="font-size: x-large; color: white">AU</span>
 			</v-toolbar-title>
 			<v-spacer></v-spacer>
 			<NewGuest>

@@ -77,7 +77,12 @@
 							<NewRecord v-bind:person="person">
 							</NewRecord> 
 						</div>
-						<div :id="person.get('email') + 'info'" :key="person.get('email') + 'info'" class="pa-0">
+						<div>
+							<v-btn class="accent mr-1" v-on:click="print(person)">
+								<v-icon dense>mdi-printer</v-icon>
+							</v-btn>
+						</div>
+						<div :id="person.id + 'info'" :key="person.get('email') + 'info'" class="pa-0">
 							<v-btn :disabled="true" :dark="true" class="accent">
 								<v-icon dense class="pr-1">mdi-card-account-details-outline</v-icon>
 								<span>Info</span>
@@ -95,6 +100,11 @@
 						<div :id="person.get('email') + 'visit'" :key="person.get('email') + 'visit'">
 							<NewRecord v-bind:person="person">
 							</NewRecord> 
+						</div>
+						<div>
+							<v-btn class="accent mr-1" v-on:click="print(person)">
+								<v-icon dense>mdi-printer</v-icon>
+							</v-btn>
 						</div>
 						<div :id="person.get('email') + 'info'" :key="person.get('email') + 'info'" class="pa-0">
 							<MoreInfo v-bind:person="person"> 
@@ -154,6 +164,14 @@ export default {
 		});
     },
 	methods: {
+		print: async function(person) {
+			let data = "::" + person.get("firstName") + " " + person.get("lastName") + "::" +
+				this.getCompanyName(person) + "::" + person.get("access");
+
+			fetch("http://localhost:3080/", { method: 'POST', mode: 'no-cors', body: data}).then(response => {
+				console.log(response);
+			});
+		},
 		getCompanyName: function (person) {
 			let comp = person.get("company");
 			let name = comp.get("name");

@@ -2,7 +2,6 @@
     <v-container>
         <v-card class="elevation-12">
 			<v-toolbar color="primary" dark flat>
-				<v-btn class="red" v-on:click="TEST()">TEST</v-btn>
 				<v-toolbar-title>
 					Login form
 				</v-toolbar-title>
@@ -42,15 +41,6 @@ export default {
 	},
 	
     methods: {
-		TEST: async function () {
-			// let data = encodeURI("chase");
-			fetch("http://localhost:3080/", { method: 'POST', mode: 'no-cors', body: ":::Chase Brown::Aunalytics::Data Suite One"}).then(response => {
-				console.log(response);
-			});
-
-			
-		},
-
         login: async function () {
 			await Parse.User.logIn(this.username, this.password);
 			this.$router.push("dashboard");
