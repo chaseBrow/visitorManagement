@@ -263,463 +263,463 @@ Description: Visit History Page
 <script>
 import Parse from "parse";
 export default {
-  data() {
-    return {
-      records: [],
-      recordsFinal: [],
-      recordsDisplay: [],
-      recordsSorted: [],
-      sort: 0,
-      lastBtn: null,
-      filterTerms: {
-        firstName: null,
-        lastName: null,
-        company: null,
-        email: null,
-        arrive: null,
-        depart: null
-      },
-      companyFinal: [],
-      searchComp: null,
-      currentPage: 1,
-      pages: null,
-      startMenu: false,
-      endMenu: false
-    };
-  },
-  computed: {
-    arriveFormatted: function() {
-      return this.formatDateInputs(this.filterTerms.arrive);
-    },
-    departFormatted: function() {
-      return this.formatDateInputs(this.filterTerms.depart);
-    }
-  },
-  watch: {
-    searchComp(val) {
-      this.searchCompanies(val);
-    }
-  },
-  beforeMount() {
-    this.getRecords();
-  },
-  methods: {
-    daysAgo: function(days) {
-      let date = new Date();
-      date.setTime(date.getTime() - 86400000 * days);
+	data() {
+		return {
+			records: [],
+			recordsFinal: [],
+			recordsDisplay: [],
+			recordsSorted: [],
+			sort: 0,
+			lastBtn: null,
+			filterTerms: {
+				firstName: null,
+				lastName: null,
+				company: null,
+				email: null,
+				arrive: null,
+				depart: null
+			},
+			companyFinal: [],
+			searchComp: null,
+			currentPage: 1,
+			pages: null,
+			startMenu: false,
+			endMenu: false
+		};
+	},
+	computed: {
+		arriveFormatted: function() {
+			return this.formatDateInputs(this.filterTerms.arrive);
+		},
+		departFormatted: function() {
+			return this.formatDateInputs(this.filterTerms.depart);
+		}
+	},
+	watch: {
+		searchComp(val) {
+			this.searchCompanies(val);
+		}
+	},
+	beforeMount() {
+		this.getRecords();
+	},
+	methods: {
+		daysAgo: function(days) {
+			let date = new Date();
+			date.setTime(date.getTime() - 86400000 * days);
 
-      let year = date.getFullYear();
-      let month = "0" + (date.getMonth() + 1);
-      let day = "0" + date.getDate();
+			let year = date.getFullYear();
+			let month = "0" + (date.getMonth() + 1);
+			let day = "0" + date.getDate();
 
-      if (days == 0) {
-        month = "01";
-        day = "01";
-      }
+			if (days == 0) {
+				month = "01";
+				day = "01";
+			}
 
-      this.filterTerms.arrive =
+			this.filterTerms.arrive =
         year + "-" + month.slice(-2) + "-" + day.slice(-2);
-      this.filterRecords();
-    },
-    formatDateInputs: function(inputtedDate) {
-      if (!inputtedDate) return null;
+			this.filterRecords();
+		},
+		formatDateInputs: function(inputtedDate) {
+			if (!inputtedDate) return null;
 
-      const [year, month, date] = inputtedDate.split("-");
-      return `${month}/${date}/${year}`;
-    },
-    displayRecords: function() {
-      this.recordsDisplay = this.recordsFinal.slice(
-        20 * (this.currentPage - 1),
-        20 * this.currentPage
-      );
-    },
-    calcPages: function() {
-      this.pages = Math.ceil(this.recordsFinal.length / 20);
-      this.displayRecords();
-    },
-    filterRecords: function() {
-      // document.getElementById('xyz').previousElementSibling.classList.add('theme--dark')
-      // document.getElementById('zyx').previousElementSibling.classList.add('theme--dark')
+			const [year, month, date] = inputtedDate.split("-");
+			return `${month}/${date}/${year}`;
+		},
+		displayRecords: function() {
+			this.recordsDisplay = this.recordsFinal.slice(
+				20 * (this.currentPage - 1),
+				20 * this.currentPage
+			);
+		},
+		calcPages: function() {
+			this.pages = Math.ceil(this.recordsFinal.length / 20);
+			this.displayRecords();
+		},
+		filterRecords: function() {
+			// document.getElementById('xyz').previousElementSibling.classList.add('theme--dark')
+			// document.getElementById('zyx').previousElementSibling.classList.add('theme--dark')
 
-      let list = this.recordsSorted.filter(item => {
-        let first = true,
-          last = true,
-          comp = true,
-          email = true,
-          date = true;
-        if (this.filterTerms.firstName) {
-          first = item.firstName
-            .toLowerCase()
-            .includes(this.filterTerms.firstName.toLowerCase());
-        }
-        if (this.filterTerms.lastName) {
-          last = item.lastName
-            .toLowerCase()
-            .includes(this.filterTerms.lastName.toLowerCase());
-        }
-        if (this.filterTerms.company) {
-          comp = item.company
-            .toLowerCase()
-            .includes(this.filterTerms.company.toLowerCase());
-        }
-        if (this.filterTerms.email) {
-          email = item.email
-            .toLowerCase()
-            .includes(this.filterTerms.email.toLowerCase());
-        }
+			let list = this.recordsSorted.filter(item => {
+				let first = true,
+					last = true,
+					comp = true,
+					email = true,
+					date = true;
+				if (this.filterTerms.firstName) {
+					first = item.firstName
+						.toLowerCase()
+						.includes(this.filterTerms.firstName.toLowerCase());
+				}
+				if (this.filterTerms.lastName) {
+					last = item.lastName
+						.toLowerCase()
+						.includes(this.filterTerms.lastName.toLowerCase());
+				}
+				if (this.filterTerms.company) {
+					comp = item.company
+						.toLowerCase()
+						.includes(this.filterTerms.company.toLowerCase());
+				}
+				if (this.filterTerms.email) {
+					email = item.email
+						.toLowerCase()
+						.includes(this.filterTerms.email.toLowerCase());
+				}
 
-        if (this.filterTerms.arrive && this.filterTerms.depart) {
-          date =
+				if (this.filterTerms.arrive && this.filterTerms.depart) {
+					date =
             item.arrive.substring(0, 9) <= this.departFormatted &&
             item.arrive.substring(0, 9) >= this.arriveFormatted;
-        } else if (this.filterTerms.arrive) {
-          date = item.arrive.substring(0, 9) >= this.arriveFormatted;
-        } else if (this.filterTerms.depart) {
-          date = item.depart.substring(0, 9) <= this.departFormatted;
-        }
+				} else if (this.filterTerms.arrive) {
+					date = item.arrive.substring(0, 9) >= this.arriveFormatted;
+				} else if (this.filterTerms.depart) {
+					date = item.depart.substring(0, 9) <= this.departFormatted;
+				}
 
-        if (
-          first == true &&
+				if (
+					first == true &&
           last == true &&
           email == true &&
           comp == true &&
           date == true
-        ) {
-          return true;
-        } else return false;
-      });
-      this.recordsFinal = list;
-      this.calcPages();
-    },
-    sortBy: async function(sortBtn) {
-      if (this.sort == 0 && this.lastBtn == null) {
-        this.sort = 1;
-        this.sortSwitch(sortBtn);
-      } else if (sortBtn !== this.lastBtn) {
-        this.sort = 1;
-        await this.reformatOldSwitch();
-        this.sortSwitch(sortBtn);
-      } else {
-        this.sort += 1;
-        this.sortSwitch(sortBtn);
-      }
-      this.lastBtn = sortBtn;
-    },
-    reformatOldSwitch: async function() {
-      let asc = await document.getElementById("asc" + this.lastBtn);
-      let des = await document.getElementById("des" + this.lastBtn);
-      asc.style.color = "grey";
-      des.style.color = "grey";
-    },
-    sortSwitch: function(sortBtn) {
-      switch (sortBtn) {
-        case 0: {
-          let asc = document.getElementById("asc0");
-          let des = document.getElementById("des0");
+				) {
+					return true;
+				} else return false;
+			});
+			this.recordsFinal = list;
+			this.calcPages();
+		},
+		sortBy: async function(sortBtn) {
+			if (this.sort == 0 && this.lastBtn == null) {
+				this.sort = 1;
+				this.sortSwitch(sortBtn);
+			} else if (sortBtn !== this.lastBtn) {
+				this.sort = 1;
+				await this.reformatOldSwitch();
+				this.sortSwitch(sortBtn);
+			} else {
+				this.sort += 1;
+				this.sortSwitch(sortBtn);
+			}
+			this.lastBtn = sortBtn;
+		},
+		reformatOldSwitch: async function() {
+			let asc = await document.getElementById("asc" + this.lastBtn);
+			let des = await document.getElementById("des" + this.lastBtn);
+			asc.style.color = "grey";
+			des.style.color = "grey";
+		},
+		sortSwitch: function(sortBtn) {
+			switch (sortBtn) {
+			case 0: {
+				let asc = document.getElementById("asc0");
+				let des = document.getElementById("des0");
 
-          if (this.sort % 3 == 0) {
-            asc.style.color = "grey";
-            des.style.color = "grey";
-            this.sortRecords();
-          } else if (this.sort % 3 == 1) {
-            asc.style.color = "grey";
-            des.style.color = "#9e1f63";
-            this.sortRecords(undefined, "firstName", "des");
-          } else {
-            asc.style.color = "#9e1f63";
-            des.style.color = "grey";
-            this.sortRecords(undefined, "firstName", "asc");
-          }
-          break;
-        }
-        case 1: {
-          let asc = document.getElementById("asc1");
-          let des = document.getElementById("des1");
+				if (this.sort % 3 == 0) {
+					asc.style.color = "grey";
+					des.style.color = "grey";
+					this.sortRecords();
+				} else if (this.sort % 3 == 1) {
+					asc.style.color = "grey";
+					des.style.color = "#9e1f63";
+					this.sortRecords(undefined, "firstName", "des");
+				} else {
+					asc.style.color = "#9e1f63";
+					des.style.color = "grey";
+					this.sortRecords(undefined, "firstName", "asc");
+				}
+				break;
+			}
+			case 1: {
+				let asc = document.getElementById("asc1");
+				let des = document.getElementById("des1");
 
-          if (this.sort % 3 == 0) {
-            asc.style.color = "grey";
-            des.style.color = "grey";
-            this.sortRecords();
-          } else if (this.sort % 3 == 1) {
-            asc.style.color = "grey";
-            des.style.color = "#9e1f63";
-            this.sortRecords(undefined, "lastName", "des");
-          } else {
-            asc.style.color = "#9e1f63";
-            des.style.color = "grey";
-            this.sortRecords(undefined, "lastName", "asc");
-          }
-          break;
-        }
-        case 2: {
-          let asc = document.getElementById("asc2");
-          let des = document.getElementById("des2");
-          if (this.sort % 3 == 0) {
-            asc.style.color = "grey";
-            des.style.color = "grey";
-            this.sortRecords();
-          } else if (this.sort % 3 == 1) {
-            asc.style.color = "grey";
-            des.style.color = "#9e1f63";
-            this.sortRecords(undefined, "company", "des");
-          } else {
-            asc.style.color = "#9e1f63";
-            des.style.color = "grey";
-            this.sortRecords(undefined, "company", "asc");
-          }
-          break;
-        }
-        case 3: {
-          let asc = document.getElementById("asc3");
-          let des = document.getElementById("des3");
-          if (this.sort % 3 == 0) {
-            asc.style.color = "grey";
-            des.style.color = "grey";
-            this.sortRecords();
-          } else if (this.sort % 3 == 1) {
-            asc.style.color = "grey";
-            des.style.color = "#9e1f63";
-            this.sortRecords(undefined, "email", "des");
-          } else {
-            asc.style.color = "#9e1f63";
-            des.style.color = "grey";
-            this.sortRecords(undefined, "email", "asc");
-          }
-          break;
-        }
-        case 4: {
-          let asc = document.getElementById("asc4");
-          let des = document.getElementById("des4");
-          if (this.sort % 3 == 0) {
-            asc.style.color = "grey";
-            des.style.color = "grey";
-            this.sortRecords();
-          } else if (this.sort % 3 == 1) {
-            asc.style.color = "grey";
-            des.style.color = "#9e1f63";
-            this.sortRecords(undefined, "arrive", "des");
-          } else {
-            asc.style.color = "#9e1f63";
-            des.style.color = "grey";
-            this.sortRecords(undefined, "arrive", "asc");
-          }
-          break;
-        }
-        case 5: {
-          let asc = document.getElementById("asc5");
-          let des = document.getElementById("des5");
-          if (this.sort % 3 == 0) {
-            asc.style.color = "grey";
-            des.style.color = "grey";
-            this.sortRecords();
-          } else if (this.sort % 3 == 1) {
-            asc.style.color = "grey";
-            des.style.color = "#9e1f63";
-            this.sortRecords(undefined, "depart", "des");
-          } else {
-            asc.style.color = "#9e1f63";
-            des.style.color = "grey";
-            this.sortRecords(undefined, "depart", "asc");
-          }
-          break;
-        }
-      }
-    },
-    sortRecords: async function(
-      list = this.records,
-      sortBy = "company",
-      sortType = "des"
-    ) {
-      switch (sortBy) {
-        case "firstName": {
-          for (let x = 1; x < list.length; x++) {
-            let y = 1;
-            let visitorx = await list[x].get("visitor");
-            let visitory = await list[x - y].get("visitor");
+				if (this.sort % 3 == 0) {
+					asc.style.color = "grey";
+					des.style.color = "grey";
+					this.sortRecords();
+				} else if (this.sort % 3 == 1) {
+					asc.style.color = "grey";
+					des.style.color = "#9e1f63";
+					this.sortRecords(undefined, "lastName", "des");
+				} else {
+					asc.style.color = "#9e1f63";
+					des.style.color = "grey";
+					this.sortRecords(undefined, "lastName", "asc");
+				}
+				break;
+			}
+			case 2: {
+				let asc = document.getElementById("asc2");
+				let des = document.getElementById("des2");
+				if (this.sort % 3 == 0) {
+					asc.style.color = "grey";
+					des.style.color = "grey";
+					this.sortRecords();
+				} else if (this.sort % 3 == 1) {
+					asc.style.color = "grey";
+					des.style.color = "#9e1f63";
+					this.sortRecords(undefined, "company", "des");
+				} else {
+					asc.style.color = "#9e1f63";
+					des.style.color = "grey";
+					this.sortRecords(undefined, "company", "asc");
+				}
+				break;
+			}
+			case 3: {
+				let asc = document.getElementById("asc3");
+				let des = document.getElementById("des3");
+				if (this.sort % 3 == 0) {
+					asc.style.color = "grey";
+					des.style.color = "grey";
+					this.sortRecords();
+				} else if (this.sort % 3 == 1) {
+					asc.style.color = "grey";
+					des.style.color = "#9e1f63";
+					this.sortRecords(undefined, "email", "des");
+				} else {
+					asc.style.color = "#9e1f63";
+					des.style.color = "grey";
+					this.sortRecords(undefined, "email", "asc");
+				}
+				break;
+			}
+			case 4: {
+				let asc = document.getElementById("asc4");
+				let des = document.getElementById("des4");
+				if (this.sort % 3 == 0) {
+					asc.style.color = "grey";
+					des.style.color = "grey";
+					this.sortRecords();
+				} else if (this.sort % 3 == 1) {
+					asc.style.color = "grey";
+					des.style.color = "#9e1f63";
+					this.sortRecords(undefined, "arrive", "des");
+				} else {
+					asc.style.color = "#9e1f63";
+					des.style.color = "grey";
+					this.sortRecords(undefined, "arrive", "asc");
+				}
+				break;
+			}
+			case 5: {
+				let asc = document.getElementById("asc5");
+				let des = document.getElementById("des5");
+				if (this.sort % 3 == 0) {
+					asc.style.color = "grey";
+					des.style.color = "grey";
+					this.sortRecords();
+				} else if (this.sort % 3 == 1) {
+					asc.style.color = "grey";
+					des.style.color = "#9e1f63";
+					this.sortRecords(undefined, "depart", "des");
+				} else {
+					asc.style.color = "#9e1f63";
+					des.style.color = "grey";
+					this.sortRecords(undefined, "depart", "asc");
+				}
+				break;
+			}
+			}
+		},
+		sortRecords: async function(
+			list = this.records,
+			sortBy = "company",
+			sortType = "des"
+		) {
+			switch (sortBy) {
+			case "firstName": {
+				for (let x = 1; x < list.length; x++) {
+					let y = 1;
+					let visitorx = await list[x].get("visitor");
+					let visitory = await list[x - y].get("visitor");
 
-            while (
-              visitorx.get("firstName").toLowerCase() <
+					while (
+						visitorx.get("firstName").toLowerCase() <
               visitory.get("firstName").toLowerCase()
-            ) {
-              let temp = list[x - y];
-              list[x - y] = list[x - y + 1];
-              list[x - y + 1] = temp;
-              if (x - y !== 0) {
-                y++;
-                visitory = list[x - y].get("visitor");
-              } else break;
-            }
-          }
-          break;
-        }
-        case "lastName": {
-          for (let x = 1; x < list.length; x++) {
-            let y = 1;
-            let visitorx = await list[x].get("visitor");
-            let visitory = await list[x - y].get("visitor");
+					) {
+						let temp = list[x - y];
+						list[x - y] = list[x - y + 1];
+						list[x - y + 1] = temp;
+						if (x - y !== 0) {
+							y++;
+							visitory = list[x - y].get("visitor");
+						} else break;
+					}
+				}
+				break;
+			}
+			case "lastName": {
+				for (let x = 1; x < list.length; x++) {
+					let y = 1;
+					let visitorx = await list[x].get("visitor");
+					let visitory = await list[x - y].get("visitor");
 
-            while (
-              visitorx.get("lastName").toLowerCase() <
+					while (
+						visitorx.get("lastName").toLowerCase() <
               visitory.get("lastName").toLowerCase()
-            ) {
-              let temp = list[x - y];
-              list[x - y] = list[x - y + 1];
-              list[x - y + 1] = temp;
-              if (x - y !== 0) {
-                y++;
-                visitory = list[x - y].get("visitor");
-              } else break;
-            }
-          }
-          break;
-        }
-        case "company": {
-          for (let x = 1; x < list.length; x++) {
-            let y = 1;
-            let visitorx = await list[x].get("visitor");
-            let visitory = await list[x - y].get("visitor");
-            let companyx = await visitorx.get("company");
-            let companyy = await visitory.get("company");
+					) {
+						let temp = list[x - y];
+						list[x - y] = list[x - y + 1];
+						list[x - y + 1] = temp;
+						if (x - y !== 0) {
+							y++;
+							visitory = list[x - y].get("visitor");
+						} else break;
+					}
+				}
+				break;
+			}
+			case "company": {
+				for (let x = 1; x < list.length; x++) {
+					let y = 1;
+					let visitorx = await list[x].get("visitor");
+					let visitory = await list[x - y].get("visitor");
+					let companyx = await visitorx.get("company");
+					let companyy = await visitory.get("company");
 
-            while (
-              companyx.get("name").toLowerCase() <
+					while (
+						companyx.get("name").toLowerCase() <
               companyy.get("name").toLowerCase()
-            ) {
-              let temp = list[x - y];
-              list[x - y] = list[x - y + 1];
-              list[x - y + 1] = temp;
-              if (x - y !== 0) {
-                y++;
-                visitory = list[x - y].get("visitor");
-                companyy = visitory.get("company");
-              } else break;
-            }
-          }
-          break;
-        }
-        case "email": {
-          for (let x = 1; x < list.length; x++) {
-            let y = 1;
-            let visitorx = await list[x].get("visitor");
-            let visitory = await list[x - y].get("visitor");
+					) {
+						let temp = list[x - y];
+						list[x - y] = list[x - y + 1];
+						list[x - y + 1] = temp;
+						if (x - y !== 0) {
+							y++;
+							visitory = list[x - y].get("visitor");
+							companyy = visitory.get("company");
+						} else break;
+					}
+				}
+				break;
+			}
+			case "email": {
+				for (let x = 1; x < list.length; x++) {
+					let y = 1;
+					let visitorx = await list[x].get("visitor");
+					let visitory = await list[x - y].get("visitor");
 
-            while (
-              visitorx.get("email").toLowerCase() <
+					while (
+						visitorx.get("email").toLowerCase() <
               visitory.get("email").toLowerCase()
-            ) {
-              let temp = list[x - y];
-              list[x - y] = list[x - y + 1];
-              list[x - y + 1] = temp;
-              if (x - y !== 0) {
-                y++;
-                visitory = list[x - y].get("visitor");
-              } else break;
-            }
-          }
-          break;
-        }
-        case "arrive": {
-          for (let x = 1; x < list.length; x++) {
-            let y = 1;
-            let arrivex = await list[x].get("arrive");
-            let arrivey = await list[x - y].get("arrive");
+					) {
+						let temp = list[x - y];
+						list[x - y] = list[x - y + 1];
+						list[x - y + 1] = temp;
+						if (x - y !== 0) {
+							y++;
+							visitory = list[x - y].get("visitor");
+						} else break;
+					}
+				}
+				break;
+			}
+			case "arrive": {
+				for (let x = 1; x < list.length; x++) {
+					let y = 1;
+					let arrivex = await list[x].get("arrive");
+					let arrivey = await list[x - y].get("arrive");
 
-            while (arrivex > arrivey) {
-              let temp = list[x - y];
-              list[x - y] = list[x - y + 1];
-              list[x - y + 1] = temp;
-              if (x - y !== 0) {
-                y++;
-                arrivey = list[x - y].get("arrive");
-              } else break;
-            }
-          }
-          break;
-        }
-        case "depart": {
-          for (let x = 1; x < list.length; x++) {
-            let y = 1;
-            let departx = await list[x].get("depart");
-            let departy = await list[x - y].get("depart");
+					while (arrivex > arrivey) {
+						let temp = list[x - y];
+						list[x - y] = list[x - y + 1];
+						list[x - y + 1] = temp;
+						if (x - y !== 0) {
+							y++;
+							arrivey = list[x - y].get("arrive");
+						} else break;
+					}
+				}
+				break;
+			}
+			case "depart": {
+				for (let x = 1; x < list.length; x++) {
+					let y = 1;
+					let departx = await list[x].get("depart");
+					let departy = await list[x - y].get("depart");
 
-            while (departx > departy) {
-              let temp = list[x - y];
-              list[x - y] = list[x - y + 1];
-              list[x - y + 1] = temp;
-              if (x - y !== 0) {
-                y++;
-                departy = list[x - y].get("depart");
-              } else break;
-            }
-          }
-          break;
-        }
-      }
-      if (sortType == "asc") {
-        list.reverse();
-      }
-      this.records = list;
-      this.recordsSorted = [];
-      this.records.forEach(item => {
-        let record = {
-          firstName: null,
-          lastName: null,
-          email: null,
-          company: null,
-          access: null,
-          arrive: null,
-          depart: null
-        };
+					while (departx > departy) {
+						let temp = list[x - y];
+						list[x - y] = list[x - y + 1];
+						list[x - y + 1] = temp;
+						if (x - y !== 0) {
+							y++;
+							departy = list[x - y].get("depart");
+						} else break;
+					}
+				}
+				break;
+			}
+			}
+			if (sortType == "asc") {
+				list.reverse();
+			}
+			this.records = list;
+			this.recordsSorted = [];
+			this.records.forEach(item => {
+				let record = {
+					firstName: null,
+					lastName: null,
+					email: null,
+					company: null,
+					access: null,
+					arrive: null,
+					depart: null
+				};
 
-        let visitor = item.get("visitor");
-        let company = visitor.get("company");
+				let visitor = item.get("visitor");
+				let company = visitor.get("company");
 
-        record.company = company.get("name");
-        record.arrive = this.formatDate(item.get("arrive"));
-        record.depart = this.formatDate(item.get("depart"));
-        record.firstName = visitor.get("firstName");
-        record.lastName = visitor.get("lastName");
-        record.email = visitor.get("email");
-        record.access = visitor.get("access");
+				record.company = company.get("name");
+				record.arrive = this.formatDate(item.get("arrive"));
+				record.depart = this.formatDate(item.get("depart"));
+				record.firstName = visitor.get("firstName");
+				record.lastName = visitor.get("lastName");
+				record.email = visitor.get("email");
+				record.access = visitor.get("access");
 
-        this.recordsSorted.push(record);
-      });
-      this.filterRecords();
-    },
-    getRecords: async function() {
-      this.records = [];
-      const Record = Parse.Object.extend("Record");
-      const recordQuery = new Parse.Query(Record);
+				this.recordsSorted.push(record);
+			});
+			this.filterRecords();
+		},
+		getRecords: async function() {
+			this.records = [];
+			const Record = Parse.Object.extend("Record");
+			const recordQuery = new Parse.Query(Record);
 
-      recordQuery.exists("depart");
+			recordQuery.exists("depart");
 
-      recordQuery.include(["visitor.company"]);
-      this.records = await recordQuery.find();
-      await this.sortRecords();
-    },
-    formatDate: function(date) {
-      let month = "0" + (date.getMonth() + 1);
-      let day = "0" + date.getDate();
-      let year = date.getFullYear();
-      let hour = date.getHours();
-      let minute = "0" + date.getMinutes();
-      let dayTime;
+			recordQuery.include(["visitor.company"]);
+			this.records = await recordQuery.find();
+			await this.sortRecords();
+		},
+		formatDate: function(date) {
+			let month = "0" + (date.getMonth() + 1);
+			let day = "0" + date.getDate();
+			let year = date.getFullYear();
+			let hour = date.getHours();
+			let minute = "0" + date.getMinutes();
+			let dayTime;
 
-      if (hour < 12) {
-        dayTime = "am";
-        hour = "0" + hour;
-      } else if (hour == 12) {
-        dayTime = "pm";
-        hour = "0" + hour;
-      } else if (hour == 24) {
-        dayTime = "am";
-        hour = "0" + (hour - 12);
-      } else {
-        dayTime = "pm";
-        hour = "0" + (hour - 12);
-      }
+			if (hour < 12) {
+				dayTime = "am";
+				hour = "0" + hour;
+			} else if (hour == 12) {
+				dayTime = "pm";
+				hour = "0" + hour;
+			} else if (hour == 24) {
+				dayTime = "am";
+				hour = "0" + (hour - 12);
+			} else {
+				dayTime = "pm";
+				hour = "0" + (hour - 12);
+			}
 
-      let formattedDate =
+			let formattedDate =
         month.slice(-2) +
         "/" +
         day.slice(-2) +
@@ -730,31 +730,31 @@ export default {
         ":" +
         minute.slice(-2) +
         dayTime;
-      return formattedDate;
-    },
-    searchCompanies: async function(val) {
-      const user = Parse.User.current();
-      const Users = new Parse.Query(Parse.User);
-      Users.equalTo("parentCompany", user);
+			return formattedDate;
+		},
+		searchCompanies: async function(val) {
+			const user = Parse.User.current();
+			const Users = new Parse.Query(Parse.User);
+			Users.equalTo("parentCompany", user);
 
-      let companyList = await Users.find();
-      companyList.push(user);
+			let companyList = await Users.find();
+			companyList.push(user);
 
-      let test = companyList.filter(company => {
-        if (val) {
-          let name = company
-            .get("name")
-            .toLowerCase()
-            .includes(val.toLowerCase());
-          return name;
-        } else return false;
-      });
-      this.companyFinal = [];
-      test.forEach(e => {
-        this.companyFinal.push(e.get("name"));
-      });
-    }
-  }
+			let test = companyList.filter(company => {
+				if (val) {
+					let name = company
+						.get("name")
+						.toLowerCase()
+						.includes(val.toLowerCase());
+					return name;
+				} else return false;
+			});
+			this.companyFinal = [];
+			test.forEach(e => {
+				this.companyFinal.push(e.get("name"));
+			});
+		}
+	}
 };
 </script>
 <style scoped>
@@ -767,7 +767,7 @@ export default {
   display: flex;
   align-items: space-around;
   /* flex-direction: column;
-    align-items: center; */
+		align-items: center; */
 }
 .v-form.form {
   border-radius: 10px 10px 0px 0px;

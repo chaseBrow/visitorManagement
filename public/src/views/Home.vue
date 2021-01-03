@@ -33,19 +33,19 @@
 <script>
 import Parse from "parse";
 export default {
-  data() {
-    return {
-      password: "",
-      username: ""
-    };
-  },
+	data() {
+		return {
+			password: "",
+			username: ""
+		};
+	},
 
-  methods: {
-    login: async function() {
-      await Parse.User.logIn(this.username, this.password);
-      this.$router.push("dashboard");
-    }
-  }
+	methods: {
+		login: async function() {
+			await Parse.User.logIn(this.username, this.password);
+			this.$router.push("dashboard");
+		}
+	}
 };
 </script>
 

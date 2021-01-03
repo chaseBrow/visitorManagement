@@ -182,49 +182,49 @@ import NewRecord from "../components/NewRecord";
 import MoreInfo from "../components/MoreInfo";
 import CompanySelect from "../components/CompanySelect";
 export default {
-  data() {
-    return {
-      recVisitors: null,
-      filteredPeople: [],
-      visitors: [],
-      guests: [],
-      hideGuests: false,
-      filterTerms: {
-        firstName: "",
-        lastName: "",
-        email: "",
-        access: "",
-        company: ""
-      },
-      accessOptions: []
-    };
-  },
-  async created() {
-    const Visitors = Parse.Object.extend("Visitor");
-    const queryVisitor = new Parse.Query(Visitors);
+	data() {
+		return {
+			recVisitors: null,
+			filteredPeople: [],
+			visitors: [],
+			guests: [],
+			hideGuests: false,
+			filterTerms: {
+				firstName: "",
+				lastName: "",
+				email: "",
+				access: "",
+				company: ""
+			},
+			accessOptions: []
+		};
+	},
+	async created() {
+		const Visitors = Parse.Object.extend("Visitor");
+		const queryVisitor = new Parse.Query(Visitors);
 
-    let liveVisitor = await queryVisitor.subscribe();
+		let liveVisitor = await queryVisitor.subscribe();
 
-    liveVisitor.on("open", () => {
-      console.log("open visitors made");
-      this.updateMade();
-    });
+		liveVisitor.on("open", () => {
+			console.log("open visitors made");
+			this.updateMade();
+		});
 
-    liveVisitor.on("delete", () => {
-      this.updateMade();
-    });
+		liveVisitor.on("delete", () => {
+			this.updateMade();
+		});
 
-    liveVisitor.on("create", () => {
-      this.updateMade();
-    });
+		liveVisitor.on("create", () => {
+			this.updateMade();
+		});
 
-    liveVisitor.on("update", () => {
-      this.updateMade();
-    });
-  },
-  methods: {
-    print: async function(person) {
-      let data =
+		liveVisitor.on("update", () => {
+			this.updateMade();
+		});
+	},
+	methods: {
+		print: async function(person) {
+			let data =
         "::" +
         person.get("firstName") +
         " " +
@@ -234,167 +234,167 @@ export default {
         "::" +
         person.get("access");
 
-      fetch("http://localhost:3080/", {
-        method: "POST",
-        mode: "no-cors",
-        body: data
-      }).then(response => {
-        console.log(response);
-      });
-    },
-    getCompanyName: function(person) {
-      let comp = person.get("company");
-      let name = comp.get("name");
-      return name;
-    },
-    recentVisitors: async function() {
-      this.filterTerms.firstName = "";
-      this.filterTerms.lastName = "";
-      this.filterTerms.email = "";
-      this.filterTerms.access = "";
-      this.filterTerms.company = "";
+			fetch("http://localhost:3080/", {
+				method: "POST",
+				mode: "no-cors",
+				body: data
+			}).then(response => {
+				console.log(response);
+			});
+		},
+		getCompanyName: function(person) {
+			let comp = person.get("company");
+			let name = comp.get("name");
+			return name;
+		},
+		recentVisitors: async function() {
+			this.filterTerms.firstName = "";
+			this.filterTerms.lastName = "";
+			this.filterTerms.email = "";
+			this.filterTerms.access = "";
+			this.filterTerms.company = "";
 
-      const Record = Parse.Object.extend("Record");
-      const recentQuery = new Parse.Query(Record).greaterThan(
-        "depart",
-        this.getYesterday()
-      );
+			const Record = Parse.Object.extend("Record");
+			const recentQuery = new Parse.Query(Record).greaterThan(
+				"depart",
+				this.getYesterday()
+			);
 
-      const statusQuery = new Parse.Query(Record).notEqualTo(
-        "status",
-        "Departed"
-      );
+			const statusQuery = new Parse.Query(Record).notEqualTo(
+				"status",
+				"Departed"
+			);
 
-      const mainQuery = Parse.Query.or(recentQuery, statusQuery);
+			const mainQuery = Parse.Query.or(recentQuery, statusQuery);
 
-      mainQuery.descending("createdAt");
-      mainQuery.include("visitor");
+			mainQuery.descending("createdAt");
+			mainQuery.include("visitor");
 
-      let vis = await mainQuery.find();
-      let test = vis.map(item => {
-        return item.get("visitor");
-      });
-      let ids = test.map(item => {
-        if (item.get("access") != "Guest") {
-          return item.id;
-        }
-        return null;
-      });
-      ids = new Set(ids);
-      ids = [...ids];
-      this.filteredPeople = test.filter(item => {
-        let index = ids.indexOf(item.id);
-        if (index !== -1) {
-          ids.splice(index, 1);
-          return true;
-        } else return false;
-      });
-    },
-    getYesterday: function() {
-      let date = new Date();
-      let yesterday = date.setTime(date.getTime() - 86400000);
-      return new Date(yesterday);
-    },
-    getOptions: async function() {
-      this.accessOptions = [];
-      let user = Parse.User.current();
-      this.accessOptions = user.get("options");
-    },
-    updateMade: async function() {
-      let children = [];
+			let vis = await mainQuery.find();
+			let test = vis.map(item => {
+				return item.get("visitor");
+			});
+			let ids = test.map(item => {
+				if (item.get("access") != "Guest") {
+					return item.id;
+				}
+				return null;
+			});
+			ids = new Set(ids);
+			ids = [...ids];
+			this.filteredPeople = test.filter(item => {
+				let index = ids.indexOf(item.id);
+				if (index !== -1) {
+					ids.splice(index, 1);
+					return true;
+				} else return false;
+			});
+		},
+		getYesterday: function() {
+			let date = new Date();
+			let yesterday = date.setTime(date.getTime() - 86400000);
+			return new Date(yesterday);
+		},
+		getOptions: async function() {
+			this.accessOptions = [];
+			let user = Parse.User.current();
+			this.accessOptions = user.get("options");
+		},
+		updateMade: async function() {
+			let children = [];
 
-      const user = Parse.User.current();
+			const user = Parse.User.current();
 
-      const contractor = new Parse.Query(Parse.User);
-      contractor.equalTo("name", "Contractor");
+			const contractor = new Parse.Query(Parse.User);
+			contractor.equalTo("name", "Contractor");
 
-      const Users = new Parse.Query(Parse.User);
-      Users.equalTo("parentCompany", user);
+			const Users = new Parse.Query(Parse.User);
+			Users.equalTo("parentCompany", user);
 
-      const mainQuery = Parse.Query.or(Users, contractor);
+			const mainQuery = Parse.Query.or(Users, contractor);
 
-      children = await mainQuery.find();
-      children.push(user);
+			children = await mainQuery.find();
+			children.push(user);
 
-      const Visitors = Parse.Object.extend("Visitor");
-      const queryVisitor = new Parse.Query(Visitors);
+			const Visitors = Parse.Object.extend("Visitor");
+			const queryVisitor = new Parse.Query(Visitors);
 
-      queryVisitor.notEqualTo("deleted", true);
-      queryVisitor.include(["company.name"]);
-      queryVisitor.containedIn("company", children);
-      queryVisitor.notEqualTo("access", "Guest");
+			queryVisitor.notEqualTo("deleted", true);
+			queryVisitor.include(["company.name"]);
+			queryVisitor.containedIn("company", children);
+			queryVisitor.notEqualTo("access", "Guest");
 
-      this.visitors = await queryVisitor.find();
-      this.visitors = this.visitors.slice(0, 20);
+			this.visitors = await queryVisitor.find();
+			this.visitors = this.visitors.slice(0, 20);
 
-      const queryGuest = new Parse.Query(Visitors);
-      queryGuest.equalTo("access", "Guest");
-      queryGuest.notEqualTo("deleted", true);
-      this.guests = await queryGuest.find();
+			const queryGuest = new Parse.Query(Visitors);
+			queryGuest.equalTo("access", "Guest");
+			queryGuest.notEqualTo("deleted", true);
+			this.guests = await queryGuest.find();
 
-      this.filterPeople();
-    },
-    filterPeople: function() {
-      this.filteredPeople = this.visitors.filter(visitor => {
-        let first = true,
-          last = true,
-          comp = true,
-          email = true,
-          access = true;
-        if (visitor.get("firstName") && this.filterTerms.firstName) {
-          first = visitor
-            .get("firstName")
-            .toLowerCase()
-            .includes(this.filterTerms.firstName.toLowerCase());
-        }
-        if (visitor.get("lastName") && this.filterTerms.lastName) {
-          last = visitor
-            .get("lastName")
-            .toLowerCase()
-            .includes(this.filterTerms.lastName.toLowerCase());
-        }
-        let val = visitor.get("company");
-        if (this.filterTerms.company) {
-          comp = val.get("name").includes(this.filterTerms.company);
-        }
-        if (visitor.get("email") && this.filterTerms.email) {
-          email = visitor
-            .get("email")
-            .toLowerCase()
-            .includes(this.filterTerms.email.toLowerCase());
-        } else if (this.filterTerms.email) {
-          email = false;
-        }
-        if (visitor.get("access") && this.filterTerms.access) {
-          access = visitor
-            .get("access")
-            .toLowerCase()
-            .includes(this.filterTerms.access.toLowerCase());
-        }
-        if (
-          first == true &&
+			this.filterPeople();
+		},
+		filterPeople: function() {
+			this.filteredPeople = this.visitors.filter(visitor => {
+				let first = true,
+					last = true,
+					comp = true,
+					email = true,
+					access = true;
+				if (visitor.get("firstName") && this.filterTerms.firstName) {
+					first = visitor
+						.get("firstName")
+						.toLowerCase()
+						.includes(this.filterTerms.firstName.toLowerCase());
+				}
+				if (visitor.get("lastName") && this.filterTerms.lastName) {
+					last = visitor
+						.get("lastName")
+						.toLowerCase()
+						.includes(this.filterTerms.lastName.toLowerCase());
+				}
+				let val = visitor.get("company");
+				if (this.filterTerms.company) {
+					comp = val.get("name").includes(this.filterTerms.company);
+				}
+				if (visitor.get("email") && this.filterTerms.email) {
+					email = visitor
+						.get("email")
+						.toLowerCase()
+						.includes(this.filterTerms.email.toLowerCase());
+				} else if (this.filterTerms.email) {
+					email = false;
+				}
+				if (visitor.get("access") && this.filterTerms.access) {
+					access = visitor
+						.get("access")
+						.toLowerCase()
+						.includes(this.filterTerms.access.toLowerCase());
+				}
+				if (
+					first == true &&
           last == true &&
           comp == true &&
           email == true &&
           access == true
-        ) {
-          return true;
-        } else {
-          return false;
-        }
-      });
-      if (this.filteredPeople.length != this.visitors.length) {
-        this.hideGuests = true;
-      } else {
-        this.hideGuests = false;
-      }
-    }
-  },
-  components: {
-    NewRecord,
-    MoreInfo,
-    CompanySelect
-  }
+				) {
+					return true;
+				} else {
+					return false;
+				}
+			});
+			if (this.filteredPeople.length != this.visitors.length) {
+				this.hideGuests = true;
+			} else {
+				this.hideGuests = false;
+			}
+		}
+	},
+	components: {
+		NewRecord,
+		MoreInfo,
+		CompanySelect
+	}
 };
 </script>
 
