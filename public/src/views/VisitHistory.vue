@@ -59,10 +59,10 @@ Description: Visit History Page
 							<v-btn class="accent" v-on:click="daysAgo(30)">
 								30 days
 							</v-btn>
-							<v-btn class="accent" v-on:click="daysAgo(30)">
+							<v-btn class="accent" v-on:click="daysAgo(90)">
 								90 days
 							</v-btn>
-							<v-btn class="accent" v-on:click="daysAgo(30)">
+							<v-btn class="accent" v-on:click="daysAgo(0)">
 								Year to Date
 							</v-btn>
 						</v-row>

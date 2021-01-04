@@ -73,7 +73,7 @@ export default {
 					text: "Visit History",
 					route: "/VisitHistory"
 				},
-				{ icon: "mdi-cog", text: "Account Settings", route: "/Account" }
+				// { icon: "mdi-cog", text: "Account Settings", route: "/Account" }
 			]
 		};
 	},
