@@ -18,7 +18,8 @@ export default new Vuetify({
 				info: colors.grey,
 				success: colors.green,
 				warning: colors.red,
-				background: "#000000"
+				background: "#000000",
+				lightAccent: "#A0CFEB"
 			},
 			dark: {
 				primary: "#000000",

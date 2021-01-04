@@ -6,174 +6,171 @@
 	Description: This where the user can edit child clients and manage access options aswell as change personal info.
 -->
 <template>
-  <v-container fluid fill-height background>
-    <v-row class="mx-4" style="height: fit-content">
-      <v-form class="primary form">
-        <v-container>
-          <v-row class="align-start">
-            <v-col cols="2" class="pb-0">
-              <v-text-field
-                label="First Name"
-                outlined
-                color="accent"
-                v-model="filterTerms.firstName"
-                v-on:input="filterPeople()"
-              >
-              </v-text-field>
-            </v-col>
-            <v-col cols="2" class="pb-0">
-              <v-text-field
-                label="Last Name"
-                outlined
-                color="accent"
-                v-model="filterTerms.lastName"
-                v-on:input="filterPeople()"
-              >
-              </v-text-field>
-            </v-col>
-            <v-col cols="3" class="pb-0">
-              <CompanySelect
-                @update:company="(filterTerms.company = $event), filterPeople()"
-                v-bind:company.sync="filterTerms.company"
-                v-bind:parent="'dashboard'"
-              >
-              </CompanySelect>
-            </v-col>
-            <v-col cols="3" class="pb-0">
-              <v-text-field
-                label="Email"
-                outlined
-                color="accent"
-                v-model="filterTerms.email"
-                v-on:input="filterPeople()"
-              >
-              </v-text-field>
-            </v-col>
-            <v-col cols="2" class="pb-0">
-              <v-select
-                clearable
-                label="Access"
-                outlined
-                color="accent"
-                :items="accessOptions"
-                v-model="filterTerms.access"
-                v-on:focus="getOptions()"
-                v-on:change="filterPeople()"
-              >
-              </v-select>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-form>
+    <v-container fluid fill-height background>
+		<v-row class="mx-4" style="height: fit-content">
+	    	<v-form class="primary form">
+				<v-container>
+		    		<v-row class="align-start">
+						<v-col cols="2" class="pb-0">
+			    			<v-text-field
+								label="First Name"
+								outlined
+								color="accent"
+								v-model="filterTerms.firstName"
+								v-on:input="filterPeople()"
+			    			>
+							</v-text-field>
+						</v-col>
+						<v-col cols="2" class="pb-0">
+							<v-text-field
+								label="Last Name"
+								outlined
+								color="accent"
+								v-model="filterTerms.lastName"
+								v-on:input="filterPeople()"
+							>
+							</v-text-field>
+						</v-col>
+						<v-col cols="3" class="pb-0">
+							<CompanySelect
+								@update:company="(filterTerms.company = $event), filterPeople()"
+								v-bind:company.sync="filterTerms.company"
+								v-bind:parent="'dashboard'"
+							>
+							</CompanySelect>
+						</v-col>
+						<v-col cols="3" class="pb-0">
+							<v-text-field
+								label="Email"
+								outlined
+								color="accent"
+								v-model="filterTerms.email"
+								v-on:input="filterPeople()"
+							>
+							</v-text-field>
+						</v-col>
+						<v-col cols="2" class="pb-0">
+							<v-select
+								clearable
+								label="Access"
+								outlined
+								color="accent"
+								:items="accessOptions"
+								v-model="filterTerms.access"
+								v-on:focus="getOptions()"
+								v-on:change="filterPeople()"
+							>
+							</v-select>
+						</v-col>
+					</v-row>
+				</v-container>
+			</v-form>
+			<v-col
+				cols="12"
+				class="primary"
+				style="border-radius: 0px 0px 10px 10px; height: fit-content"
+			>
+				<v-toolbar class="secondary">
+					<span class="primary--text" style="width: 10%;">First Name</span>
+					<span class="primary--text" style="width: 10%">Last Name</span>
+					<span class="primary--text" style="width: 10%">Company</span>
+					<span class="primary--text" style="width: 25%">Email</span>
+					<span class="primary--text" style="width: 10%">Access</span>
+					<v-spacer></v-spacer>
+					<v-btn class="accent primary--text" v-on:click="recentVisitors()">
+						Recent Visitors
+					</v-btn>
+				</v-toolbar>
+				<v-list dense class="data secondary">
+					<v-list-item
+						class="guest"
+						v-for="person in guests"
+						:key="person.id"
+						:hidden="hideGuests"
+					>
+						<span class="primary--text" style="width: 10%">{{
+							person.get("firstName")
+						}}</span>
+						<span class="primary--text" style="width: 10%">{{
+							person.get("lastName")
+						}}</span>
+						<span
+							class="primary--text"
+							style="width: 10%; font-size: 0.95rem"
+							>{{ getCompanyName(person) }}</span
+						>
+						<span class="primary--text" style="width: 25%; font-size: 0.9rem">{{
+							person.get("email")
+						}}</span>
+						<span class="primary--text" style="width: 10%; font-size: 0.9rem">{{
+							person.get("access")
+						}}</span>
 
-      <v-col
-        cols="12"
-        class="primary"
-        style="border-radius: 0px 0px 10px 10px; height: fit-content"
-      >
-        <v-toolbar class="secondary">
-          <span class="primary--text" style="width: 10%;">First Name</span>
-          <span class="primary--text" style="width: 10%">Last Name</span>
-          <span class="primary--text" style="width: 10%">Company</span>
-          <span class="primary--text" style="width: 25%">Email</span>
-          <span class="primary--text" style="width: 10%">Access</span>
-          <v-spacer></v-spacer>
-          <v-btn class="accent primary--text" v-on:click="recentVisitors()">
-            Recent Visitors
-          </v-btn>
-        </v-toolbar>
+						<v-spacer></v-spacer>
+						<div :id="person.id + 'visit'" :key="person.id + 'visit'">
+							<NewRecord v-bind:person="person"> </NewRecord>
+						</div>
+						<div>
+							<v-btn class="accent mr-1" v-on:click="print(person)">
+								<v-icon dense>mdi-printer</v-icon>
+							</v-btn>
+						</div>
+						<div
+							:id="person.id + 'info'"
+							:key="person.get('email') + 'info'"
+							class="pa-0"
+						>
+							<v-btn :disabled="true" :dark="true" class="accent">
+								<v-icon dense class="pr-1"
+									>mdi-card-account-details-outline</v-icon
+								>
+								<span>Info</span>
+							</v-btn>
+						</div>
+					</v-list-item>
+					<v-list-item v-for="person in filteredPeople" :key="person.id">
+						<span class="primary--text" style="width: 10%">{{
+							person.get("firstName")
+						}}</span>
+						<span class="primary--text" style="width: 10%">{{
+							person.get("lastName")
+						}}</span>
+						<span
+							class="primary--text"
+							style="width: 10%; font-size: 0.95rem"
+							>{{ getCompanyName(person) }}</span
+						>
+						<span class="primary--text" style="width: 25%; font-size: 0.9rem">{{
+							person.get("email")
+						}}</span>
+						<span class="primary--text" style="width: 10%; font-size: 0.9rem">{{
+							person.get("access")
+						}}</span>
 
-        <v-list dense class="data secondary">
-          <v-list-item
-            class="guest"
-            v-for="person in guests"
-            :key="person.id"
-            color="accent"
-            :hidden="hideGuests"
-          >
-            <span class="primary--text" style="width: 10%">{{
-              person.get("firstName")
-            }}</span>
-            <span class="primary--text" style="width: 10%">{{
-              person.get("lastName")
-            }}</span>
-            <span
-              class="primary--text"
-              style="width: 10%; font-size: 0.95rem"
-              >{{ getCompanyName(person) }}</span
-            >
-            <span class="primary--text" style="width: 25%; font-size: 0.9rem">{{
-              person.get("email")
-            }}</span>
-            <span class="primary--text" style="width: 10%; font-size: 0.9rem">{{
-              person.get("access")
-            }}</span>
-
-            <v-spacer></v-spacer>
-            <div :id="person.id + 'visit'" :key="person.id + 'visit'">
-              <NewRecord v-bind:person="person"> </NewRecord>
-            </div>
-            <div>
-              <v-btn class="accent mr-1" v-on:click="print(person)">
-                <v-icon dense>mdi-printer</v-icon>
-              </v-btn>
-            </div>
-            <div
-              :id="person.id + 'info'"
-              :key="person.get('email') + 'info'"
-              class="pa-0"
-            >
-              <v-btn :disabled="true" :dark="true" class="accent">
-                <v-icon dense class="pr-1"
-                  >mdi-card-account-details-outline</v-icon
-                >
-                <span>Info</span>
-              </v-btn>
-            </div>
-          </v-list-item>
-          <v-list-item v-for="person in filteredPeople" :key="person.id">
-            <span class="primary--text" style="width: 10%">{{
-              person.get("firstName")
-            }}</span>
-            <span class="primary--text" style="width: 10%">{{
-              person.get("lastName")
-            }}</span>
-            <span
-              class="primary--text"
-              style="width: 10%; font-size: 0.95rem"
-              >{{ getCompanyName(person) }}</span
-            >
-            <span class="primary--text" style="width: 25%; font-size: 0.9rem">{{
-              person.get("email")
-            }}</span>
-            <span class="primary--text" style="width: 10%; font-size: 0.9rem">{{
-              person.get("access")
-            }}</span>
-
-            <v-spacer></v-spacer>
-            <div
-              :id="person.get('email') + 'visit'"
-              :key="person.get('email') + 'visit'"
-            >
-              <NewRecord v-bind:person="person"> </NewRecord>
-            </div>
-            <div>
-              <v-btn class="accent mr-1" v-on:click="print(person)">
-                <v-icon dense>mdi-printer</v-icon>
-              </v-btn>
-            </div>
-            <div
-              :id="person.get('email') + 'info'"
-              :key="person.get('email') + 'info'"
-              class="pa-0"
-            >
-              <MoreInfo v-bind:person="person"> </MoreInfo>
-            </div>
-          </v-list-item>
-        </v-list>
-      </v-col>
-    </v-row>
-  </v-container>
+						<v-spacer></v-spacer>
+						<div
+							:id="person.get('email') + 'visit'"
+							:key="person.get('email') + 'visit'"
+						>
+							<NewRecord v-bind:person="person"> </NewRecord>
+						</div>
+						<div>
+								<v-btn class="accent mr-1" v-on:click="print(person)">
+									<v-icon dense>mdi-printer</v-icon>
+								</v-btn>
+						</div>
+						<div
+							:id="person.get('email') + 'info'"
+							:key="person.get('email') + 'info'"
+							class="pa-0"
+						>
+							<MoreInfo v-bind:person="person"> </MoreInfo>
+						</div>
+					</v-list-item>
+				</v-list>
+			</v-col>
+		</v-row>
+    </v-container>
 </template>
 
 <script>
@@ -225,14 +222,14 @@ export default {
 	methods: {
 		print: async function(person) {
 			let data =
-        "::" +
-        person.get("firstName") +
-        " " +
-        person.get("lastName") +
-        "::" +
-        this.getCompanyName(person) +
-        "::" +
-        person.get("access");
+		"::" +
+		person.get("firstName") +
+		" " +
+		person.get("lastName") +
+		"::" +
+		this.getCompanyName(person) +
+		"::" +
+		person.get("access");
 
 			fetch("http://localhost:3080/", {
 				method: "POST",
@@ -373,10 +370,10 @@ export default {
 				}
 				if (
 					first == true &&
-          last == true &&
-          comp == true &&
-          email == true &&
-          access == true
+		    last == true &&
+		    comp == true &&
+		    email == true &&
+		    access == true
 				) {
 					return true;
 				} else {
@@ -400,28 +397,28 @@ export default {
 
 <style scoped>
 .v-list-item:hover {
-  background: #454545;
+    background: #454545;
 }
 
 .v-list-item.guest {
-  background: #9e1f6370;
+    background: #a0d0eb8e;
 }
 .v-list-item.guest:hover {
-  background: #454545;
+    background: #454545;
 }
 .v-list.data {
-  border-radius: 0px;
-  overflow-y: auto;
-  height: 450px;
+    border-radius: 0px;
+    overflow-y: auto;
+    height: 450px;
 }
 
 textarea:focus,
 input:focus {
-  outline: none;
+    outline: none;
 }
 .form {
-  border-radius: 10px 10px 0px 0px;
-  height: fit-content;
-  width: 100%;
+    border-radius: 10px 10px 0px 0px;
+    height: fit-content;
+    width: 100%;
 }
 </style>

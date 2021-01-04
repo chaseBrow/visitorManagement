@@ -5,259 +5,262 @@ Updated On: 08/03/2020
 Description: Visit History Page
 -->
 <template>
-  <v-container background fluid fill-height>
-    <v-row class="mx-4" style="height: 100%">
-      <v-form class="form primary">
-        <v-row>
-          <v-col cols="4">
-            <v-text-field
-              label="First Name"
-              outlined
-              color="black"
-              v-model="filterTerms.firstName"
-              v-on:input="filterRecords()"
-            >
-            </v-text-field>
-            <v-text-field
-              label="Last Name"
-              outlined
-              color="black"
-              v-model="filterTerms.lastName"
-              v-on:input="filterRecords()"
-            >
-            </v-text-field>
-          </v-col>
-          <v-col cols="4">
-            <v-autocomplete
-              outlined
-              label="Company"
-              color="black"
-              cache-items
-              hide-no-data
-              :items="companyFinal"
-              :search-input.sync="searchComp"
-              v-model="filterTerms.company"
-              v-on:change="filterRecords()"
-            >
-            </v-autocomplete>
-            <v-text-field
-              label="Email"
-              outlined
-              color="black"
-              v-model="filterTerms.email"
-              v-on:input="filterRecords()"
-            >
-            </v-text-field>
-          </v-col>
-          <v-col cols="4">
-            <v-card
-              color="grey lighten-1"
-              elevation="6"
-              style="border-radius: 8px;"
-            >
-              <v-row class="date2">
-                <v-col cols="6" class="date">
-                  <v-btn class="accent" v-on:click="daysAgo(30)">
-                    30 days
-                  </v-btn>
-                  <v-menu
-                    v-model="startMenu"
-                    transition="scale-transition"
-                    offset-y
-                  >
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-text-field
-                        v-model="filterTerms.arrive"
-                        label="Start Date"
-                        v-bind="attrs"
-                        readonly
-                        v-on="on"
-                        outlined
-                        clearable
-                        v-on:input="filterRecords()"
-                        color="accent"
-                      >
-                      </v-text-field>
-                    </template>
-                    <v-date-picker
-                      v-model="filterTerms.arrive"
-                      no-title
-                      scrollable
-                      v-on:input="filterRecords()"
-                    >
-                    </v-date-picker>
-                  </v-menu>
-                </v-col>
-                <v-col cols="6">
-                  <v-btn class="accent" v-on:click="daysAgo(0)">
-                    Year to Date
-                  </v-btn>
-                  <v-menu
-                    v-model="endMenu"
-                    transition="scale-transition"
-                    offset-y
-                  >
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-text-field
-                        v-model="filterTerms.depart"
-                        label="End Date"
-                        v-bind="attrs"
-                        readonly
-                        v-on="on"
-                        outlined
-                        clearable
-                        v-on:input="filterRecords()"
-                        color="accent"
-                      >
-                      </v-text-field>
-                    </template>
-                    <v-date-picker
-                      v-model="filterTerms.depart"
-                      no-title
-                      scrollable
-                      v-on:input="filterRecords()"
-                    >
-                    </v-date-picker>
-                  </v-menu>
-                </v-col>
-              </v-row>
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-form>
-      <v-col
-        class="primary"
-        style="border-radius:0px 0px 10px 10px; width: 100%; height: 80%"
-      >
-        <v-toolbar class="secondary">
-          <div style="width: 10%">
-            <v-btn
-              class="sort secondary text--white"
-              v-on:click="sortBy(0)"
-              elevation="0"
-            >
-              <span>First Name</span>
-              <v-row>
-                <v-icon class="up" id="asc0">mdi-menu-up</v-icon>
-              </v-row>
-              <v-row>
-                <v-icon class="down" id="des0">mdi-menu-down</v-icon>
-              </v-row>
-            </v-btn>
-          </div>
-          <div style="width: 15%">
-            <v-btn
-              class="sort secondary text--white"
-              v-on:click="sortBy(1)"
-              elevation="0"
-            >
-              <span>Last Name</span>
-              <v-row>
-                <v-icon class="up" id="asc1">mdi-menu-up</v-icon>
-              </v-row>
-              <v-row>
-                <v-icon class="down" id="des1">mdi-menu-down</v-icon>
-              </v-row>
-            </v-btn>
-          </div>
-          <div style="width: 20%">
-            <v-btn
-              class="sort secondary text--white"
-              v-on:click="sortBy(2)"
-              elevation="0"
-            >
-              <span>Company</span>
-              <v-row>
-                <v-icon class="up" id="asc2">mdi-menu-up</v-icon>
-              </v-row>
-              <v-row>
-                <v-icon class="down" id="des2">mdi-menu-down</v-icon>
-              </v-row>
-            </v-btn>
-          </div>
-          <div style="width: 25%">
-            <v-btn
-              class="sort secondary text--white"
-              v-on:click="sortBy(3)"
-              elevation="0"
-            >
-              <span>Email</span>
-              <v-row>
-                <v-icon class="up" id="asc3">mdi-menu-up</v-icon>
-              </v-row>
-              <v-row>
-                <v-icon class="down" id="des3">mdi-menu-down</v-icon>
-              </v-row>
-            </v-btn>
-          </div>
-          <div style="width: 15%">
-            <v-btn
-              class="sort secondary text--white"
-              v-on:click="sortBy(4)"
-              elevation="0"
-            >
-              <span>Arrive</span>
-              <v-row>
-                <v-icon class="up" id="asc4">mdi-menu-up</v-icon>
-              </v-row>
-              <v-row>
-                <v-icon class="down" id="des4">mdi-menu-down</v-icon>
-              </v-row>
-            </v-btn>
-          </div>
-          <div style="width: 15%">
-            <v-btn
-              class="sort secondary text--white"
-              v-on:click="sortBy(5)"
-              elevation="0"
-            >
-              <span>Depart</span>
-              <v-row>
-                <v-icon class="up" id="asc5">mdi-menu-up</v-icon>
-              </v-row>
-              <v-row>
-                <v-icon class="down" id="des5">mdi-menu-down</v-icon>
-              </v-row>
-            </v-btn>
-          </div>
-        </v-toolbar>
-        <v-list style="padding: 16px" class="secondary">
-          <v-list-item
-            v-for="record in recordsDisplay"
-            :key="record.id"
-            style="padding: 0px"
-          >
-            <v-row style="padding: 0px 16px 0px 16px">
-              <span class="primary--text" style="width: 10%">{{
-                record.firstName
-              }}</span>
-              <span class="primary--text" style="width: 15%">{{
-                record.lastName
-              }}</span>
-              <span class="primary--text" style="width: 20%">{{
-                record.company
-              }}</span>
-              <span class="primary--text" style="width: 25%">{{
-                record.email
-              }}</span>
-              <span class="primary--text" style="width: 15%">{{
-                record.arrive
-              }}</span>
-              <span class="primary--text" style="width: 15%">{{
-                record.depart
-              }}</span>
-            </v-row>
-          </v-list-item>
-        </v-list>
-        <v-pagination
-          :length="pages"
-          v-model="currentPage"
-          v-on:input="displayRecords()"
-        >
-        </v-pagination>
-      </v-col>
-    </v-row>
-  </v-container>
+	<v-container background fluid fill-height>
+		<v-row class="mx-4" style="height: 100%">
+			<v-form class="form primary">
+				<v-row>
+					<v-col cols="4">
+						<div style="margin: 10px">
+							<v-text-field
+								label="First Name"
+								outlined
+								color="black"
+								v-model="filterTerms.firstName"
+								v-on:input="filterRecords()"
+							>
+							</v-text-field>
+							<v-text-field
+								label="Last Name"
+								outlined
+								color="black"
+								v-model="filterTerms.lastName"
+								v-on:input="filterRecords()"
+							>
+							</v-text-field>
+						</div>
+					</v-col>
+					<v-col cols="4">
+						<div style="margin: 10px">
+							<v-autocomplete
+								outlined
+								label="Company"
+								color="black"
+								cache-items
+								hide-no-data
+								:items="companyFinal"
+								:search-input.sync="searchComp"
+								v-model="filterTerms.company"
+								v-on:change="filterRecords()"
+							>
+							</v-autocomplete>
+							<v-text-field
+								label="Email"
+								outlined
+								color="black"
+								v-model="filterTerms.email"
+								v-on:input="filterRecords()"
+							>
+							</v-text-field>
+						</div>
+					</v-col>
+					<v-col cols="4">
+						<v-card class="date" height="90%">
+						<v-row class="date2">
+							<v-btn class="accent" v-on:click="daysAgo(30)">
+								30 days
+							</v-btn>
+							<v-btn class="accent" v-on:click="daysAgo(30)">
+								90 days
+							</v-btn>
+							<v-btn class="accent" v-on:click="daysAgo(30)">
+								Year to Date
+							</v-btn>
+						</v-row>
+						<v-row class="date2">
+							<v-menu
+								v-model="startMenu"
+								transition="scale-transition"
+								offset-y
+							>
+								<template v-slot:activator="{ on, attrs }">
+									<v-text-field
+										v-model="filterTerms.arrive"
+										label="Start Date"
+										v-bind="attrs"
+										readonly
+										v-on="on"
+										outlined
+										clearable
+										v-on:input="filterRecords()"
+										color="accent"
+										style="max-width: 40%"
+									>
+									</v-text-field>
+								</template>
+								<v-date-picker
+									v-model="filterTerms.arrive"
+									no-title
+									scrollable
+									v-on:input="filterRecords()"
+								>
+								</v-date-picker>
+							</v-menu>
+							<v-menu
+								v-model="endMenu"
+								transition="scale-transition"
+								offset-y
+							>
+								<template v-slot:activator="{ on, attrs }">
+									<v-text-field
+										v-model="filterTerms.depart"
+										label="End Date"
+										v-bind="attrs"
+										readonly
+										v-on="on"
+										outlined
+										clearable
+										v-on:input="filterRecords()"
+										color="accent"
+										style="max-width: 40%"
+									>
+									</v-text-field>
+								</template>
+								<v-date-picker
+									v-model="filterTerms.depart"
+									no-title
+									scrollable
+									v-on:input="filterRecords()"
+								>
+								</v-date-picker>
+							</v-menu>
+						</v-row>
+						</v-card>
+					</v-col>
+				</v-row>
+			</v-form>
+			<v-col
+				class="primary"
+				style="border-radius:0px 0px 10px 10px; width: 100%; height: 80%"
+			>
+				<v-toolbar class="secondary">
+					<div style="width: 10%">
+						<v-btn
+							class="sort secondary text--white"
+							v-on:click="sortBy(0)"
+							elevation="0"
+						>
+							<span>First Name</span>
+							<v-row>
+								<v-icon class="up" id="asc0">mdi-menu-up</v-icon>
+							</v-row>
+							<v-row>
+								<v-icon class="down" id="des0">mdi-menu-down</v-icon>
+							</v-row>
+						</v-btn>
+					</div>
+					<div style="width: 15%">
+						<v-btn
+							class="sort secondary text--white"
+							v-on:click="sortBy(1)"
+							elevation="0"
+						>
+							<span>Last Name</span>
+							<v-row>
+								<v-icon class="up" id="asc1">mdi-menu-up</v-icon>
+							</v-row>
+							<v-row>
+								<v-icon class="down" id="des1">mdi-menu-down</v-icon>
+							</v-row>
+						</v-btn>
+					</div>
+					<div style="width: 20%">
+						<v-btn
+							class="sort secondary text--white"
+							v-on:click="sortBy(2)"
+							elevation="0"
+						>
+							<span>Company</span>
+							<v-row>
+								<v-icon class="up" id="asc2">mdi-menu-up</v-icon>
+							</v-row>
+							<v-row>
+								<v-icon class="down" id="des2">mdi-menu-down</v-icon>
+							</v-row>
+						</v-btn>
+					</div>
+					<div style="width: 25%">
+						<v-btn
+							class="sort secondary text--white"
+							v-on:click="sortBy(3)"
+							elevation="0"
+						>
+							<span>Email</span>
+							<v-row>
+								<v-icon class="up" id="asc3">mdi-menu-up</v-icon>
+							</v-row>
+							<v-row>
+								<v-icon class="down" id="des3">mdi-menu-down</v-icon>
+							</v-row>
+						</v-btn>
+					</div>
+					<div style="width: 15%">
+						<v-btn
+							class="sort secondary text--white"
+							v-on:click="sortBy(4)"
+							elevation="0"
+						>
+							<span>Arrive</span>
+							<v-row>
+								<v-icon class="up" id="asc4">mdi-menu-up</v-icon>
+							</v-row>
+							<v-row>
+								<v-icon class="down" id="des4">mdi-menu-down</v-icon>
+							</v-row>
+						</v-btn>
+					</div>
+					<div style="width: 15%">
+						<v-btn
+							class="sort secondary text--white"
+							v-on:click="sortBy(5)"
+							elevation="0"
+						>
+							<span>Depart</span>
+							<v-row>
+								<v-icon class="up" id="asc5">mdi-menu-up</v-icon>
+							</v-row>
+							<v-row>
+								<v-icon class="down" id="des5">mdi-menu-down</v-icon>
+							</v-row>
+						</v-btn>
+					</div>
+				</v-toolbar>
+				<v-list style="padding: 16px" class="secondary">
+					<v-list-item
+						v-for="record in recordsDisplay"
+						:key="record.id"
+						style="padding: 0px"
+					>
+						<v-row style="padding: 0px 16px 0px 16px">
+							<span class="primary--text" style="width: 10%">{{
+								record.firstName
+							}}</span>
+							<span class="primary--text" style="width: 15%">{{
+								record.lastName
+							}}</span>
+							<span class="primary--text" style="width: 20%">{{
+								record.company
+							}}</span>
+							<span class="primary--text" style="width: 25%">{{
+								record.email
+							}}</span>
+							<span class="primary--text" style="width: 15%">{{
+								record.arrive
+							}}</span>
+							<span class="primary--text" style="width: 15%">{{
+								record.depart
+							}}</span>
+						</v-row>
+					</v-list-item>
+				</v-list>
+				<v-pagination
+					:length="pages"
+					v-model="currentPage"
+					v-on:input="displayRecords()"
+				>
+				</v-pagination>
+			</v-col>
+		</v-row>
+	</v-container>
 </template>
 
 <script>
@@ -759,44 +762,42 @@ export default {
 </script>
 <style scoped>
 .date {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
+	background: #a0d0eb8e;
+	border-radius: 8px;
+	padding: 10px;
 }
 .date2 {
-  display: flex;
-  align-items: space-around;
-  /* flex-direction: column;
-		align-items: center; */
+	justify-content: space-around;
+	height: 45%;
 }
 .v-form.form {
-  border-radius: 10px 10px 0px 0px;
-  width: 100%;
-  height: fit-content;
-  /* padding: 0px 20px 0px 20px; */
+	border-radius: 10px 10px 0px 0px;
+	width: 100%;
+	height: fit-content;
+	/* padding: 0px 20px 0px 20px; */
 }
 .v-btn.sort {
-  margin: 0px;
-  padding: 10px 20px 10px 5px;
+	margin: 0px;
+	padding: 10px 20px 10px 5px;
 }
 .v-icon.up {
-  position: relative;
-  top: -5px;
-  left: 10px;
-  color: grey;
+	position: relative;
+	top: -5px;
+	left: 10px;
+	color: grey;
 }
 .v-icon.down {
-  position: relative;
-  top: 5px;
-  left: 10px;
-  color: grey;
+	position: relative;
+	top: 5px;
+	left: 10px;
+	color: grey;
 }
 .v-list {
-  height: 70%;
-  overflow-y: scroll;
-  border-radius: 0px;
+	height: 70%;
+	overflow-y: scroll;
+	border-radius: 0px;
 }
 .v-list-item:hover {
-  background: #454545;
+ 	background: #454545;
 }
 </style>
