@@ -1,3 +1,4 @@
+/* eslint-disable */
 <!-- Author: Chad Brown & Chase Brown
 Created On: 05/23/1618
 Updated By: Chad Brown & Chase Brown
@@ -14,7 +15,7 @@ Description: Visit History Page
 							<v-text-field
 								label="First Name"
 								outlined
-								color="black"
+								color="accent"
 								v-model="filterTerms.firstName"
 								v-on:input="filterRecords()"
 							>
@@ -22,7 +23,7 @@ Description: Visit History Page
 							<v-text-field
 								label="Last Name"
 								outlined
-								color="black"
+								color="accent"
 								v-model="filterTerms.lastName"
 								v-on:input="filterRecords()"
 							>
@@ -31,22 +32,16 @@ Description: Visit History Page
 					</v-col>
 					<v-col cols="4">
 						<div style="margin: 10px">
-							<v-autocomplete
-								outlined
-								label="Company"
-								color="black"
-								cache-items
-								hide-no-data
-								:items="companyFinal"
-								:search-input.sync="searchComp"
-								v-model="filterTerms.company"
-								v-on:change="filterRecords()"
+							<CompanySelect
+								@update:company="(filterTerms.company = $event), filterRecords()"
+								v-bind:company.sync="filterTerms.company"
+								v-bind:parent="'dashboard'"
 							>
-							</v-autocomplete>
+							</CompanySelect>
 							<v-text-field
 								label="Email"
 								outlined
-								color="black"
+								color="accent"
 								v-model="filterTerms.email"
 								v-on:input="filterRecords()"
 							>
@@ -55,75 +50,75 @@ Description: Visit History Page
 					</v-col>
 					<v-col cols="4">
 						<v-card class="date" height="90%">
-						<v-row class="date2">
-							<v-btn class="accent" v-on:click="daysAgo(30)">
-								30 days
-							</v-btn>
-							<v-btn class="accent" v-on:click="daysAgo(90)">
-								90 days
-							</v-btn>
-							<v-btn class="accent" v-on:click="daysAgo(0)">
-								Year to Date
-							</v-btn>
-						</v-row>
-						<v-row class="date2">
-							<v-menu
-								v-model="startMenu"
-								transition="scale-transition"
-								offset-y
-							>
-								<template v-slot:activator="{ on, attrs }">
-									<v-text-field
+							<v-row class="date2">
+								<v-btn class="accent" v-on:click="daysAgo(30)">
+									30 days
+								</v-btn>
+								<v-btn class="accent" v-on:click="daysAgo(90)">
+									90 days
+								</v-btn>
+								<v-btn class="accent" v-on:click="daysAgo(0)">
+									Year to Date
+								</v-btn>
+							</v-row>
+							<v-row class="date2">
+								<v-menu
+									v-model="startMenu"
+									transition="scale-transition"
+									offset-y
+								>
+									<template v-slot:activator="{ on, attrs }">
+										<v-text-field
+											v-model="filterTerms.arrive"
+											label="Start Date"
+											v-bind="attrs"
+											readonly
+											v-on="on"
+											outlined
+											clearable
+											v-on:input="filterRecords()"
+											color="accent"
+											style="max-width: 40%"
+										>
+										</v-text-field>
+									</template>
+									<v-date-picker
 										v-model="filterTerms.arrive"
-										label="Start Date"
-										v-bind="attrs"
-										readonly
-										v-on="on"
-										outlined
-										clearable
+										no-title
+										scrollable
 										v-on:input="filterRecords()"
-										color="accent"
-										style="max-width: 40%"
 									>
-									</v-text-field>
-								</template>
-								<v-date-picker
-									v-model="filterTerms.arrive"
-									no-title
-									scrollable
-									v-on:input="filterRecords()"
+									</v-date-picker>
+								</v-menu>
+								<v-menu
+									v-model="endMenu"
+									transition="scale-transition"
+									offset-y
 								>
-								</v-date-picker>
-							</v-menu>
-							<v-menu
-								v-model="endMenu"
-								transition="scale-transition"
-								offset-y
-							>
-								<template v-slot:activator="{ on, attrs }">
-									<v-text-field
+									<template v-slot:activator="{ on, attrs }">
+										<v-text-field
+											v-model="filterTerms.depart"
+											label="End Date"
+											v-bind="attrs"
+											readonly
+											v-on="on"
+											outlined
+											clearable
+											v-on:input="filterRecords()"
+											color="accent"
+											style="max-width: 40%"
+										>
+										</v-text-field>
+									</template>
+									<v-date-picker
 										v-model="filterTerms.depart"
-										label="End Date"
-										v-bind="attrs"
-										readonly
-										v-on="on"
-										outlined
-										clearable
+										no-title
+										scrollable
 										v-on:input="filterRecords()"
-										color="accent"
-										style="max-width: 40%"
 									>
-									</v-text-field>
-								</template>
-								<v-date-picker
-									v-model="filterTerms.depart"
-									no-title
-									scrollable
-									v-on:input="filterRecords()"
-								>
-								</v-date-picker>
-							</v-menu>
-						</v-row>
+									</v-date-picker>
+								</v-menu>
+							</v-row>
 						</v-card>
 					</v-col>
 				</v-row>
@@ -265,13 +260,17 @@ Description: Visit History Page
 
 <script>
 import Parse from "parse";
+import CompanySelect from "../components/CompanySelect.vue";
 export default {
+	components: {
+		CompanySelect,
+	},
 	data() {
 		return {
+			objRecords: [],
 			records: [],
 			recordsFinal: [],
 			recordsDisplay: [],
-			recordsSorted: [],
 			sort: 0,
 			lastBtn: null,
 			filterTerms: {
@@ -282,8 +281,6 @@ export default {
 				arrive: null,
 				depart: null
 			},
-			companyFinal: [],
-			searchComp: null,
 			currentPage: 1,
 			pages: null,
 			startMenu: false,
@@ -296,11 +293,6 @@ export default {
 		},
 		departFormatted: function() {
 			return this.formatDateInputs(this.filterTerms.depart);
-		}
-	},
-	watch: {
-		searchComp(val) {
-			this.searchCompanies(val);
 		}
 	},
 	beforeMount() {
@@ -320,8 +312,7 @@ export default {
 				day = "01";
 			}
 
-			this.filterTerms.arrive =
-        year + "-" + month.slice(-2) + "-" + day.slice(-2);
+			this.filterTerms.arrive = year + "-" + month.slice(-2) + "-" + day.slice(-2);
 			this.filterRecords();
 		},
 		formatDateInputs: function(inputtedDate) {
@@ -341,10 +332,7 @@ export default {
 			this.displayRecords();
 		},
 		filterRecords: function() {
-			// document.getElementById('xyz').previousElementSibling.classList.add('theme--dark')
-			// document.getElementById('zyx').previousElementSibling.classList.add('theme--dark')
-
-			let list = this.recordsSorted.filter(item => {
+			this.recordsFinal = this.objRecords.filter(item => {
 				let first = true,
 					last = true,
 					comp = true,
@@ -372,26 +360,17 @@ export default {
 				}
 
 				if (this.filterTerms.arrive && this.filterTerms.depart) {
-					date =
-            item.arrive.substring(0, 9) <= this.departFormatted &&
-            item.arrive.substring(0, 9) >= this.arriveFormatted;
+					date = item.arrive.substring(0, 9) <= this.departFormatted && item.arrive.substring(0, 9) >= this.arriveFormatted;
 				} else if (this.filterTerms.arrive) {
 					date = item.arrive.substring(0, 9) >= this.arriveFormatted;
 				} else if (this.filterTerms.depart) {
 					date = item.depart.substring(0, 9) <= this.departFormatted;
 				}
 
-				if (
-					first == true &&
-          last == true &&
-          email == true &&
-          comp == true &&
-          date == true
-				) {
+				if (first == true && last == true && email == true && comp == true && date == true) {
 					return true;
 				} else return false;
 			});
-			this.recordsFinal = list;
 			this.calcPages();
 		},
 		sortBy: async function(sortBtn) {
@@ -528,29 +507,23 @@ export default {
 			}
 			}
 		},
-		sortRecords: async function(
-			list = this.records,
-			sortBy = "company",
-			sortType = "des"
-		) {
+		sortRecords: async function(list = this.records, sortBy = "company", sortType = "des") {
 			switch (sortBy) {
 			case "firstName": {
 				for (let x = 1; x < list.length; x++) {
 					let y = 1;
-					let visitorx = await list[x].get("visitor");
-					let visitory = await list[x - y].get("visitor");
+					let visitorx = list[x].get("visitor");
+					let visitory = list[x - y].get("visitor");
 
-					while (
-						visitorx.get("firstName").toLowerCase() <
-              visitory.get("firstName").toLowerCase()
-					) {
+					while (visitorx.get("firstName").toLowerCase() < visitory.get("firstName").toLowerCase()) {
 						let temp = list[x - y];
 						list[x - y] = list[x - y + 1];
 						list[x - y + 1] = temp;
 						if (x - y !== 0) {
 							y++;
 							visitory = list[x - y].get("visitor");
-						} else break;
+						} 
+						else break;
 					}
 				}
 				break;
@@ -558,20 +531,18 @@ export default {
 			case "lastName": {
 				for (let x = 1; x < list.length; x++) {
 					let y = 1;
-					let visitorx = await list[x].get("visitor");
-					let visitory = await list[x - y].get("visitor");
+					let visitorx = list[x].get("visitor");
+					let visitory = list[x - y].get("visitor");
 
-					while (
-						visitorx.get("lastName").toLowerCase() <
-              visitory.get("lastName").toLowerCase()
-					) {
+					while (visitorx.get("lastName").toLowerCase() < visitory.get("lastName").toLowerCase()) {
 						let temp = list[x - y];
 						list[x - y] = list[x - y + 1];
 						list[x - y + 1] = temp;
 						if (x - y !== 0) {
 							y++;
 							visitory = list[x - y].get("visitor");
-						} else break;
+						} 
+						else break;
 					}
 				}
 				break;
@@ -579,15 +550,12 @@ export default {
 			case "company": {
 				for (let x = 1; x < list.length; x++) {
 					let y = 1;
-					let visitorx = await list[x].get("visitor");
-					let visitory = await list[x - y].get("visitor");
-					let companyx = await visitorx.get("company");
-					let companyy = await visitory.get("company");
+					let visitorx = list[x].get("visitor");
+					let visitory = list[x - y].get("visitor");
+					let companyx = visitorx.get("company");
+					let companyy = visitory.get("company");
 
-					while (
-						companyx.get("name").toLowerCase() <
-              companyy.get("name").toLowerCase()
-					) {
+					while (companyx.get("name").toLowerCase() < companyy.get("name").toLowerCase()) {
 						let temp = list[x - y];
 						list[x - y] = list[x - y + 1];
 						list[x - y + 1] = temp;
@@ -603,13 +571,10 @@ export default {
 			case "email": {
 				for (let x = 1; x < list.length; x++) {
 					let y = 1;
-					let visitorx = await list[x].get("visitor");
-					let visitory = await list[x - y].get("visitor");
+					let visitorx = list[x].get("visitor");
+					let visitory = list[x - y].get("visitor");
 
-					while (
-						visitorx.get("email").toLowerCase() <
-              visitory.get("email").toLowerCase()
-					) {
+					while (visitorx.get("email").toLowerCase() < visitory.get("email").toLowerCase()) {
 						let temp = list[x - y];
 						list[x - y] = list[x - y + 1];
 						list[x - y + 1] = temp;
@@ -624,8 +589,8 @@ export default {
 			case "arrive": {
 				for (let x = 1; x < list.length; x++) {
 					let y = 1;
-					let arrivex = await list[x].get("arrive");
-					let arrivey = await list[x - y].get("arrive");
+					let arrivex = list[x].get("arrive");
+					let arrivey = list[x - y].get("arrive");
 
 					while (arrivex > arrivey) {
 						let temp = list[x - y];
@@ -642,8 +607,8 @@ export default {
 			case "depart": {
 				for (let x = 1; x < list.length; x++) {
 					let y = 1;
-					let departx = await list[x].get("depart");
-					let departy = await list[x - y].get("depart");
+					let departx = list[x].get("depart");
+					let departy = list[x - y].get("depart");
 
 					while (departx > departy) {
 						let temp = list[x - y];
@@ -661,9 +626,8 @@ export default {
 			if (sortType == "asc") {
 				list.reverse();
 			}
-			this.records = list;
-			this.recordsSorted = [];
-			this.records.forEach(item => {
+			this.objRecords = [];
+			list.forEach(item => {
 				let record = {
 					firstName: null,
 					lastName: null,
@@ -673,6 +637,7 @@ export default {
 					arrive: null,
 					depart: null
 				};
+
 
 				let visitor = item.get("visitor");
 				let company = visitor.get("company");
@@ -685,7 +650,7 @@ export default {
 				record.email = visitor.get("email");
 				record.access = visitor.get("access");
 
-				this.recordsSorted.push(record);
+				this.objRecords.push(record);
 			});
 			this.filterRecords();
 		},
@@ -695,10 +660,10 @@ export default {
 			const recordQuery = new Parse.Query(Record);
 
 			recordQuery.exists("depart");
-
 			recordQuery.include(["visitor.company"]);
+
 			this.records = await recordQuery.find();
-			await this.sortRecords();
+			this.sortRecords();
 		},
 		formatDate: function(date) {
 			let month = "0" + (date.getMonth() + 1);
@@ -723,39 +688,17 @@ export default {
 			}
 
 			let formattedDate =
-        month.slice(-2) +
-        "/" +
-        day.slice(-2) +
-        "/" +
-        year +
-        " - " +
-        hour.slice(-2) +
-        ":" +
-        minute.slice(-2) +
-        dayTime;
+				month.slice(-2) +
+				"/" +
+				day.slice(-2) +
+				"/" +
+				year +
+				" - " +
+				hour.slice(-2) +
+				":" +
+				minute.slice(-2) +
+				dayTime;
 			return formattedDate;
-		},
-		searchCompanies: async function(val) {
-			const user = Parse.User.current();
-			const Users = new Parse.Query(Parse.User);
-			Users.equalTo("parentCompany", user);
-
-			let companyList = await Users.find();
-			companyList.push(user);
-
-			let test = companyList.filter(company => {
-				if (val) {
-					let name = company
-						.get("name")
-						.toLowerCase()
-						.includes(val.toLowerCase());
-					return name;
-				} else return false;
-			});
-			this.companyFinal = [];
-			test.forEach(e => {
-				this.companyFinal.push(e.get("name"));
-			});
 		}
 	}
 };

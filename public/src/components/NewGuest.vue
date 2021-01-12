@@ -103,6 +103,7 @@ export default {
 				person.set("lastName", this.guest.lastName);
 				person.set("company", comp);
 				person.set("access", "Guest");
+				person.set("email", "Guest");
 				await person.save();
 
 				const Record = new Parse.Object.extend("Record");
