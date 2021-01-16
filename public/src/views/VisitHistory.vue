@@ -224,6 +224,7 @@ Description: Visit History Page
 						v-for="record in recordsDisplay"
 						:key="record.id"
 						style="padding: 0px"
+						:class="changeClass(record.email)"
 					>
 						<v-row style="padding: 0px 16px 0px 16px">
 							<span class="primary--text" style="width: 10%">{{
@@ -299,6 +300,10 @@ export default {
 		this.getRecords();
 	},
 	methods: {
+		changeClass: function(email) {
+			if(email == "Guest") return 'guest';
+			else return null;
+		},
 		daysAgo: function(days) {
 			let date = new Date();
 			date.setTime(date.getTime() - 86400000 * days);
@@ -704,6 +709,9 @@ export default {
 };
 </script>
 <style scoped>
+.v-list-item.guest {
+    background: #a0d0eb8e;
+}
 .date {
 	background: #a0d0eb8e;
 	border-radius: 8px;
