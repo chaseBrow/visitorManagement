@@ -1,7 +1,7 @@
 <template>
 	<v-footer color="secondary lighten-1" padless>
 		<v-row justify="center" no-gutters>
-			<v-btn
+			<!-- <v-btn
 				v-for="link in links"
 				:key="link"
 				color="white"
@@ -10,7 +10,7 @@
 				class="my-2"
 			>
 				{{ link }}
-			</v-btn>
+			</v-btn> -->
 			<v-col
 				class="secondary lighten-2 py-4 text-center primary--text"
 				cols="12"

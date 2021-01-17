@@ -256,6 +256,19 @@ Description: Visit History Page
 					v-on:input="displayRecords()"
 				>
 				</v-pagination>
+				<v-btn
+					color="accent"
+					fixed
+					rounded
+					right
+					bottom
+					v-on:click="exportToCSV()"
+					class="mr-10"
+					x-large
+
+				>
+					Export
+				</v-btn>
 			</v-col>
 		</v-row>
 	</v-container>
@@ -294,6 +307,38 @@ export default {
 		this.getRecords();
 	},
 	methods: {
+		exportToCSV: function(){
+			let rows = [];
+			rows.push(["First Name", "Last Name", "Company", "Email", "Phone Number", 
+				"Access", "May Request Remote Hands", "May Schedule Others", "Arrival", "Departure"]);
+
+			this.recordsFinal.forEach((record) => {
+				let row = [];
+				
+				row.push(record.firstName);
+				row.push(record.lastName);
+				row.push(record.company);
+				row.push(record.email);
+				row.push(record.phone);
+				row.push(record.access);
+				row.push(record.mayRemote);
+				row.push(record.maySchedule);
+				row.push(record.arrive);
+				row.push(record.depart);
+				
+				rows.push(row);
+			})
+
+			let csvContent = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");	
+
+			var encodedUri = encodeURI(csvContent);
+			var link = document.createElement("a");
+			link.setAttribute("href", encodedUri);
+			link.setAttribute("download", "visitRecords.csv");
+			document.body.appendChild(link);
+
+			link.click();
+		},
 		changeClass: function(email) {
 			if(email == "Guest") return 'guest';
 			else return null;
@@ -646,6 +691,9 @@ export default {
 				record.lastName = visitor.get("lastName");
 				record.email = visitor.get("email");
 				record.access = visitor.get("access");
+				record.mayRemote = visitor.get("mayRemote");
+				record.maySchedule = visitor.get("maySchedule");
+				record.phone = visitor.get("phone");
 
 				this.objRecords.push(record);
 			});
