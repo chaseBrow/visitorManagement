@@ -249,6 +249,8 @@ Description: Visit History Page
 					</v-list-item>
 				</v-list>
 				<v-pagination
+					color="accent"
+					dark
 					:length="pages"
 					v-model="currentPage"
 					v-on:input="displayRecords()"
