@@ -23,7 +23,7 @@
 				>
 			</v-toolbar-title>
 			<v-spacer></v-spacer>
-			<NewGuest> </NewGuest>
+			<NewGuest v-if="['home'].indexOf($route.name) <= -1"> </NewGuest>
 			<NewVisitor v-if="['home'].indexOf($route.name) <= -1"> </NewVisitor>
 			<v-btn
 				class="accent"
@@ -33,7 +33,7 @@
 				<span class="mr-1 primary--text">Sign Out</span>
 				<v-icon color="white">mdi-exit-to-app</v-icon>
 			</v-btn>
-			<Login v-if="['home'].indexOf($route.name) == 0"> </Login>
+			<!-- <Login v-if="['home'].indexOf($route.name) == 0"> </Login> -->
 		</v-app-bar>
 		<v-navigation-drawer v-model="drawer" class="secondary" app fixed temporary>
 			<v-list>
@@ -53,14 +53,13 @@
 </template>
 
 <script>
-import Login from "./Login";
+// import Login from "./Login";
 import NewVisitor from "./NewVisitor";
 import Parse from "parse";
 import NewGuest from "./NewGuest";
 export default {
 	components: {
 		NewVisitor,
-		Login,
 		NewGuest
 	},
 	data() {
