@@ -151,8 +151,7 @@ export default {
 				phoneRules: [
 					v =>
 						/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/.test(v) ||
-						!v ||
-						"Invalid Phone Number."
+						!v || "Invalid Phone Number."
 				],
 				maySchedule: null,
 				mayRemote: false
