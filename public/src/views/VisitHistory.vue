@@ -290,14 +290,6 @@ export default {
 			endMenu: false
 		};
 	},
-	computed: {
-		startFormatted: function() {
-			return this.formatDateInputs(this.filterTerms.start);
-		},
-		endFormatted: function() {
-			return this.formatDateInputs(this.filterTerms.end);
-		}
-	},
 	beforeMount() {
 		this.getRecords();
 	},
@@ -323,10 +315,8 @@ export default {
 			this.filterRecords();
 		},
 		formatDateInputs: function(inputtedDate) {
-			if (!inputtedDate) return null;
-
-			const [year, month, date] = inputtedDate.split("-");
-			return `${month}/${date}/${year}`;
+			const [month, day, year] = inputtedDate.substring(0,10).split("/");
+			return `${year}-${month}-${day}`;
 		},
 		displayRecords: function() {
 			this.recordsDisplay = this.recordsFinal.slice(
@@ -367,11 +357,11 @@ export default {
 				}
 
 				if (this.filterTerms.start && this.filterTerms.end) {
-					date = item.arrive.substring(0, 9) <= this.endFormatted && item.arrive.substring(0, 9) >= this.startFormatted;
+					date = new Date(this.formatDateInputs(item.depart)) <= new Date(this.filterTerms.end) && new Date(this.formatDateInputs(item.depart)) >= new Date(this.filterTerms.start);
 				} else if (this.filterTerms.start) {
-					date = item.arrive.substring(0, 9) >= this.startFormatted;
+					date = new Date(this.formatDateInputs(item.depart)) >= new Date(this.filterTerms.start);
 				} else if (this.filterTerms.end) {
-					date = item.depart.substring(0, 9) <= this.endFormatted;
+					date = new Date(this.formatDateInputs(item.depart)) <= new Date(this.filterTerms.end);
 				}
 
 				if (first == true && last == true && email == true && comp == true && date == true) {
