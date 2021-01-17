@@ -17,6 +17,8 @@
 					class="mr-1 accent"
 					v-on:click="newRecord()"
 					style="padding: 0 16px 0 6px"
+					:disabled="person.get('company').get('restricted')"
+					dark
 				>
 					<v-icon dense class="pr-1">mdi-plus</v-icon>
 					<span>Visit</span>
