@@ -69,7 +69,7 @@ Description: Visit History Page
 								>
 									<template v-slot:activator="{ on, attrs }">
 										<v-text-field
-											v-model="filterTerms.arrive"
+											v-model="filterTerms.start"
 											label="Start Date"
 											v-bind="attrs"
 											readonly
@@ -83,7 +83,7 @@ Description: Visit History Page
 										</v-text-field>
 									</template>
 									<v-date-picker
-										v-model="filterTerms.arrive"
+										v-model="filterTerms.start"
 										no-title
 										scrollable
 										v-on:input="filterRecords()"
@@ -97,7 +97,7 @@ Description: Visit History Page
 								>
 									<template v-slot:activator="{ on, attrs }">
 										<v-text-field
-											v-model="filterTerms.depart"
+											v-model="filterTerms.end"
 											label="End Date"
 											v-bind="attrs"
 											readonly
@@ -111,7 +111,7 @@ Description: Visit History Page
 										</v-text-field>
 									</template>
 									<v-date-picker
-										v-model="filterTerms.depart"
+										v-model="filterTerms.end"
 										no-title
 										scrollable
 										v-on:input="filterRecords()"
@@ -281,8 +281,8 @@ export default {
 				lastName: null,
 				company: null,
 				email: null,
-				arrive: null,
-				depart: null
+				start: null,
+				end: null
 			},
 			currentPage: 1,
 			pages: null,
@@ -291,11 +291,11 @@ export default {
 		};
 	},
 	computed: {
-		arriveFormatted: function() {
-			return this.formatDateInputs(this.filterTerms.arrive);
+		startFormatted: function() {
+			return this.formatDateInputs(this.filterTerms.start);
 		},
-		departFormatted: function() {
-			return this.formatDateInputs(this.filterTerms.depart);
+		endFormatted: function() {
+			return this.formatDateInputs(this.filterTerms.end);
 		}
 	},
 	beforeMount() {
@@ -319,7 +319,7 @@ export default {
 				day = "01";
 			}
 
-			this.filterTerms.arrive = year + "-" + month.slice(-2) + "-" + day.slice(-2);
+			this.filterTerms.start = year + "-" + month.slice(-2) + "-" + day.slice(-2);
 			this.filterRecords();
 		},
 		formatDateInputs: function(inputtedDate) {
@@ -366,12 +366,12 @@ export default {
 						.includes(this.filterTerms.email.toLowerCase());
 				}
 
-				if (this.filterTerms.arrive && this.filterTerms.depart) {
-					date = item.arrive.substring(0, 9) <= this.departFormatted && item.arrive.substring(0, 9) >= this.arriveFormatted;
-				} else if (this.filterTerms.arrive) {
-					date = item.arrive.substring(0, 9) >= this.arriveFormatted;
-				} else if (this.filterTerms.depart) {
-					date = item.depart.substring(0, 9) <= this.departFormatted;
+				if (this.filterTerms.start && this.filterTerms.end) {
+					date = item.arrive.substring(0, 9) <= this.endFormatted && item.arrive.substring(0, 9) >= this.startFormatted;
+				} else if (this.filterTerms.start) {
+					date = item.arrive.substring(0, 9) >= this.startFormatted;
+				} else if (this.filterTerms.end) {
+					date = item.depart.substring(0, 9) <= this.endFormatted;
 				}
 
 				if (first == true && last == true && email == true && comp == true && date == true) {
