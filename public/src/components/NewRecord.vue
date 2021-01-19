@@ -17,7 +17,7 @@
 					class="mr-1 accent"
 					v-on:click="newRecord()"
 					style="padding: 0 16px 0 6px"
-					:disabled="person.get('company').get('restricted')"
+					:disabled="isRestricted()"
 					dark
 				>
 					<v-icon dense class="pr-1">mdi-plus</v-icon>
@@ -81,6 +81,14 @@ export default {
 		this.newRecord();
 	},
 	methods: {
+		isRestricted: function() {
+			if(this.person.get('company').get('restricted')) {
+				if(this.person.get('company').id == Parse.User.current().id) return false;
+				else if(this.status != "Absent") return false;
+				else return true;
+			}
+			else return false;
+		},
 		visitStatus: function() {
 			this.status = this.select;
 			if (this.status == "Arrived") {
