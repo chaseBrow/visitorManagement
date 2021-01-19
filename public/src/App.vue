@@ -4,20 +4,20 @@
 			<v-content>
 				<router-view> </router-view>
 			</v-content>
-		<Footer> </Footer>
+		<!-- <Footer> </Footer> -->
   	</v-app>
 </template>
 
 <script>
 import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
+// import Footer from "./components/Footer";
 
 export default {
 	name: "App",
 
 	components: {
 		Navbar,
-		Footer
+		// Footer
 	},
 
 	data: () => ({

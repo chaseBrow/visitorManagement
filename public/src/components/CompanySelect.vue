@@ -64,10 +64,16 @@ export default {
 	methods: {
 		getCompanies: async function() {
 			const user = Parse.User.current();
+
+			const contractor = new Parse.Query(Parse.User);
+			contractor.equalTo("name", "Contractor");
+
 			const Users = new Parse.Query(Parse.User);
 			Users.equalTo("parentCompany", user);
 
-			this.companies = await Users.find();
+			const mainQuery = Parse.Query.or(Users, contractor);
+
+			this.companies = await mainQuery.find();
 
 			this.companies.push(user);
 			this.searchCompanies();

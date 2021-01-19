@@ -247,28 +247,24 @@ Description: Visit History Page
 							}}</span>
 						</v-row>
 					</v-list-item>
+					<v-btn
+						color="accent"
+						v-on:click="exportToCSV()"
+						class="floater"
+					>
+						Export
+					</v-btn>
 				</v-list>
 				<v-pagination
 					color="accent"
 					dark
 					:length="pages"
+					total-visible="5"
 					v-model="currentPage"
 					v-on:input="displayRecords()"
 				>
 				</v-pagination>
-				<v-btn
-					color="accent"
-					fixed
-					rounded
-					right
-					bottom
-					v-on:click="exportToCSV()"
-					class="mr-10"
-					x-large
-
-				>
-					Export
-				</v-btn>
+				
 			</v-col>
 		</v-row>
 	</v-container>
@@ -749,6 +745,11 @@ export default {
 };
 </script>
 <style scoped>
+.v-btn.floater {
+	position: absolute;
+	right: 50px;
+	top: 250px;
+}
 .v-list-item.guest {
     background: #a0d0eb8e;
 }
