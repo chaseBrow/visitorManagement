@@ -326,6 +326,7 @@ export default {
 
 			const queryGuest = new Parse.Query(Visitors);
 			queryGuest.equalTo("access", "Guest");
+			queryGuest.containedIn("company", children);
 			queryGuest.notEqualTo("deleted", true);
 			this.guests = await queryGuest.find();
 
