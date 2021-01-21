@@ -83,10 +83,51 @@
 				</v-toolbar>
 				<v-list dense class="data secondary">
 					<v-list-item
-						class="guest"
-						v-for="person in guests"
+						class="guestCont"
+						v-for="person in contractors" 
 						:key="person.id"
-						:hidden="hideGuests"
+						:hidden="hideGuestCont"
+					>
+						<span class="primary--text" style="width: 10%">{{
+							person.get("firstName")
+						}}</span>
+						<span class="primary--text" style="width: 10%">{{
+							person.get("lastName")
+						}}</span>
+						<span
+							class="primary--text"
+							style="width: 10%; font-size: 0.95rem"
+							>{{ getCompanyName(person) }}</span
+						>
+						<span class="primary--text" style="width: 25%; font-size: 0.9rem">{{
+							person.get("email")
+						}}</span>
+						<span class="primary--text" style="width: 10%; font-size: 0.9rem">{{
+							person.get("access")
+						}}</span>
+
+						<v-spacer></v-spacer>
+						<div :id="person.id + 'visit'" :key="person.id + 'visit'">
+							<NewRecord v-bind:person="person"> </NewRecord>
+						</div>
+						<div>
+							<v-btn class="accent mr-1" v-on:click="print(person)">
+								<v-icon dense>mdi-printer</v-icon>
+							</v-btn>
+						</div>
+						<div
+							:id="person.get('email') + 'info'"
+							:key="person.get('email') + 'info'"
+							class="pa-0"
+						>
+							<MoreInfo v-bind:person="person"> </MoreInfo>
+						</div>
+					</v-list-item>
+					<v-list-item
+						class="guestCont"
+						v-for="person in guests" 
+						:key="person.id"
+						:hidden="hideGuestCont"
 					>
 						<span class="primary--text" style="width: 10%">{{
 							person.get("firstName")
@@ -185,7 +226,8 @@ export default {
 			filteredPeople: [],
 			visitors: [],
 			guests: [],
-			hideGuests: false,
+			contractors: [],
+			hideGuestCont: false,
 			filterTerms: {
 				firstName: "",
 				lastName: "",
@@ -221,16 +263,7 @@ export default {
 	},
 	methods: {
 		print: async function(person) {
-			let data =
-		"::" +
-		person.get("firstName") +
-		" " +
-		person.get("lastName") +
-		"::" +
-		this.getCompanyName(person) +
-		"::" +
-		person.get("access");
-
+			let data = "::" + person.get("firstName") + " " + person.get("lastName") + "::" + this.getCompanyName(person) + "::" + person.get("access");
 			fetch("http://localhost:3080/", {
 				method: "POST",
 				mode: "no-cors",
@@ -272,7 +305,7 @@ export default {
 				return item.get("visitor");
 			});
 			let ids = test.map(item => {
-				if (item.get("access") != "Guest") {
+				if (item.get("access") != "Guest" || item.get("access") != "Contractor") {
 					return item.id;
 				}
 				return null;
@@ -302,15 +335,10 @@ export default {
 
 			const user = Parse.User.current();
 
-			const contractor = new Parse.Query(Parse.User);
-			contractor.equalTo("name", "Contractor");
-
 			const Users = new Parse.Query(Parse.User);
 			Users.equalTo("parentCompany", user);
 
-			const mainQuery = Parse.Query.or(Users, contractor);
-
-			children = await mainQuery.find();
+			children = await Users.find();
 			children.push(user);
 
 			const Visitors = Parse.Object.extend("Visitor");
@@ -319,15 +347,22 @@ export default {
 			queryVisitor.notEqualTo("deleted", true);
 			queryVisitor.include(["company.name"]);
 			queryVisitor.containedIn("company", children);
-			queryVisitor.notEqualTo("access", "Guest");
+			queryVisitor.notContainedIn("access", ["Contractor","Guest"])
 
 			this.visitors = await queryVisitor.find();
 			this.visitors = this.visitors.slice(0, 20);
 
 			const queryGuest = new Parse.Query(Visitors);
 			queryGuest.equalTo("access", "Guest");
+			queryGuest.containedIn("company", children);
 			queryGuest.notEqualTo("deleted", true);
 			this.guests = await queryGuest.find();
+
+			const queryCont = new Parse.Query(Visitors);
+			queryCont.equalTo("access", "Contractor");
+			queryCont.containedIn("company", children);
+			queryCont.notEqualTo("deleted", true);
+			this.contractors = await queryCont.find();
 
 			this.filterPeople();
 		},
@@ -381,9 +416,9 @@ export default {
 				}
 			});
 			if (this.filteredPeople.length != this.visitors.length) {
-				this.hideGuests = true;
+				this.hideGuestCont = true;
 			} else {
-				this.hideGuests = false;
+				this.hideGuestCont = false;
 			}
 		}
 	},
@@ -400,10 +435,10 @@ export default {
     background: #454545;
 }
 
-.v-list-item.guest {
+.v-list-item.guestCont {
     background: #a0d0eb8e;
 }
-.v-list-item.guest:hover {
+.v-list-item.guestCont:hover {
     background: #454545;
 }
 .v-list.data {

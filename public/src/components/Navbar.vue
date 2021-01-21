@@ -23,6 +23,7 @@
 				>
 			</v-toolbar-title>
 			<v-spacer></v-spacer>
+			<NewContractor v-if="['home'].indexOf($route.name) <= -1"> </NewContractor>
 			<NewGuest v-if="['home'].indexOf($route.name) <= -1"> </NewGuest>
 			<NewVisitor v-if="['home'].indexOf($route.name) <= -1"> </NewVisitor>
 			<v-btn
@@ -57,10 +58,12 @@
 import NewVisitor from "./NewVisitor";
 import Parse from "parse";
 import NewGuest from "./NewGuest";
+import NewContractor from "./NewContractor";
 export default {
 	components: {
 		NewVisitor,
-		NewGuest
+		NewGuest,
+		NewContractor
 	},
 	data() {
 		return {

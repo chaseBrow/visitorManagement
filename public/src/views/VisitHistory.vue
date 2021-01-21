@@ -224,7 +224,7 @@ Description: Visit History Page
 						v-for="record in recordsDisplay"
 						:key="record.id"
 						style="padding: 0px"
-						:class="changeClass(record.email)"
+						:class="changeClass(record.access)"
 					>
 						<v-row style="padding: 0px 16px 0px 16px">
 							<span class="primary--text" style="width: 10%">{{
@@ -335,8 +335,8 @@ export default {
 
 			link.click();
 		},
-		changeClass: function(email) {
-			if(email == "Guest") return 'guest';
+		changeClass: function(access) {
+			if(access == "Guest" || access == "Contractor") return 'guestCont';
 			else return null;
 		},
 		daysAgo: function(days) {
@@ -750,7 +750,7 @@ export default {
 	right: 50px;
 	top: 250px;
 }
-.v-list-item.guest {
+.v-list-item.guestCont {
     background: #a0d0eb8e;
 }
 .date {

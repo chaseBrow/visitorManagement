@@ -63,7 +63,6 @@
 							v-model="visitor.access"
 							v-on:focus="getOptions()"
 							:rules="visitor.accessRules"
-							:disabled="visitor.company == 'Contractor'"
 						>
 						</v-select>
 					</v-col>
@@ -143,9 +142,7 @@ export default {
 				access: null,
 				accessRules: [
 					v =>
-						!!v ||
-						this.visitor.company == "Contractor" ||
-						"Access is a required field."
+						!!v || "Access is a required field."
 				],
 				phone: null,
 				phoneRules: [
@@ -197,11 +194,7 @@ export default {
 				person.set("lastName", this.visitor.lastName);
 				person.set("company", comp);
 				person.set("email", this.visitor.email);
-				if (this.visitor.company == "Contractor") {
-					person.set("access", "Contractor");
-				} else {
-					person.set("access", this.visitor.access);
-				}
+				person.set("access", this.visitor.access);
 				person.set("phone", this.visitor.phone);
 				person.set("maySchedule", this.visitor.maySchedule);
 				person.set("mayRemote", this.visitor.mayRemote);
