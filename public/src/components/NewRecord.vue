@@ -165,7 +165,7 @@ export default {
 				this.arrivalTime = null;
 				this.departureTime = null;
 
-				if (this.person.get("access") == "Guest") {
+				if (this.person.get("access") == "Guest" || this.person.get('access') == "Contractor") {
 					this.person.set("deleted", true);
 					await this.person.save();
 				}
@@ -179,7 +179,7 @@ export default {
 				this.options = ["Arrived", "Expected"];
 				await this.record.destroy();
 
-				if (this.person.get("access") == "Guest") {
+				if (this.person.get("access") == "Guest" || this.person.get("access") == "Contractor") {
 					this.person.set("deleted", true);
 					await this.person.save();
 				}

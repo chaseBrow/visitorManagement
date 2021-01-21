@@ -19,7 +19,7 @@
 						Visitor Information
 						<v-spacer></v-spacer>
 						<div :id="person.id + 'btnEdit'">
-							<v-btn class="accent" v-on:click="editBtn()" :disabled="ctr">
+							<v-btn class="accent" v-on:click="editBtn()">
 								Edit
 							</v-btn>
 						</div>
@@ -140,6 +140,7 @@
 								outlined
 								color="accent"
 								label="Notes"
+								rows="6"
 								:readonly="!edit"
 								v-model="visitor.notes"
 							>
@@ -237,28 +238,6 @@ export default {
 			edit: false
 		};
 	},
-	computed: {
-		ctr: function() {
-			const curUser = Parse.User.current();
-			const comp = this.person.get("company");
-			return (
-				this.person.get("company").get("name") == "Contractor" &&
-				curUser.id != comp.get("parentCompany").id
-			);
-		}
-	},
-	// watch: {
-	//     company: function(val) {
-	//         if(val) {
-	//             const curUser = Parse.User.current();
-	//             const comp = this.person.get("company");
-	//             if(this.visitor.company == "Contractor" && curUser != comp.get("parent")){
-	//                 let edit = document.getElementById(this.person.id + 'btnEdit');
-	//                 edit.style.display = 'none';
-	//             }
-	//         }
-	//     }
-	// },
 	methods: {
 		getOptions: function() {
 			this.accessOptions = [];
