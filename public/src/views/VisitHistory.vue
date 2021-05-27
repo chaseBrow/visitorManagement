@@ -443,10 +443,10 @@ export default {
 					this.sortRecords();
 				} else if (this.sort % 3 == 1) {
 					asc.style.color = "grey";
-					des.style.color = "#9e1f63";
+					des.style.color = "#2A6EBB";
 					this.sortRecords(undefined, "firstName", "des");
 				} else {
-					asc.style.color = "#9e1f63";
+					asc.style.color = "#2A6EBB";
 					des.style.color = "grey";
 					this.sortRecords(undefined, "firstName", "asc");
 				}
@@ -462,10 +462,10 @@ export default {
 					this.sortRecords();
 				} else if (this.sort % 3 == 1) {
 					asc.style.color = "grey";
-					des.style.color = "#9e1f63";
+					des.style.color = "#2A6EBB";
 					this.sortRecords(undefined, "lastName", "des");
 				} else {
-					asc.style.color = "#9e1f63";
+					asc.style.color = "#2A6EBB";
 					des.style.color = "grey";
 					this.sortRecords(undefined, "lastName", "asc");
 				}
@@ -480,10 +480,10 @@ export default {
 					this.sortRecords();
 				} else if (this.sort % 3 == 1) {
 					asc.style.color = "grey";
-					des.style.color = "#9e1f63";
+					des.style.color = "#2A6EBB";
 					this.sortRecords(undefined, "company", "des");
 				} else {
-					asc.style.color = "#9e1f63";
+					asc.style.color = "#2A6EBB";
 					des.style.color = "grey";
 					this.sortRecords(undefined, "company", "asc");
 				}
@@ -498,10 +498,10 @@ export default {
 					this.sortRecords();
 				} else if (this.sort % 3 == 1) {
 					asc.style.color = "grey";
-					des.style.color = "#9e1f63";
+					des.style.color = "#2A6EBB";
 					this.sortRecords(undefined, "email", "des");
 				} else {
-					asc.style.color = "#9e1f63";
+					asc.style.color = "#2A6EBB";
 					des.style.color = "grey";
 					this.sortRecords(undefined, "email", "asc");
 				}
@@ -516,10 +516,10 @@ export default {
 					this.sortRecords();
 				} else if (this.sort % 3 == 1) {
 					asc.style.color = "grey";
-					des.style.color = "#9e1f63";
+					des.style.color = "#2A6EBB";
 					this.sortRecords(undefined, "arrive", "des");
 				} else {
-					asc.style.color = "#9e1f63";
+					asc.style.color = "#2A6EBB";
 					des.style.color = "grey";
 					this.sortRecords(undefined, "arrive", "asc");
 				}
@@ -534,10 +534,10 @@ export default {
 					this.sortRecords();
 				} else if (this.sort % 3 == 1) {
 					asc.style.color = "grey";
-					des.style.color = "#9e1f63";
+					des.style.color = "#2A6EBB";
 					this.sortRecords(undefined, "depart", "des");
 				} else {
-					asc.style.color = "#9e1f63";
+					asc.style.color = "#2A6EBB";
 					des.style.color = "grey";
 					this.sortRecords(undefined, "depart", "asc");
 				}
